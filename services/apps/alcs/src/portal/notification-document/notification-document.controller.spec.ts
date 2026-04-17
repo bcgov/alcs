@@ -9,10 +9,7 @@ import { NotificationDocument } from '../../alcs/notification/notification-docum
 import { NotificationDocumentService } from '../../alcs/notification/notification-document/notification-document.service';
 import { NotificationService } from '../../alcs/notification/notification.service';
 import { NotificationProfile } from '../../common/automapper/notification.automapper.profile';
-import {
-  DOCUMENT_TYPE,
-  DocumentCode,
-} from '../../document/document-code.entity';
+import { DOCUMENT_TYPE, DocumentCode } from '../../document/document-code.entity';
 import { DOCUMENT_SOURCE, DOCUMENT_SYSTEM } from '../../document/document.dto';
 import { Document } from '../../document/document.entity';
 import { DocumentService } from '../../document/document.service';
@@ -75,13 +72,9 @@ describe('NotificationDocumentController', () => {
         ...mockKeyCloakProviders,
       ],
     }).compile();
-    controller = module.get<NotificationDocumentController>(
-      NotificationDocumentController,
-    );
+    controller = module.get<NotificationDocumentController>(NotificationDocumentController);
 
-    mockNotificationSubmissionService.getByFileNumber.mockResolvedValue(
-      new NotificationSubmission(),
-    );
+    mockNotificationSubmissionService.getByFileNumber.mockResolvedValue(new NotificationSubmission());
     mockNotificationService.getUuid.mockResolvedValue('uuid');
   });
 
@@ -105,9 +98,7 @@ describe('NotificationDocumentController', () => {
   });
 
   it('should call through to update documents', async () => {
-    mockNotificationDocumentService.updateDescriptionAndType.mockResolvedValue(
-      [],
-    );
+    mockNotificationDocumentService.updateDescriptionAndType.mockResolvedValue([]);
 
     await controller.update(
       'file-number',
@@ -119,9 +110,7 @@ describe('NotificationDocumentController', () => {
       [],
     );
 
-    expect(
-      mockNotificationDocumentService.updateDescriptionAndType,
-    ).toHaveBeenCalledTimes(1);
+    expect(mockNotificationDocumentService.updateDescriptionAndType).toHaveBeenCalledTimes(1);
   });
 
   it('should call through for open', async () => {
@@ -136,9 +125,7 @@ describe('NotificationDocumentController', () => {
       },
     });
 
-    expect(mockNotificationDocumentService.getInlineUrl).toHaveBeenCalledTimes(
-      1,
-    );
+    expect(mockNotificationDocumentService.getInlineUrl).toHaveBeenCalledTimes(1);
     expect(res.url).toEqual(fakeUrl);
   });
 
@@ -187,17 +174,11 @@ describe('NotificationDocumentController', () => {
       }),
     );
 
-    const res = await controller.attachExternalDocument(
-      'fake-number',
-      docDto,
-      user,
-    );
+    const res = await controller.attachExternalDocument('fake-number', docDto, user);
 
-    expect(mockDocumentService.createDocumentRecord).toBeCalledTimes(1);
-    expect(
-      mockNotificationDocumentService.attachExternalDocument,
-    ).toBeCalledTimes(1);
-    expect(mockDocumentService.createDocumentRecord).toBeCalledWith({
+    expect(mockDocumentService.createDocumentRecord).toHaveBeenCalledTimes(1);
+    expect(mockNotificationDocumentService.attachExternalDocument).toHaveBeenCalledTimes(1);
+    expect(mockDocumentService.createDocumentRecord).toHaveBeenCalledWith({
       ...docDto,
       system: DOCUMENT_SYSTEM.PORTAL,
     });
@@ -236,31 +217,19 @@ describe('NotificationDocumentController', () => {
       }),
     );
 
-    const res = await controller.attachExternalDocument(
-      'fake-number',
-      docDto,
-      user,
-    );
+    const res = await controller.attachExternalDocument('fake-number', docDto, user);
 
-    expect(mockDocumentService.createDocumentRecord).toBeCalledTimes(1);
-    expect(
-      mockNotificationDocumentService.attachExternalDocument,
-    ).toBeCalledTimes(1);
-    expect(
-      mockNotificationDocumentService.attachExternalDocument,
-    ).toBeCalledWith(
+    expect(mockDocumentService.createDocumentRecord).toHaveBeenCalledTimes(1);
+    expect(mockNotificationDocumentService.attachExternalDocument).toHaveBeenCalledTimes(1);
+    expect(mockNotificationDocumentService.attachExternalDocument).toHaveBeenCalledWith(
       undefined,
       {
         documentUuid: 'fake-uuid',
         type: DOCUMENT_TYPE.PROPOSAL_MAP,
       },
-      [
-        VISIBILITY_FLAG.APPLICANT,
-        VISIBILITY_FLAG.COMMISSIONER,
-        VISIBILITY_FLAG.PUBLIC,
-      ],
+      [VISIBILITY_FLAG.APPLICANT, VISIBILITY_FLAG.COMMISSIONER, VISIBILITY_FLAG.PUBLIC],
     );
-    expect(mockDocumentService.createDocumentRecord).toBeCalledWith({
+    expect(mockDocumentService.createDocumentRecord).toHaveBeenCalledWith({
       ...docDto,
       system: DOCUMENT_SYSTEM.PORTAL,
     });

@@ -7,10 +7,7 @@ import { NotificationDocument } from '../../alcs/notification/notification-docum
 import { NotificationDocumentService } from '../../alcs/notification/notification-document/notification-document.service';
 import { Notification } from '../../alcs/notification/notification.entity';
 import { NotificationService } from '../../alcs/notification/notification.service';
-import {
-  DOCUMENT_TYPE,
-  DocumentCode,
-} from '../../document/document-code.entity';
+import { DOCUMENT_TYPE, DocumentCode } from '../../document/document-code.entity';
 import { User } from '../../user/user.entity';
 import { NotificationParcelService } from '../notification-submission/notification-parcel/notification-parcel.service';
 import { NotificationSubmission } from '../notification-submission/notification-submission.entity';
@@ -88,20 +85,16 @@ describe('GenerateSrwDocumentService', () => {
         }),
       }),
     ]);
-    mockNotificationService.getByFileNumber.mockResolvedValue(
-      new Notification(),
-    );
-    mockLocalGovernmentService.getByUuid.mockResolvedValue(
-      new LocalGovernment(),
-    );
+    mockNotificationService.getByFileNumber.mockResolvedValue(new Notification());
+    mockLocalGovernmentService.getByUuid.mockResolvedValue(new LocalGovernment());
     const userEntity = new User({
       name: 'Bruce Wayne',
     });
 
     const res = await service.generate('fake', userEntity, new Date());
 
-    expect(mockCdogsService.generateDocument).toBeCalledTimes(1);
-    expect(mockLocalGovernmentService.getByUuid).toBeCalledTimes(1);
+    expect(mockCdogsService.generateDocument).toHaveBeenCalledTimes(1);
+    expect(mockLocalGovernmentService.getByUuid).toHaveBeenCalledTimes(1);
     expect(res).toBeDefined();
   });
 });

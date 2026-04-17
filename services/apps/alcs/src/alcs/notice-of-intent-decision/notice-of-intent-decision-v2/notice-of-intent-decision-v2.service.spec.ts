@@ -188,13 +188,13 @@ describe('NoticeOfIntentDecisionV2Service', () => {
       await service.delete(mockDecision.uuid);
 
       expect(mockDecisionRepository.save.mock.calls[0][0].modifies).toBeNull();
-      expect(mockDecisionRepository.softRemove).toBeCalledTimes(1);
+      expect(mockDecisionRepository.softRemove).toHaveBeenCalledTimes(1);
       expect(mockNoticeOfIntentService.updateByUuid).toHaveBeenCalledTimes(1);
       expect(mockNoticeOfIntentService.updateByUuid).toHaveBeenCalledWith(mockNoticeOfIntent.uuid, {
         decisionDate: null,
       });
-      expect(mockNoticeOfIntentSubmissionStatusService.setStatusDateByFileNumber).toBeCalledTimes(1);
-      expect(mockNoticeOfIntentSubmissionStatusService.setStatusDateByFileNumber).toBeCalledWith(
+      expect(mockNoticeOfIntentSubmissionStatusService.setStatusDateByFileNumber).toHaveBeenCalledTimes(1);
+      expect(mockNoticeOfIntentSubmissionStatusService.setStatusDateByFileNumber).toHaveBeenCalledWith(
         mockNoticeOfIntent.fileNumber,
         NOI_SUBMISSION_STATUS.ALC_DECISION,
         null,
@@ -273,7 +273,7 @@ describe('NoticeOfIntentDecisionV2Service', () => {
 
       await service.create(decisionToCreate, mockNoticeOfIntent, undefined);
 
-      expect(mockDecisionRepository.save).toBeCalledTimes(1);
+      expect(mockDecisionRepository.save).toHaveBeenCalledTimes(1);
       expect(mockNoticeOfIntentService.update).toHaveBeenCalledTimes(0);
     });
 
@@ -310,7 +310,7 @@ describe('NoticeOfIntentDecisionV2Service', () => {
 
       await service.create(decisionToCreate, mockNoticeOfIntent, undefined);
 
-      expect(mockDecisionRepository.save).toBeCalledTimes(3);
+      expect(mockDecisionRepository.save).toHaveBeenCalledTimes(3);
       expect(mockNoticeOfIntentService.update).toHaveBeenCalledTimes(0);
       const finalDecision = mockDecisionRepository.save.mock.calls[2][0];
 
@@ -342,7 +342,7 @@ describe('NoticeOfIntentDecisionV2Service', () => {
         ),
       );
 
-      expect(mockDecisionRepository.save).toBeCalledTimes(0);
+      expect(mockDecisionRepository.save).toHaveBeenCalledTimes(0);
       expect(mockNoticeOfIntentService.update).toHaveBeenCalledTimes(0);
     });
 
@@ -366,7 +366,7 @@ describe('NoticeOfIntentDecisionV2Service', () => {
         new ServiceValidationException('Draft decision already exists for this notice of intent.'),
       );
 
-      expect(mockDecisionRepository.save).toBeCalledTimes(0);
+      expect(mockDecisionRepository.save).toHaveBeenCalledTimes(0);
       expect(mockNoticeOfIntentService.update).toHaveBeenCalledTimes(0);
     });
 
@@ -385,7 +385,7 @@ describe('NoticeOfIntentDecisionV2Service', () => {
 
       await service.create(decisionToCreate, mockNoticeOfIntent, undefined);
 
-      expect(mockDecisionRepository.save).toBeCalledTimes(1);
+      expect(mockDecisionRepository.save).toHaveBeenCalledTimes(1);
       expect(mockNoticeOfIntentService.update).not.toHaveBeenCalled();
       expect(mockNoticeOfIntentSubmissionStatusService.setStatusDateByFileNumber).not.toHaveBeenCalled();
     });
@@ -416,14 +416,14 @@ describe('NoticeOfIntentDecisionV2Service', () => {
 
       await service.update(mockDecision.uuid, decisionUpdate, undefined);
 
-      expect(mockDecisionRepository.findOne).toBeCalledTimes(2);
+      expect(mockDecisionRepository.findOne).toHaveBeenCalledTimes(2);
       expect(mockDecisionRepository.save).toHaveBeenCalledTimes(1);
       expect(mockNoticeOfIntentService.updateByUuid).toHaveBeenCalledTimes(1);
       expect(mockNoticeOfIntentService.updateByUuid).toHaveBeenCalledWith(mockNoticeOfIntent.uuid, {
         decisionDate,
       });
-      expect(mockNoticeOfIntentSubmissionStatusService.setStatusDateByFileNumber).toBeCalledTimes(1);
-      expect(mockNoticeOfIntentSubmissionStatusService.setStatusDateByFileNumber).toBeCalledWith(
+      expect(mockNoticeOfIntentSubmissionStatusService.setStatusDateByFileNumber).toHaveBeenCalledTimes(1);
+      expect(mockNoticeOfIntentSubmissionStatusService.setStatusDateByFileNumber).toHaveBeenCalledWith(
         mockNoticeOfIntent.fileNumber,
         NOI_SUBMISSION_STATUS.ALC_DECISION,
         decisionDate,
@@ -440,14 +440,14 @@ describe('NoticeOfIntentDecisionV2Service', () => {
 
       await service.update(mockDecision.uuid, decisionUpdate, undefined);
 
-      expect(mockDecisionRepository.findOne).toBeCalledTimes(2);
-      expect(mockDecisionRepository.save).toBeCalledTimes(1);
+      expect(mockDecisionRepository.findOne).toHaveBeenCalledTimes(2);
+      expect(mockDecisionRepository.save).toHaveBeenCalledTimes(1);
       expect(mockNoticeOfIntentService.updateByUuid).toHaveBeenCalledTimes(1);
-      expect(mockNoticeOfIntentService.updateByUuid).toBeCalledWith('1111-1111-1111-1111', {
+      expect(mockNoticeOfIntentService.updateByUuid).toHaveBeenCalledWith('1111-1111-1111-1111', {
         decisionDate: null,
       });
-      expect(mockNoticeOfIntentSubmissionStatusService.setStatusDateByFileNumber).toBeCalledTimes(1);
-      expect(mockNoticeOfIntentSubmissionStatusService.setStatusDateByFileNumber).toBeCalledWith(
+      expect(mockNoticeOfIntentSubmissionStatusService.setStatusDateByFileNumber).toHaveBeenCalledTimes(1);
+      expect(mockNoticeOfIntentSubmissionStatusService.setStatusDateByFileNumber).toHaveBeenCalledWith(
         mockNoticeOfIntent.fileNumber,
         NOI_SUBMISSION_STATUS.ALC_DECISION,
         null,
@@ -471,8 +471,8 @@ describe('NoticeOfIntentDecisionV2Service', () => {
 
       await service.update(mockDecision.uuid, decisionUpdate, undefined);
 
-      expect(mockDecisionRepository.findOne).toBeCalledTimes(2);
-      expect(mockDecisionRepository.save).toBeCalledTimes(1);
+      expect(mockDecisionRepository.findOne).toHaveBeenCalledTimes(2);
+      expect(mockDecisionRepository.save).toHaveBeenCalledTimes(1);
       expect(mockNoticeOfIntentService.update).not.toHaveBeenCalled();
       expect(mockNoticeOfIntentSubmissionStatusService.setStatusDateByFileNumber).not.toHaveBeenCalled();
     });
@@ -490,7 +490,7 @@ describe('NoticeOfIntentDecisionV2Service', () => {
       await expect(promise).rejects.toMatchObject(
         new ServiceNotFoundException(`Decision with UUID ${nonExistantUuid} not found`),
       );
-      expect(mockDecisionRepository.save).toBeCalledTimes(0);
+      expect(mockDecisionRepository.save).toHaveBeenCalledTimes(0);
     });
 
     it('should call through for get code', async () => {

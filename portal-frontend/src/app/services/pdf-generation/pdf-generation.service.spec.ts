@@ -61,11 +61,11 @@ describe('PdfGenerationService', () => {
     await service.generateAppSubmission('fake');
 
     expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
-    expect(mockHttpClient.get).toBeCalledWith(`${environment.apiUrl}/pdf-generation/fake/submission`, {
+    expect(mockHttpClient.get).toHaveBeenCalledWith(`${environment.apiUrl}/pdf-generation/fake/submission`, {
       responseType: 'blob' as 'json',
     });
     expect(getPdfFile).toHaveBeenCalledTimes(1);
-    expect(getPdfFile).toBeCalledWith(`fake_${moment().format('MMM_DD_YYYY_hh-mm_Z')}`, {});
+    expect(getPdfFile).toHaveBeenCalledWith(`fake_${moment().format('MMM_DD_YYYY_hh-mm_Z')}`, {});
   });
 
   it('should make a get request for generate review PDF', async () => {
@@ -76,10 +76,10 @@ describe('PdfGenerationService', () => {
     await service.generateReview('fake');
 
     expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
-    expect(mockHttpClient.get).toBeCalledWith(`${environment.apiUrl}/pdf-generation/fake/review`, {
+    expect(mockHttpClient.get).toHaveBeenCalledWith(`${environment.apiUrl}/pdf-generation/fake/review`, {
       responseType: 'blob' as 'json',
     });
     expect(getPdfFile).toHaveBeenCalledTimes(1);
-    expect(getPdfFile).toBeCalledWith(`fake-Review_${moment().format('MMM_DD_YYYY_hh-mm_Z')}`, {});
+    expect(getPdfFile).toHaveBeenCalledWith(`fake-Review_${moment().format('MMM_DD_YYYY_hh-mm_Z')}`, {});
   });
 });

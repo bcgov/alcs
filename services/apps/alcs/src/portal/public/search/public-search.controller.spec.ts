@@ -106,17 +106,13 @@ describe('PublicSearchController', () => {
 
     const result = await controller.search(mockSearchRequestDto);
 
-    expect(mockAppPublicSearchService.searchApplications).toBeCalledTimes(1);
-    expect(mockAppPublicSearchService.searchApplications).toBeCalledWith(
-      mockSearchRequestDto,
-    );
+    expect(mockAppPublicSearchService.searchApplications).toHaveBeenCalledTimes(1);
+    expect(mockAppPublicSearchService.searchApplications).toHaveBeenCalledWith(mockSearchRequestDto);
     expect(result.applications).toBeDefined();
     expect(result.totalApplications).toBe(0);
 
-    expect(mockNOIPublicSearchService.searchNoticeOfIntents).toBeCalledTimes(1);
-    expect(mockNOIPublicSearchService.searchNoticeOfIntents).toBeCalledWith(
-      mockSearchRequestDto,
-    );
+    expect(mockNOIPublicSearchService.searchNoticeOfIntents).toHaveBeenCalledTimes(1);
+    expect(mockNOIPublicSearchService.searchNoticeOfIntents).toHaveBeenCalledWith(mockSearchRequestDto);
     expect(result.noticeOfIntents).toBeDefined();
     expect(result.totalNoticeOfIntents).toBe(0);
   });
@@ -132,10 +128,8 @@ describe('PublicSearchController', () => {
 
     const result = await controller.searchApplications(mockSearchRequestDto);
 
-    expect(mockAppPublicSearchService.searchApplications).toBeCalledTimes(1);
-    expect(mockAppPublicSearchService.searchApplications).toBeCalledWith(
-      mockSearchRequestDto,
-    );
+    expect(mockAppPublicSearchService.searchApplications).toHaveBeenCalledTimes(1);
+    expect(mockAppPublicSearchService.searchApplications).toHaveBeenCalledWith(mockSearchRequestDto);
     expect(result.data).toBeDefined();
     expect(result.total).toBe(0);
   });
@@ -151,10 +145,8 @@ describe('PublicSearchController', () => {
 
     const result = await controller.searchNoticeOfIntents(mockSearchRequestDto);
 
-    expect(mockNOIPublicSearchService.searchNoticeOfIntents).toBeCalledTimes(1);
-    expect(mockNOIPublicSearchService.searchNoticeOfIntents).toBeCalledWith(
-      mockSearchRequestDto,
-    );
+    expect(mockNOIPublicSearchService.searchNoticeOfIntents).toHaveBeenCalledTimes(1);
+    expect(mockNOIPublicSearchService.searchNoticeOfIntents).toHaveBeenCalledWith(mockSearchRequestDto);
     expect(result.data).toBeDefined();
     expect(result.total).toBe(0);
   });
@@ -170,10 +162,8 @@ describe('PublicSearchController', () => {
 
     const result = await controller.search(mockSearchRequestDto);
 
-    expect(mockAppPublicSearchService.searchApplications).toBeCalledTimes(1);
-    expect(mockAppPublicSearchService.searchApplications).toBeCalledWith(
-      mockSearchRequestDto,
-    );
+    expect(mockAppPublicSearchService.searchApplications).toHaveBeenCalledTimes(1);
+    expect(mockAppPublicSearchService.searchApplications).toHaveBeenCalledWith(mockSearchRequestDto);
     expect(result.applications).toBeDefined();
     expect(result.totalApplications).toBe(0);
   });
@@ -189,10 +179,8 @@ describe('PublicSearchController', () => {
 
     const result = await controller.search(mockSearchRequestDto);
 
-    expect(mockNOIPublicSearchService.searchNoticeOfIntents).toBeCalledTimes(1);
-    expect(mockNOIPublicSearchService.searchNoticeOfIntents).toBeCalledWith(
-      mockSearchRequestDto,
-    );
+    expect(mockNOIPublicSearchService.searchNoticeOfIntents).toHaveBeenCalledTimes(1);
+    expect(mockNOIPublicSearchService.searchNoticeOfIntents).toHaveBeenCalledWith(mockSearchRequestDto);
     expect(result.noticeOfIntents).toBeDefined();
     expect(result.totalNoticeOfIntents).toBe(0);
   });
@@ -208,14 +196,12 @@ describe('PublicSearchController', () => {
 
     const result = await controller.search(mockSearchRequestDto);
 
-    expect(mockAppPublicSearchService.searchApplications).toBeCalledTimes(1);
-    expect(mockAppPublicSearchService.searchApplications).toBeCalledWith(
-      mockSearchRequestDto,
-    );
+    expect(mockAppPublicSearchService.searchApplications).toHaveBeenCalledTimes(1);
+    expect(mockAppPublicSearchService.searchApplications).toHaveBeenCalledWith(mockSearchRequestDto);
     expect(result.applications).toBeDefined();
     expect(result.totalApplications).toBe(0);
 
-    expect(mockNOIPublicSearchService.searchNoticeOfIntents).toBeCalledTimes(0);
+    expect(mockNOIPublicSearchService.searchNoticeOfIntents).toHaveBeenCalledTimes(0);
     expect(result.noticeOfIntents).toBeDefined();
     expect(result.totalNoticeOfIntents).toBe(0);
   });

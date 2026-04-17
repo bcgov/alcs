@@ -25,11 +25,7 @@ import { NoticeOfIntentOwner } from '../../portal/notice-of-intent-submission/no
 import { NoticeOfIntentSubmission } from '../../portal/notice-of-intent-submission/notice-of-intent-submission.entity';
 import { NoticeOfIntentSubmissionService } from '../../portal/notice-of-intent-submission/notice-of-intent-submission.service';
 import { EmailService } from './email.service';
-import {
-  ApplicationEmailData,
-  NoticeOfIntentEmailData,
-  StatusEmailService,
-} from './status-email.service';
+import { ApplicationEmailData, NoticeOfIntentEmailData, StatusEmailService } from './status-email.service';
 
 describe('StatusEmailService', () => {
   let service: StatusEmailService;
@@ -113,31 +109,21 @@ describe('StatusEmailService', () => {
 
     mockLocalGovernmentService.getByUuid.mockResolvedValue(mockGovernment);
 
-    const res = await service.getSubmissionGovernmentOrFail(
-      mockApplicationSubmission,
-    );
+    const res = await service.getSubmissionGovernmentOrFail(mockApplicationSubmission);
 
     expect(mockLocalGovernmentService.getByUuid).toHaveBeenCalledTimes(1);
-    expect(mockLocalGovernmentService.getByUuid).toHaveBeenCalledWith(
-      mockApplicationSubmission.localGovernmentUuid,
-    );
+    expect(mockLocalGovernmentService.getByUuid).toHaveBeenCalledWith(mockApplicationSubmission.localGovernmentUuid);
     expect(res).toStrictEqual(mockGovernment);
   });
 
   it('should call through services and return application data', async () => {
     const mockSubmission = new ApplicationSubmission();
-    mockApplicationSubmissionService.getOrFailByFileNumber.mockResolvedValue(
-      mockSubmission,
-    );
+    mockApplicationSubmissionService.getOrFailByFileNumber.mockResolvedValue(mockSubmission);
 
     const res = await service.getApplicationEmailData('file-number');
 
-    expect(
-      mockApplicationSubmissionService.getOrFailByFileNumber,
-    ).toBeCalledTimes(1);
-    expect(
-      mockApplicationSubmissionService.getOrFailByFileNumber,
-    ).toBeCalledWith('file-number');
+    expect(mockApplicationSubmissionService.getOrFailByFileNumber).toHaveBeenCalledTimes(1);
+    expect(mockApplicationSubmissionService.getOrFailByFileNumber).toHaveBeenCalledWith('file-number');
     expect(res).toStrictEqual({
       applicationSubmission: mockSubmission,
       primaryContact: undefined,
@@ -146,9 +132,7 @@ describe('StatusEmailService', () => {
   });
 
   it('should call through services and return notice of intent data', async () => {
-    const res = await service.getNoticeOfIntentEmailData(
-      new NoticeOfIntentSubmission(),
-    );
+    const res = await service.getNoticeOfIntentEmailData(new NoticeOfIntentSubmission());
 
     expect(res).toStrictEqual({
       primaryContact: undefined,
@@ -173,7 +157,7 @@ describe('StatusEmailService', () => {
 
     const res = await service.getApplicationDecisionDocuments('file-number');
 
-    expect(mockApplicationDecisionService.get).toBeCalledTimes(1);
+    expect(mockApplicationDecisionService.get).toHaveBeenCalledTimes(1);
 
     const baseUrl = config.get('ALCS.BASE_URL');
 
@@ -206,7 +190,7 @@ describe('StatusEmailService', () => {
 
     const res = await service.getNoticeOfIntentDecisionDocuments('uuid');
 
-    expect(mockNoticeOfIntentDecisionService.get).toBeCalledTimes(1);
+    expect(mockNoticeOfIntentDecisionService.get).toHaveBeenCalledTimes(1);
 
     const baseUrl = config.get('ALCS.BASE_URL');
 
@@ -233,19 +217,15 @@ describe('StatusEmailService', () => {
       ccEmails: [],
     };
 
-    mockApplicationSubmissionService.getStatus.mockResolvedValue(
-      new ApplicationSubmissionStatusType(),
-    );
+    mockApplicationSubmissionService.getStatus.mockResolvedValue(new ApplicationSubmissionStatusType());
     mockApplicationService.fetchApplicationTypes.mockResolvedValue([]);
     mockApplicationService.getUuid.mockResolvedValue('fake-uuid');
 
     await service.sendApplicationStatusEmail(mockData);
 
-    expect(mockApplicationSubmissionService.getStatus).toBeCalledTimes(1);
-    expect(mockApplicationSubmissionService.getStatus).toBeCalledWith(
-      mockData.status,
-    );
-    expect(mockApplicationService.fetchApplicationTypes).toBeCalledTimes(1);
+    expect(mockApplicationSubmissionService.getStatus).toHaveBeenCalledTimes(1);
+    expect(mockApplicationSubmissionService.getStatus).toHaveBeenCalledWith(mockData.status);
+    expect(mockApplicationService.fetchApplicationTypes).toHaveBeenCalledTimes(1);
   });
 
   it('should call through services to set notice of intent email template', async () => {
@@ -259,20 +239,14 @@ describe('StatusEmailService', () => {
       ccEmails: [],
     };
 
-    mockNoticeOfIntentSubmissionService.getStatus.mockResolvedValue(
-      new NoticeOfIntentSubmissionStatusType(),
-    );
+    mockNoticeOfIntentSubmissionService.getStatus.mockResolvedValue(new NoticeOfIntentSubmissionStatusType());
     mockNoticeOfIntentService.listTypes.mockResolvedValue([]);
     mockNoticeOfIntentService.getUuid.mockResolvedValue('fake-uuid');
 
     await service.sendNoticeOfIntentStatusEmail(mockData);
 
-    expect(mockNoticeOfIntentSubmissionService.getStatus).toHaveBeenCalledTimes(
-      1,
-    );
-    expect(mockNoticeOfIntentSubmissionService.getStatus).toHaveBeenCalledWith(
-      mockData.status,
-    );
+    expect(mockNoticeOfIntentSubmissionService.getStatus).toHaveBeenCalledTimes(1);
+    expect(mockNoticeOfIntentSubmissionService.getStatus).toHaveBeenCalledWith(mockData.status);
     expect(mockNoticeOfIntentService.listTypes).toHaveBeenCalledTimes(1);
   });
 
@@ -290,17 +264,13 @@ describe('StatusEmailService', () => {
       ccEmails,
     };
 
-    mockNoticeOfIntentSubmissionService.getStatus.mockResolvedValue(
-      new NoticeOfIntentSubmissionStatusType(),
-    );
+    mockNoticeOfIntentSubmissionService.getStatus.mockResolvedValue(new NoticeOfIntentSubmissionStatusType());
     mockNoticeOfIntentService.listTypes.mockResolvedValue([]);
     mockNoticeOfIntentService.getUuid.mockResolvedValue('fake-uuid');
 
     await service.sendNoticeOfIntentStatusEmail(mockData);
 
-    expect(mockNoticeOfIntentSubmissionService.getStatus).toHaveBeenCalledTimes(
-      1,
-    );
+    expect(mockNoticeOfIntentSubmissionService.getStatus).toHaveBeenCalledTimes(1);
     expect(mockNoticeOfIntentService.listTypes).toHaveBeenCalledTimes(1);
     expect(mockEmailService.sendEmail).toHaveBeenCalledTimes(1);
     expect(mockEmailService.sendEmail).toHaveBeenCalledWith(

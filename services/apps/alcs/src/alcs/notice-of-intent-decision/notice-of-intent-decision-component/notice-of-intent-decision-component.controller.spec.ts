@@ -38,9 +38,7 @@ describe('NoticeOfIntentDecisionComponentController', () => {
       ],
     }).compile();
 
-    controller = module.get<NoticeOfIntentDecisionComponentController>(
-      NoticeOfIntentDecisionComponentController,
-    );
+    controller = module.get<NoticeOfIntentDecisionComponentController>(NoticeOfIntentDecisionComponentController);
   });
 
   it('should be defined', () => {
@@ -48,12 +46,8 @@ describe('NoticeOfIntentDecisionComponentController', () => {
   });
 
   it('should call update of ApplicationDecisionComponentService', async () => {
-    mockApplicationDecisionComponentService.createOrUpdate.mockResolvedValue([
-      new NoticeOfIntentDecisionComponent(),
-    ]);
-    mockApplicationDecisionComponentService.getOneOrFail.mockResolvedValue(
-      new NoticeOfIntentDecisionComponent(),
-    );
+    mockApplicationDecisionComponentService.createOrUpdate.mockResolvedValue([new NoticeOfIntentDecisionComponent()]);
+    mockApplicationDecisionComponentService.getOneOrFail.mockResolvedValue(new NoticeOfIntentDecisionComponent());
     const updates = {
       uuid: 'fake_uuid',
       alrArea: 10,
@@ -62,18 +56,10 @@ describe('NoticeOfIntentDecisionComponentController', () => {
 
     await controller.update('fake_uuid', updates);
 
-    expect(
-      mockApplicationDecisionComponentService.getOneOrFail,
-    ).toBeCalledTimes(1);
-    expect(mockApplicationDecisionComponentService.getOneOrFail).toBeCalledWith(
-      'fake_uuid',
-    );
-    expect(
-      mockApplicationDecisionComponentService.createOrUpdate,
-    ).toBeCalledTimes(1);
-    expect(
-      mockApplicationDecisionComponentService.createOrUpdate,
-    ).toBeCalledWith([
+    expect(mockApplicationDecisionComponentService.getOneOrFail).toHaveBeenCalledTimes(1);
+    expect(mockApplicationDecisionComponentService.getOneOrFail).toHaveBeenCalledWith('fake_uuid');
+    expect(mockApplicationDecisionComponentService.createOrUpdate).toHaveBeenCalledTimes(1);
+    expect(mockApplicationDecisionComponentService.createOrUpdate).toHaveBeenCalledWith([
       {
         uuid: 'fake_uuid',
         alrArea: 10,

@@ -25,9 +25,7 @@ describe('ApplicationModificationController', () => {
   beforeEach(async () => {
     mockModificationService = createMock<ApplicationModificationService>();
     mockBoardService = createMock<BoardService>();
-    mockModificationService.mapToDtos.mockResolvedValue([
-      {},
-    ] as ApplicationModificationDto[]);
+    mockModificationService.mapToDtos.mockResolvedValue([{}] as ApplicationModificationDto[]);
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -54,9 +52,7 @@ describe('ApplicationModificationController', () => {
       ],
     }).compile();
 
-    controller = module.get<ApplicationModificationController>(
-      ApplicationModificationController,
-    );
+    controller = module.get<ApplicationModificationController>(ApplicationModificationController);
   });
 
   it('should be defined', () => {
@@ -64,28 +60,24 @@ describe('ApplicationModificationController', () => {
   });
 
   it('should call service delete method on delete', async () => {
-    mockModificationService.delete.mockResolvedValue([
-      {},
-    ] as ApplicationModification[]);
+    mockModificationService.delete.mockResolvedValue([{}] as ApplicationModification[]);
     await controller.delete('fake');
-    expect(mockModificationService.delete).toBeCalledTimes(1);
-    expect(mockModificationService.delete).toBeCalledWith('fake');
+    expect(mockModificationService.delete).toHaveBeenCalledTimes(1);
+    expect(mockModificationService.delete).toHaveBeenCalledWith('fake');
   });
 
   it('should call service get by card method', async () => {
-    mockModificationService.getByCardUuid.mockResolvedValue(
-      {} as ApplicationModification,
-    );
+    mockModificationService.getByCardUuid.mockResolvedValue({} as ApplicationModification);
     await controller.getByCard('fake');
-    expect(mockModificationService.getByCardUuid).toBeCalledTimes(1);
-    expect(mockModificationService.getByCardUuid).toBeCalledWith('fake');
+    expect(mockModificationService.getByCardUuid).toHaveBeenCalledTimes(1);
+    expect(mockModificationService.getByCardUuid).toHaveBeenCalledWith('fake');
   });
 
   it('should call service update method', async () => {
     const modification = initApplicationModificationMockEntity();
     mockModificationService.update.mockResolvedValue(modification);
     await controller.update('fake', {} as ApplicationModificationUpdateDto);
-    expect(mockModificationService.update).toBeCalledTimes(1);
+    expect(mockModificationService.update).toHaveBeenCalledTimes(1);
   });
 
   it('should call service create method', async () => {
@@ -93,14 +85,14 @@ describe('ApplicationModificationController', () => {
     mockModificationService.create.mockResolvedValue(modification);
     mockBoardService.getOneOrFail.mockResolvedValue({} as Board);
     await controller.create({} as ApplicationModificationCreateDto);
-    expect(mockModificationService.create).toBeCalledTimes(1);
+    expect(mockModificationService.create).toHaveBeenCalledTimes(1);
   });
 
   it('should call service getByApplication method', async () => {
     const fakeNumber = 'fake';
     mockModificationService.getByApplication.mockResolvedValue([]);
     await controller.getByApplication(fakeNumber);
-    expect(mockModificationService.getByApplication).toBeCalledTimes(1);
-    expect(mockModificationService.getByApplication).toBeCalledWith(fakeNumber);
+    expect(mockModificationService.getByApplication).toHaveBeenCalledTimes(1);
+    expect(mockModificationService.getByApplication).toHaveBeenCalledWith(fakeNumber);
   });
 });

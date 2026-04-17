@@ -48,9 +48,7 @@ describe('GenerateNoiSubmissionDocumentService', () => {
     mockNoinOwnerService = createMock();
     mockNoiDocumentService = createMock();
 
-    mockNoiLocalGovernmentService.getByUuid.mockResolvedValue(
-      new LocalGovernment(),
-    );
+    mockNoiLocalGovernmentService.getByUuid.mockResolvedValue(new LocalGovernment());
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -85,9 +83,7 @@ describe('GenerateNoiSubmissionDocumentService', () => {
       submissionUuid: 'fake',
     });
 
-    service = module.get<GenerateNoiSubmissionDocumentService>(
-      GenerateNoiSubmissionDocumentService,
-    );
+    service = module.get<GenerateNoiSubmissionDocumentService>(GenerateNoiSubmissionDocumentService);
   });
 
   it('should be defined', () => {
@@ -121,8 +117,8 @@ describe('GenerateNoiSubmissionDocumentService', () => {
 
     const res = await service.generate('fake', userEntity);
 
-    expect(mockCdogsService.generateDocument).toBeCalledTimes(1);
-    expect(mockNoiLocalGovernmentService.getByUuid).toBeCalledTimes(1);
+    expect(mockCdogsService.generateDocument).toHaveBeenCalledTimes(1);
+    expect(mockNoiLocalGovernmentService.getByUuid).toHaveBeenCalledTimes(1);
     expect(res).toBeDefined();
   });
 
@@ -154,7 +150,7 @@ describe('GenerateNoiSubmissionDocumentService', () => {
     const res = await service.generate('fake', userEntity);
 
     expect(res).toBeUndefined();
-    expect(mockCdogsService.generateDocument).toBeCalledTimes(0);
+    expect(mockCdogsService.generateDocument).toHaveBeenCalledTimes(0);
   });
 
   it('should clear visibility for existing submissions on update', async () => {
@@ -193,23 +189,15 @@ describe('GenerateNoiSubmissionDocumentService', () => {
     const userEntity = new User({
       name: user.user.entity,
     });
-    mockNoiDocumentService.update.mockResolvedValue(
-      new NoticeOfIntentDocument(),
-    );
-    mockNoiDocumentService.attachDocumentAsBuffer.mockResolvedValue(
-      new NoticeOfIntentDocument(),
-    );
+    mockNoiDocumentService.update.mockResolvedValue(new NoticeOfIntentDocument());
+    mockNoiDocumentService.attachDocumentAsBuffer.mockResolvedValue(new NoticeOfIntentDocument());
 
     await service.generateUpdate('fake', userEntity);
 
-    expect(mockCdogsService.generateDocument).toBeCalledTimes(1);
+    expect(mockCdogsService.generateDocument).toHaveBeenCalledTimes(1);
     expect(mockNoiDocumentService.update).toHaveBeenCalledTimes(1);
-    expect(
-      mockNoiDocumentService.update.mock.calls[0][0].visibilityFlags,
-    ).toEqual([]);
-    expect(mockNoiLocalGovernmentService.getByUuid).toBeCalledTimes(1);
-    expect(mockNoiDocumentService.attachDocumentAsBuffer).toHaveBeenCalledTimes(
-      1,
-    );
+    expect(mockNoiDocumentService.update.mock.calls[0][0].visibilityFlags).toEqual([]);
+    expect(mockNoiLocalGovernmentService.getByUuid).toHaveBeenCalledTimes(1);
+    expect(mockNoiDocumentService.attachDocumentAsBuffer).toHaveBeenCalledTimes(1);
   });
 });

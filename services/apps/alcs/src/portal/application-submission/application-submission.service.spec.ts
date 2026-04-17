@@ -1,7 +1,4 @@
-import {
-  BaseServiceException,
-  ServiceNotFoundException,
-} from '@app/common/exceptions/base.exception';
+import { BaseServiceException, ServiceNotFoundException } from '@app/common/exceptions/base.exception';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
@@ -37,9 +34,7 @@ import { ApplicationTagService } from '../../alcs/application/application-tag/ap
 describe('ApplicationSubmissionService', () => {
   let service: ApplicationSubmissionService;
   let mockRepository: DeepMocked<Repository<ApplicationSubmission>>;
-  let mockStatusRepository: DeepMocked<
-    Repository<ApplicationSubmissionStatusType>
-  >;
+  let mockStatusRepository: DeepMocked<Repository<ApplicationSubmissionStatusType>>;
   let mockNaruSubtypeRepository: DeepMocked<Repository<NaruSubtype>>;
   let mockApplicationService: DeepMocked<ApplicationService>;
   let mockApplicationTagService: DeepMocked<ApplicationTagService>;
@@ -125,16 +120,10 @@ describe('ApplicationSubmissionService', () => {
       ],
     }).compile();
 
-    mockApplicationSubmissionStatusService.setStatusDateByFileNumber.mockResolvedValue(
-      {} as any,
-    );
-    mockApplicationSubmissionStatusService.setStatusDate.mockResolvedValue(
-      {} as any,
-    );
+    mockApplicationSubmissionStatusService.setStatusDateByFileNumber.mockResolvedValue({} as any);
+    mockApplicationSubmissionStatusService.setStatusDate.mockResolvedValue({} as any);
 
-    service = module.get<ApplicationSubmissionService>(
-      ApplicationSubmissionService,
-    );
+    service = module.get<ApplicationSubmissionService>(ApplicationSubmissionService);
 
     mockQueryBuilder = createMock<SelectQueryBuilder<ApplicationSubmission>>();
     mockQueryBuilder.leftJoin.mockReturnValue(mockQueryBuilder);
@@ -145,8 +134,7 @@ describe('ApplicationSubmissionService', () => {
       {
         user_uuid: 'user_uuid',
         bceid_business_guid: 'bceid_business_guid',
-        localGovernment_bceid_business_guid:
-          'localGovernment_bceid_business_guid',
+        localGovernment_bceid_business_guid: 'localGovernment_bceid_business_guid',
       },
     ]);
   });
@@ -175,32 +163,24 @@ describe('ApplicationSubmissionService', () => {
     mockRepository.findOne.mockResolvedValue(null);
 
     const promise = service.getIfCreatorByFileNumber('', mockUser);
-    await expect(promise).rejects.toMatchObject(
-      new Error(`Failed to load application with File ID `),
-    );
+    await expect(promise).rejects.toMatchObject(new Error(`Failed to load application with File ID `));
   });
 
   it("should throw an error if application doesn't exist", async () => {
     mockRepository.findOne.mockResolvedValue(null);
 
     const promise = service.getOrFailByFileNumber('');
-    await expect(promise).rejects.toMatchObject(
-      new Error('Failed to find document'),
-    );
+    await expect(promise).rejects.toMatchObject(new Error('Failed to find document'));
   });
 
   it('save a new application for create', async () => {
     const fileId = 'file-id';
     mockRepository.findOne.mockResolvedValue(null);
-    mockStatusRepository.findOne.mockResolvedValue(
-      new ApplicationSubmissionStatusType(),
-    );
+    mockStatusRepository.findOne.mockResolvedValue(new ApplicationSubmissionStatusType());
     mockRepository.save.mockResolvedValue(new ApplicationSubmission());
     mockFileNumberService.generateNextFileNumber.mockResolvedValue(fileId);
     mockApplicationService.create.mockResolvedValue(new Application());
-    mockApplicationSubmissionStatusService.setInitialStatuses.mockResolvedValue(
-      {} as any,
-    );
+    mockApplicationSubmissionStatusService.setInitialStatuses.mockResolvedValue({} as any);
 
     const fileNumber = await service.create('type', mockUser);
 
@@ -208,9 +188,7 @@ describe('ApplicationSubmissionService', () => {
     expect(mockStatusRepository.findOne).toHaveBeenCalledTimes(1);
     expect(mockRepository.save).toHaveBeenCalledTimes(1);
     expect(mockApplicationService.create).toHaveBeenCalledTimes(1);
-    expect(
-      mockApplicationSubmissionStatusService.setInitialStatuses,
-    ).toHaveBeenCalledTimes(1);
+    expect(mockApplicationSubmissionStatusService.setInitialStatuses).toHaveBeenCalledTimes(1);
   });
 
   it('should call through for get by user', async () => {
@@ -286,9 +264,7 @@ describe('ApplicationSubmissionService', () => {
     );
 
     await expect(promise).rejects.toMatchObject(
-      new ServiceNotFoundException(
-        `Failed to load application with File ID ${submission.fileNumber}`,
-      ),
+      new ServiceNotFoundException(`Failed to load application with File ID ${submission.fileNumber}`),
     );
 
     expect(mockRepository.findOne).toHaveBeenCalledTimes(1);
@@ -305,10 +281,8 @@ describe('ApplicationSubmissionService', () => {
 
     await service.cancel(application);
 
-    expect(
-      mockApplicationSubmissionStatusService.setStatusDate,
-    ).toBeCalledTimes(1);
-    expect(mockApplicationSubmissionStatusService.setStatusDate).toBeCalledWith(
+    expect(mockApplicationSubmissionStatusService.setStatusDate).toHaveBeenCalledTimes(1);
+    expect(mockApplicationSubmissionStatusService.setStatusDate).toHaveBeenCalledWith(
       application.uuid,
       SUBMISSION_STATUS.CANCELLED,
     );
@@ -325,10 +299,8 @@ describe('ApplicationSubmissionService', () => {
 
     await service.submitToLg(application);
 
-    expect(
-      mockApplicationSubmissionStatusService.setStatusDate,
-    ).toBeCalledTimes(1);
-    expect(mockApplicationSubmissionStatusService.setStatusDate).toBeCalledWith(
+    expect(mockApplicationSubmissionStatusService.setStatusDate).toHaveBeenCalledTimes(1);
+    expect(mockApplicationSubmissionStatusService.setStatusDate).toHaveBeenCalledWith(
       application.uuid,
       SUBMISSION_STATUS.SUBMITTED_TO_LG,
       undefined,
@@ -360,9 +332,7 @@ describe('ApplicationSubmissionService', () => {
     mockRepository.findOne.mockResolvedValue(application);
 
     const res = await service.mapToDTOs([application], mockUser);
-    expect(mockApplicationService.fetchApplicationTypes).toHaveBeenCalledTimes(
-      1,
-    );
+    expect(mockApplicationService.fetchApplicationTypes).toHaveBeenCalledTimes(1);
     expect(res[0].type).toEqual('label');
     expect(res[0].applicant).toEqual(applicant);
   });
@@ -427,15 +397,12 @@ describe('ApplicationSubmissionService', () => {
     ] as any);
     mockApplicationService.submit.mockResolvedValue(mockSubmittedApp);
 
-    await service.submitToAlcs(
-      mockApplication as ValidatedApplicationSubmission,
-      mockUser,
-    );
+    await service.submitToAlcs(mockApplication as ValidatedApplicationSubmission, mockUser);
 
-    expect(mockApplicationService.submit).toBeCalledTimes(1);
+    expect(mockApplicationService.submit).toHaveBeenCalledTimes(1);
 
-    expect(mockApplicationSubmissionStatusService.setStatusDate).toBeCalledTimes(1);
-    expect(mockApplicationSubmissionStatusService.setStatusDate).toBeCalledWith(
+    expect(mockApplicationSubmissionStatusService.setStatusDate).toHaveBeenCalledTimes(1);
+    expect(mockApplicationSubmissionStatusService.setStatusDate).toHaveBeenCalledWith(
       mockApplication.uuid,
       SUBMISSION_STATUS.SUBMITTED_TO_ALC,
       mockSubmittedApp.dateSubmittedToAlc,
@@ -457,9 +424,7 @@ describe('ApplicationSubmissionService', () => {
 
     mockRepository.findOne.mockResolvedValue(mockApplication);
     mockRepository.save.mockResolvedValue(mockApplication);
-    mockApplicationService.updateByFileNumber.mockResolvedValue(
-      new Application(),
-    );
+    mockApplicationService.updateByFileNumber.mockResolvedValue(new Application());
 
     const result = await service.update(fileNumber, {
       applicant,
@@ -467,8 +432,8 @@ describe('ApplicationSubmissionService', () => {
       localGovernmentUuid,
     });
 
-    expect(mockRepository.save).toBeCalledTimes(1);
-    expect(mockRepository.findOne).toBeCalledTimes(2);
+    expect(mockRepository.save).toHaveBeenCalledTimes(1);
+    expect(mockRepository.findOne).toHaveBeenCalledTimes(2);
     expect(result).toEqual(
       new ApplicationSubmission({
         fileNumber,
@@ -497,12 +462,10 @@ describe('ApplicationSubmissionService', () => {
     });
 
     expect(mockAppDocService.deleteByType).toHaveBeenCalledTimes(1);
-    expect(mockAppDocService.deleteByType.mock.calls[0][0]).toEqual(
-      DOCUMENT_TYPE.HOMESITE_SEVERANCE,
-    );
+    expect(mockAppDocService.deleteByType.mock.calls[0][0]).toEqual(DOCUMENT_TYPE.HOMESITE_SEVERANCE);
     expect(mockAppDocService.deleteByType.mock.calls[0][1]).toEqual(mockUuid);
-    expect(mockRepository.save).toBeCalledTimes(1);
-    expect(mockRepository.findOne).toBeCalledTimes(2);
+    expect(mockRepository.save).toHaveBeenCalledTimes(1);
+    expect(mockRepository.findOne).toHaveBeenCalledTimes(2);
   });
 
   it('should call through to repo for list subtypes', async () => {

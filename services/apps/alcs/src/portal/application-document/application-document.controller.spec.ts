@@ -11,10 +11,7 @@ import {
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { ApplicationService } from '../../alcs/application/application.service';
 import { ApplicationProfile } from '../../common/automapper/application.automapper.profile';
-import {
-  DOCUMENT_TYPE,
-  DocumentCode,
-} from '../../document/document-code.entity';
+import { DOCUMENT_TYPE, DocumentCode } from '../../document/document-code.entity';
 import { DOCUMENT_SOURCE, DOCUMENT_SYSTEM } from '../../document/document.dto';
 import { Document } from '../../document/document.entity';
 import { DocumentService } from '../../document/document.service';
@@ -77,13 +74,9 @@ describe('ApplicationDocumentController', () => {
         ...mockKeyCloakProviders,
       ],
     }).compile();
-    controller = module.get<ApplicationDocumentController>(
-      ApplicationDocumentController,
-    );
+    controller = module.get<ApplicationDocumentController>(ApplicationDocumentController);
 
-    mockApplicationSubmissionService.verifyAccessByFileId.mockResolvedValue(
-      new ApplicationSubmission(),
-    );
+    mockApplicationSubmissionService.verifyAccessByFileId.mockResolvedValue(new ApplicationSubmission());
     mockApplicationService.getUuid.mockResolvedValue('uuid');
   });
 
@@ -119,9 +112,7 @@ describe('ApplicationDocumentController', () => {
       [],
     );
 
-    expect(appDocumentService.updateDescriptionAndType).toHaveBeenCalledTimes(
-      1,
-    );
+    expect(appDocumentService.updateDescriptionAndType).toHaveBeenCalledTimes(1);
   });
 
   it('should call through for open', async () => {
@@ -185,26 +176,18 @@ describe('ApplicationDocumentController', () => {
       }),
     );
 
-    const res = await controller.attachExternalDocument(
-      'fake-number',
-      docDto,
-      user,
-    );
+    const res = await controller.attachExternalDocument('fake-number', docDto, user);
 
-    expect(mockDocumentService.createDocumentRecord).toBeCalledTimes(1);
-    expect(appDocumentService.attachExternalDocument).toBeCalledTimes(1);
-    expect(appDocumentService.attachExternalDocument).toBeCalledWith(
+    expect(mockDocumentService.createDocumentRecord).toHaveBeenCalledTimes(1);
+    expect(appDocumentService.attachExternalDocument).toHaveBeenCalledTimes(1);
+    expect(appDocumentService.attachExternalDocument).toHaveBeenCalledWith(
       undefined,
       {
         documentUuid: 'fake-uuid',
       },
-      [
-        VISIBILITY_FLAG.APPLICANT,
-        VISIBILITY_FLAG.GOVERNMENT,
-        VISIBILITY_FLAG.COMMISSIONER,
-      ],
+      [VISIBILITY_FLAG.APPLICANT, VISIBILITY_FLAG.GOVERNMENT, VISIBILITY_FLAG.COMMISSIONER],
     );
-    expect(mockDocumentService.createDocumentRecord).toBeCalledWith({
+    expect(mockDocumentService.createDocumentRecord).toHaveBeenCalledWith({
       ...docDto,
       system: DOCUMENT_SYSTEM.PORTAL,
     });
@@ -243,28 +226,19 @@ describe('ApplicationDocumentController', () => {
       }),
     );
 
-    const res = await controller.attachExternalDocument(
-      'fake-number',
-      docDto,
-      user,
-    );
+    const res = await controller.attachExternalDocument('fake-number', docDto, user);
 
-    expect(mockDocumentService.createDocumentRecord).toBeCalledTimes(1);
-    expect(appDocumentService.attachExternalDocument).toBeCalledTimes(1);
-    expect(appDocumentService.attachExternalDocument).toBeCalledWith(
+    expect(mockDocumentService.createDocumentRecord).toHaveBeenCalledTimes(1);
+    expect(appDocumentService.attachExternalDocument).toHaveBeenCalledTimes(1);
+    expect(appDocumentService.attachExternalDocument).toHaveBeenCalledWith(
       undefined,
       {
         documentUuid: 'fake-uuid',
         type: DOCUMENT_TYPE.PROPOSAL_MAP,
       },
-      [
-        VISIBILITY_FLAG.APPLICANT,
-        VISIBILITY_FLAG.GOVERNMENT,
-        VISIBILITY_FLAG.COMMISSIONER,
-        VISIBILITY_FLAG.PUBLIC,
-      ],
+      [VISIBILITY_FLAG.APPLICANT, VISIBILITY_FLAG.GOVERNMENT, VISIBILITY_FLAG.COMMISSIONER, VISIBILITY_FLAG.PUBLIC],
     );
-    expect(mockDocumentService.createDocumentRecord).toBeCalledWith({
+    expect(mockDocumentService.createDocumentRecord).toHaveBeenCalledWith({
       ...docDto,
       system: DOCUMENT_SYSTEM.PORTAL,
     });

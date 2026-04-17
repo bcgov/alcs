@@ -10,10 +10,7 @@ import { UserProfile } from '../../../common/automapper/user.automapper.profile'
 import { PlanningReview } from '../planning-review.entity';
 import { PlanningReviewDecisionOutcomeCode } from './planning-review-decision-outcome.entity';
 import { PlanningReviewDecisionController } from './planning-review-decision.controller';
-import {
-  CreatePlanningReviewDecisionDto,
-  UpdatePlanningReviewDecisionDto,
-} from './planning-review-decision.dto';
+import { CreatePlanningReviewDecisionDto, UpdatePlanningReviewDecisionDto } from './planning-review-decision.dto';
 import { PlanningReviewDecision } from './planning-review-decision.entity';
 import { PlanningReviewDecisionService } from './planning-review-decision.service';
 
@@ -55,9 +52,7 @@ describe('PlanningReviewDecisionController', () => {
       ],
     }).compile();
 
-    controller = module.get<PlanningReviewDecisionController>(
-      PlanningReviewDecisionController,
-    );
+    controller = module.get<PlanningReviewDecisionController>(PlanningReviewDecisionController);
 
     mockDecisionService.fetchCodes.mockResolvedValue({
       outcomes: [
@@ -78,7 +73,7 @@ describe('PlanningReviewDecisionController', () => {
 
     const result = await controller.getByFileNumber('fake-number');
 
-    expect(mockDecisionService.getByFileNumber).toBeCalledTimes(1);
+    expect(mockDecisionService.getByFileNumber).toHaveBeenCalledTimes(1);
     expect(result[0].uuid).toStrictEqual(mockDecision.uuid);
   });
 
@@ -86,7 +81,7 @@ describe('PlanningReviewDecisionController', () => {
     mockDecisionService.get.mockResolvedValue(mockDecision);
     const result = await controller.get('fake-uuid');
 
-    expect(mockDecisionService.get).toBeCalledTimes(1);
+    expect(mockDecisionService.get).toHaveBeenCalledTimes(1);
     expect(result.uuid).toStrictEqual(mockDecision.uuid);
   });
 
@@ -95,8 +90,8 @@ describe('PlanningReviewDecisionController', () => {
 
     await controller.delete('fake-uuid');
 
-    expect(mockDecisionService.delete).toBeCalledTimes(1);
-    expect(mockDecisionService.delete).toBeCalledWith('fake-uuid');
+    expect(mockDecisionService.delete).toHaveBeenCalledTimes(1);
+    expect(mockDecisionService.delete).toHaveBeenCalledWith('fake-uuid');
   });
 
   it('should create the decision if planning review exists', async () => {
@@ -108,8 +103,8 @@ describe('PlanningReviewDecisionController', () => {
 
     await controller.create(decisionToCreate);
 
-    expect(mockDecisionService.create).toBeCalledTimes(1);
-    expect(mockDecisionService.create).toBeCalledWith({
+    expect(mockDecisionService.create).toHaveBeenCalledTimes(1);
+    expect(mockDecisionService.create).toHaveBeenCalledWith({
       planningReviewFileNumber: mockPlanningReview.fileNumber,
     });
   });
@@ -125,8 +120,8 @@ describe('PlanningReviewDecisionController', () => {
 
     await controller.update('fake-uuid', updates);
 
-    expect(mockDecisionService.update).toBeCalledTimes(1);
-    expect(mockDecisionService.update).toBeCalledWith('fake-uuid', {
+    expect(mockDecisionService.update).toHaveBeenCalledTimes(1);
+    expect(mockDecisionService.update).toHaveBeenCalledWith('fake-uuid', {
       outcomeCode: 'New Outcome',
       date: updates.date,
       isDraft: true,
@@ -145,7 +140,7 @@ describe('PlanningReviewDecisionController', () => {
       },
     });
 
-    expect(mockDecisionService.attachDocument).toBeCalledTimes(1);
+    expect(mockDecisionService.attachDocument).toHaveBeenCalledTimes(1);
   });
 
   it('should throw an exception if there is no file for file upload', async () => {
@@ -158,9 +153,7 @@ describe('PlanningReviewDecisionController', () => {
       },
     });
 
-    await expect(promise).rejects.toMatchObject(
-      new Error('Request is not multipart'),
-    );
+    await expect(promise).rejects.toMatchObject(new Error('Request is not multipart'));
   });
 
   it('should call through for getting download url', async () => {
@@ -168,7 +161,7 @@ describe('PlanningReviewDecisionController', () => {
     mockDecisionService.getDownloadUrl.mockResolvedValue(fakeUrl);
     const res = await controller.getDownloadUrl('fake-uuid', 'document-uuid');
 
-    expect(mockDecisionService.getDownloadUrl).toBeCalledTimes(1);
+    expect(mockDecisionService.getDownloadUrl).toHaveBeenCalledTimes(1);
     expect(res.url).toEqual(fakeUrl);
   });
 
@@ -178,7 +171,7 @@ describe('PlanningReviewDecisionController', () => {
       fileName: '',
     });
 
-    expect(mockDecisionService.updateDocument).toBeCalledTimes(1);
+    expect(mockDecisionService.updateDocument).toHaveBeenCalledTimes(1);
   });
 
   it('should call through for getting open url', async () => {
@@ -186,7 +179,7 @@ describe('PlanningReviewDecisionController', () => {
     mockDecisionService.getDownloadUrl.mockResolvedValue(fakeUrl);
     const res = await controller.getOpenUrl('fake-uuid', 'document-uuid');
 
-    expect(mockDecisionService.getDownloadUrl).toBeCalledTimes(1);
+    expect(mockDecisionService.getDownloadUrl).toHaveBeenCalledTimes(1);
     expect(res.url).toEqual(fakeUrl);
   });
 
@@ -194,14 +187,14 @@ describe('PlanningReviewDecisionController', () => {
     mockDecisionService.deleteDocument.mockResolvedValue({} as any);
     await controller.deleteDocument('fake-uuid', 'document-uuid');
 
-    expect(mockDecisionService.deleteDocument).toBeCalledTimes(1);
+    expect(mockDecisionService.deleteDocument).toHaveBeenCalledTimes(1);
   });
 
   it('should call through for resolution number generation', async () => {
     mockDecisionService.generateResolutionNumber.mockResolvedValue(1);
     await controller.getNextAvailableResolutionNumber(2023);
 
-    expect(mockDecisionService.generateResolutionNumber).toBeCalledTimes(1);
-    expect(mockDecisionService.generateResolutionNumber).toBeCalledWith(2023);
+    expect(mockDecisionService.generateResolutionNumber).toHaveBeenCalledTimes(1);
+    expect(mockDecisionService.generateResolutionNumber).toHaveBeenCalledWith(2023);
   });
 });

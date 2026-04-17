@@ -260,7 +260,7 @@ describe('NoticeOfIntentSubmissionService', () => {
 
     await service.submitToAlcs(mockNoiSubmission as ValidatedNoticeOfIntentSubmission, mockUser);
 
-    expect(mockNoiService.submit).toBeCalledTimes(1);
+    expect(mockNoiService.submit).toHaveBeenCalledTimes(1);
     expect(mockNoiStatusService.setStatusDate).toHaveBeenCalledTimes(1);
     expect(mockGenerateNoiSubmissionDocumentService.generateAndAttach).toHaveBeenCalledTimes(1);
   });
@@ -414,8 +414,8 @@ describe('NoticeOfIntentSubmissionService', () => {
       mockUser,
     );
 
-    expect(mockRepository.save).toBeCalledTimes(1);
-    expect(mockRepository.findOneOrFail).toBeCalledTimes(2);
+    expect(mockRepository.save).toHaveBeenCalledTimes(1);
+    expect(mockRepository.findOneOrFail).toHaveBeenCalledTimes(2);
   });
 
   it('should return the fetched notice of intent when fetching with file number', async () => {

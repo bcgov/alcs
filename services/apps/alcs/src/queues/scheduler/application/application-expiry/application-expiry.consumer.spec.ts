@@ -33,9 +33,7 @@ describe('SchedulerConsumerService', () => {
       ],
     }).compile();
 
-    applicationExpiryConsumer = module.get<ApplicationExpiryConsumer>(
-      ApplicationExpiryConsumer,
-    );
+    applicationExpiryConsumer = module.get<ApplicationExpiryConsumer>(ApplicationExpiryConsumer);
 
     mockEmailService.sendEmail.mockResolvedValue(true);
   });
@@ -45,9 +43,7 @@ describe('SchedulerConsumerService', () => {
   });
 
   it('should send email with application near expiry', async () => {
-    mockApplicationService.getAllNearExpiryDates.mockResolvedValue([
-      mockApplicationEntity,
-    ]);
+    mockApplicationService.getAllNearExpiryDates.mockResolvedValue([mockApplicationEntity]);
 
     const expectedParameterForEmailService = {
       body: `
@@ -59,11 +55,9 @@ describe('SchedulerConsumerService', () => {
 
     await applicationExpiryConsumer.process();
 
-    expect(mockApplicationService.getAllNearExpiryDates).toBeCalledTimes(1);
-    expect(mockEmailService.sendEmail).toBeCalledTimes(1);
-    expect(mockEmailService.sendEmail).toBeCalledWith(
-      expectedParameterForEmailService,
-    );
+    expect(mockApplicationService.getAllNearExpiryDates).toHaveBeenCalledTimes(1);
+    expect(mockEmailService.sendEmail).toHaveBeenCalledTimes(1);
+    expect(mockEmailService.sendEmail).toHaveBeenCalledWith(expectedParameterForEmailService);
   });
 
   it('should not send email if no application near expiry', async () => {
@@ -71,7 +65,7 @@ describe('SchedulerConsumerService', () => {
 
     await applicationExpiryConsumer.process();
 
-    expect(mockApplicationService.getAllNearExpiryDates).toBeCalledTimes(1);
-    expect(mockEmailService.sendEmail).toBeCalledTimes(0);
+    expect(mockApplicationService.getAllNearExpiryDates).toHaveBeenCalledTimes(1);
+    expect(mockEmailService.sendEmail).toHaveBeenCalledTimes(0);
   });
 });

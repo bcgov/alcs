@@ -37,9 +37,7 @@ describe('ApplicationConditionToComponentLotController', () => {
       ],
     }).compile();
 
-    controller = module.get<ApplicationConditionToComponentLotController>(
-      ApplicationConditionToComponentLotController,
-    );
+    controller = module.get<ApplicationConditionToComponentLotController>(ApplicationConditionToComponentLotController);
   });
 
   it('should be defined', () => {
@@ -54,12 +52,8 @@ describe('ApplicationConditionToComponentLotController', () => {
     const result = await controller.update('fake-1', 'fake-2', {} as any);
 
     expect(result).toBeDefined();
-    expect(
-      mockApplicationConditionToComponentLotService.createOrUpdate,
-    ).toBeCalledTimes(1);
-    expect(
-      mockApplicationConditionToComponentLotService.createOrUpdate,
-    ).toBeCalledWith('fake-2', 'fake-1', {});
+    expect(mockApplicationConditionToComponentLotService.createOrUpdate).toHaveBeenCalledTimes(1);
+    expect(mockApplicationConditionToComponentLotService.createOrUpdate).toHaveBeenCalledWith('fake-2', 'fake-1', {});
   });
 
   it('should successfully call service to fetch lots', async () => {
@@ -70,12 +64,7 @@ describe('ApplicationConditionToComponentLotController', () => {
     const result = await controller.get('fake-1', 'fake-2');
 
     expect(result).toBeDefined();
-    expect(mockApplicationConditionToComponentLotService.fetch).toBeCalledTimes(
-      1,
-    );
-    expect(mockApplicationConditionToComponentLotService.fetch).toBeCalledWith(
-      'fake-1',
-      'fake-2',
-    );
+    expect(mockApplicationConditionToComponentLotService.fetch).toHaveBeenCalledTimes(1);
+    expect(mockApplicationConditionToComponentLotService.fetch).toHaveBeenCalledWith('fake-1', 'fake-2');
   });
 });

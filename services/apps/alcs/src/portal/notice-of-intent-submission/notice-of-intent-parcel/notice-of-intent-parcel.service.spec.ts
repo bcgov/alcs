@@ -47,9 +47,7 @@ describe('NoticeOfIntentParcelService', () => {
       ],
     }).compile();
 
-    service = module.get<NoticeOfIntentParcelService>(
-      NoticeOfIntentParcelService,
-    );
+    service = module.get<NoticeOfIntentParcelService>(NoticeOfIntentParcelService);
   });
 
   it('should be defined', () => {
@@ -62,8 +60,8 @@ describe('NoticeOfIntentParcelService', () => {
     const result = await service.fetchByFileId(mockFileNumber);
 
     expect(result).toEqual([mockNOIParcel]);
-    expect(mockParcelRepo.find).toBeCalledTimes(1);
-    expect(mockParcelRepo.find).toBeCalledWith({
+    expect(mockParcelRepo.find).toHaveBeenCalledTimes(1);
+    expect(mockParcelRepo.find).toHaveBeenCalledWith({
       where: {
         noticeOfIntentSubmission: {
           fileNumber: mockFileNumber,
@@ -95,8 +93,8 @@ describe('NoticeOfIntentParcelService', () => {
     const result = await service.getOneOrFail(mockUuid);
 
     expect(result).toEqual(mockNOIParcel);
-    expect(mockParcelRepo.findOneOrFail).toBeCalledTimes(1);
-    expect(mockParcelRepo.findOneOrFail).toBeCalledWith({
+    expect(mockParcelRepo.findOneOrFail).toHaveBeenCalledTimes(1);
+    expect(mockParcelRepo.findOneOrFail).toHaveBeenCalledWith({
       where: { uuid: mockUuid },
     });
   });
@@ -104,11 +102,9 @@ describe('NoticeOfIntentParcelService', () => {
   it('should raise error on get parcel by uuid if the parcel does not exist', async () => {
     mockParcelRepo.findOneOrFail.mockRejectedValue(mockError);
 
-    await expect(service.getOneOrFail(mockUuid)).rejects.toMatchObject(
-      mockError,
-    );
-    expect(mockParcelRepo.findOneOrFail).toBeCalledTimes(1);
-    expect(mockParcelRepo.findOneOrFail).toBeCalledWith({
+    await expect(service.getOneOrFail(mockUuid)).rejects.toMatchObject(mockError);
+    expect(mockParcelRepo.findOneOrFail).toHaveBeenCalledTimes(1);
+    expect(mockParcelRepo.findOneOrFail).toHaveBeenCalledWith({
       where: { uuid: mockUuid },
     });
   });
@@ -133,11 +129,11 @@ describe('NoticeOfIntentParcelService', () => {
 
     await service.update(updateParcelDto, new User());
 
-    expect(mockParcelRepo.findOneOrFail).toBeCalledTimes(1);
-    expect(mockParcelRepo.findOneOrFail).toBeCalledWith({
+    expect(mockParcelRepo.findOneOrFail).toHaveBeenCalledTimes(1);
+    expect(mockParcelRepo.findOneOrFail).toHaveBeenCalledWith({
       where: { uuid: mockUuid },
     });
-    expect(mockParcelRepo.save).toBeCalledTimes(1);
+    expect(mockParcelRepo.save).toHaveBeenCalledTimes(1);
   });
 
   it('should update the applicant if the parcel has owners', async () => {
@@ -163,11 +159,11 @@ describe('NoticeOfIntentParcelService', () => {
 
     await service.update(updateParcelDto, new User());
 
-    expect(mockParcelRepo.findOneOrFail).toBeCalledTimes(1);
-    expect(mockParcelRepo.findOneOrFail).toBeCalledWith({
+    expect(mockParcelRepo.findOneOrFail).toHaveBeenCalledTimes(1);
+    expect(mockParcelRepo.findOneOrFail).toHaveBeenCalledWith({
       where: { uuid: mockUuid },
     });
-    expect(mockParcelRepo.save).toBeCalledTimes(1);
+    expect(mockParcelRepo.save).toHaveBeenCalledTimes(1);
     expect(mockOwnerService.updateSubmissionApplicant).toHaveBeenCalledTimes(1);
   });
 
@@ -190,14 +186,12 @@ describe('NoticeOfIntentParcelService', () => {
     mockParcelRepo.findOneOrFail.mockRejectedValue(mockError);
     mockParcelRepo.save.mockResolvedValue(new NoticeOfIntentParcel());
 
-    await expect(
-      service.update(updateParcelDto, new User()),
-    ).rejects.toMatchObject(mockError);
-    expect(mockParcelRepo.findOneOrFail).toBeCalledTimes(1);
-    expect(mockParcelRepo.findOneOrFail).toBeCalledWith({
+    await expect(service.update(updateParcelDto, new User())).rejects.toMatchObject(mockError);
+    expect(mockParcelRepo.findOneOrFail).toHaveBeenCalledTimes(1);
+    expect(mockParcelRepo.findOneOrFail).toHaveBeenCalledWith({
       where: { uuid: mockUuid },
     });
-    expect(mockParcelRepo.save).toBeCalledTimes(0);
+    expect(mockParcelRepo.save).toHaveBeenCalledTimes(0);
   });
 
   it('should successfully delete a parcel and update applicant', async () => {
@@ -208,31 +202,27 @@ describe('NoticeOfIntentParcelService', () => {
     const result = await service.deleteMany([mockUuid], new User());
 
     expect(result).toBeDefined();
-    expect(mockParcelRepo.find).toBeCalledTimes(1);
-    expect(mockParcelRepo.find).toBeCalledWith({
+    expect(mockParcelRepo.find).toHaveBeenCalledTimes(1);
+    expect(mockParcelRepo.find).toHaveBeenCalledWith({
       where: { uuid: In([mockUuid]) },
     });
-    expect(mockParcelRepo.remove).toBeCalledWith([mockNOIParcel]);
-    expect(mockParcelRepo.remove).toBeCalledTimes(1);
+    expect(mockParcelRepo.remove).toHaveBeenCalledWith([mockNOIParcel]);
+    expect(mockParcelRepo.remove).toHaveBeenCalledTimes(1);
     expect(mockOwnerService.updateSubmissionApplicant).toHaveBeenCalledTimes(1);
   });
 
   it('should not call remove if the parcel does not exist', async () => {
-    const exception = new ServiceValidationException(
-      `Unable to find parcels with provided uuids: ${mockUuid}.`,
-    );
+    const exception = new ServiceValidationException(`Unable to find parcels with provided uuids: ${mockUuid}.`);
 
     mockParcelRepo.find.mockResolvedValue([]);
     mockParcelRepo.remove.mockResolvedValue(new NoticeOfIntentParcel());
 
-    await expect(
-      service.deleteMany([mockUuid], new User()),
-    ).rejects.toMatchObject(exception);
-    expect(mockParcelRepo.find).toBeCalledTimes(1);
-    expect(mockParcelRepo.find).toBeCalledWith({
+    await expect(service.deleteMany([mockUuid], new User())).rejects.toMatchObject(exception);
+    expect(mockParcelRepo.find).toHaveBeenCalledTimes(1);
+    expect(mockParcelRepo.find).toHaveBeenCalledWith({
       where: { uuid: In([mockUuid]) },
     });
-    expect(mockParcelRepo.remove).toBeCalledTimes(0);
+    expect(mockParcelRepo.remove).toHaveBeenCalledTimes(0);
   });
 
   it('should successfully create a parcel', async () => {
@@ -249,6 +239,6 @@ describe('NoticeOfIntentParcelService', () => {
     const result = await service.create(mockFileNumber);
 
     expect(result).toEqual(mockParcel);
-    expect(mockParcelRepo.save).toBeCalledTimes(1);
+    expect(mockParcelRepo.save).toHaveBeenCalledTimes(1);
   });
 });

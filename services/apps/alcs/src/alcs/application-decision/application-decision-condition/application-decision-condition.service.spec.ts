@@ -24,7 +24,7 @@ describe('ApplicationDecisionConditionService', () => {
   let mockAppDecCondTypeRepository: DeepMocked<Repository<ApplicationDecisionConditionType>>;
   let mockApplicationModificationRepository: DeepMocked<Repository<ApplicationModification>>;
   let mockApplicationReconsiderationRepository: DeepMocked<Repository<ApplicationReconsideration>>;
-  
+
   let mockApplicationDecisionConditionComponentPlanNumber: DeepMocked<
     Repository<ApplicationDecisionConditionComponentPlanNumber>
   >;
@@ -103,8 +103,8 @@ describe('ApplicationDecisionConditionService', () => {
 
     const result = await service.getOneOrFail('fake');
 
-    expect(mockApplicationDecisionConditionRepository.findOneOrFail).toBeCalledTimes(1);
-    expect(mockApplicationDecisionConditionRepository.findOneOrFail).toBeCalledWith({
+    expect(mockApplicationDecisionConditionRepository.findOneOrFail).toHaveBeenCalledTimes(1);
+    expect(mockApplicationDecisionConditionRepository.findOneOrFail).toHaveBeenCalledWith({
       where: { uuid: 'fake' },
       relations: { type: true, dates: true },
     });
@@ -122,7 +122,7 @@ describe('ApplicationDecisionConditionService', () => {
 
     await service.remove(conditions);
 
-    expect(mockTransaction).toBeCalledTimes(1);
+    expect(mockTransaction).toHaveBeenCalledTimes(1);
   });
 
   it('should create new components when given a DTO without a UUID', async () => {
@@ -134,7 +134,7 @@ describe('ApplicationDecisionConditionService', () => {
 
     expect(result).toBeDefined();
     expect(result.length).toBe(2);
-    expect(mockApplicationDecisionConditionRepository.findOneOrFail).toBeCalledTimes(0);
+    expect(mockApplicationDecisionConditionRepository.findOneOrFail).toHaveBeenCalledTimes(0);
   });
 
   it('should update existing components when given a DTO with a UUID', async () => {
@@ -152,8 +152,8 @@ describe('ApplicationDecisionConditionService', () => {
 
     expect(result).toBeDefined();
     expect(result.length).toBe(1);
-    expect(mockApplicationDecisionConditionRepository.findOneOrFail).toBeCalledTimes(1);
-    expect(mockApplicationDecisionConditionRepository.findOneOrFail).toBeCalledWith({
+    expect(mockApplicationDecisionConditionRepository.findOneOrFail).toHaveBeenCalledTimes(1);
+    expect(mockApplicationDecisionConditionRepository.findOneOrFail).toHaveBeenCalledWith({
       where: { uuid: 'uuid' },
       relations: { type: true, dates: true },
     });
@@ -169,8 +169,8 @@ describe('ApplicationDecisionConditionService', () => {
     const result = await service.createOrUpdate(updateDtos, [], [], true);
 
     expect(result).toBeDefined();
-    expect(mockApplicationDecisionConditionRepository.findOneOrFail).toBeCalledTimes(0);
-    expect(mockApplicationDecisionConditionRepository.save).toBeCalledTimes(1);
+    expect(mockApplicationDecisionConditionRepository.findOneOrFail).toHaveBeenCalledTimes(0);
+    expect(mockApplicationDecisionConditionRepository.save).toHaveBeenCalledTimes(1);
   });
 
   it('should not persist entity if persist flag is false', async () => {
@@ -182,8 +182,8 @@ describe('ApplicationDecisionConditionService', () => {
     const result = await service.createOrUpdate(updateDtos, [], [], false);
 
     expect(result).toBeDefined();
-    expect(mockApplicationDecisionConditionRepository.findOneOrFail).toBeCalledTimes(0);
-    expect(mockApplicationDecisionConditionRepository.save).toBeCalledTimes(0);
+    expect(mockApplicationDecisionConditionRepository.findOneOrFail).toHaveBeenCalledTimes(0);
+    expect(mockApplicationDecisionConditionRepository.save).toHaveBeenCalledTimes(0);
   });
 
   it('should call update on the repo and return the updated object', async () => {

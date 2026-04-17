@@ -38,9 +38,7 @@ describe('NoticeOfIntentSubmissionController', () => {
       ],
     }).compile();
 
-    controller = module.get<NoticeOfIntentSubmissionController>(
-      NoticeOfIntentSubmissionController,
-    );
+    controller = module.get<NoticeOfIntentSubmissionController>(NoticeOfIntentSubmissionController);
   });
 
   it('should be defined', () => {
@@ -53,14 +51,12 @@ describe('NoticeOfIntentSubmissionController', () => {
     mockNoticeOfIntentSubmissionService.get.mockResolvedValue({
       fileNumber: fakeFileNumber,
     } as NoticeOfIntentSubmission);
-    mockNoticeOfIntentSubmissionService.mapToDto.mockResolvedValue(
-      createMock<AlcsNoticeOfIntentSubmissionDto>(),
-    );
+    mockNoticeOfIntentSubmissionService.mapToDto.mockResolvedValue(createMock<AlcsNoticeOfIntentSubmissionDto>());
 
     const result = await controller.get(fakeFileNumber);
 
-    expect(mockNoticeOfIntentSubmissionService.get).toBeCalledTimes(1);
-    expect(mockNoticeOfIntentSubmissionService.mapToDto).toBeCalledTimes(1);
+    expect(mockNoticeOfIntentSubmissionService.get).toHaveBeenCalledTimes(1);
+    expect(mockNoticeOfIntentSubmissionService.mapToDto).toHaveBeenCalledTimes(1);
     expect(result).toBeDefined();
   });
 
@@ -73,13 +69,10 @@ describe('NoticeOfIntentSubmissionController', () => {
 
     const result = await controller.downloadFile(fakeUuid);
 
-    expect(mockDocumentService.getDocument).toBeCalledTimes(1);
-    expect(mockDocumentService.getDownloadUrl).toBeCalledTimes(1);
-    expect(mockDocumentService.getDocument).toBeCalledWith(fakeUuid);
-    expect(mockDocumentService.getDownloadUrl).toBeCalledWith(
-      {} as Document,
-      true,
-    );
+    expect(mockDocumentService.getDocument).toHaveBeenCalledTimes(1);
+    expect(mockDocumentService.getDownloadUrl).toHaveBeenCalledTimes(1);
+    expect(mockDocumentService.getDocument).toHaveBeenCalledWith(fakeUuid);
+    expect(mockDocumentService.getDownloadUrl).toHaveBeenCalledWith({} as Document, true);
     expect(result).toEqual({ url: fakeDownloadUrl });
   });
 });

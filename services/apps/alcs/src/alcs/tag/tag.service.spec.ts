@@ -90,6 +90,6 @@ describe('TagCategoryService', () => {
 
     await service.create(payload);
 
-    expect(tagRepositoryMock.save).toBeCalledTimes(1);
+    expect(tagRepositoryMock.save).toHaveBeenCalledTimes(1);
   });
 });

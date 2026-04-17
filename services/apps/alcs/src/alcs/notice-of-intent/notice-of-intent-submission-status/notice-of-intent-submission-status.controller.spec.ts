@@ -37,9 +37,7 @@ describe('NoticeOfIntentSubmissionStatusController', () => {
       ],
     }).compile();
 
-    controller = module.get<NoticeOfIntentSubmissionStatusController>(
-      NoticeOfIntentSubmissionStatusController,
-    );
+    controller = module.get<NoticeOfIntentSubmissionStatusController>(NoticeOfIntentSubmissionStatusController);
   });
 
   it('should be defined', () => {
@@ -47,31 +45,25 @@ describe('NoticeOfIntentSubmissionStatusController', () => {
   });
 
   it('should call the service for list statuses', async () => {
-    mockNoticeOfIntentSubmissionStatusService.listStatuses.mockResolvedValue(
-      [],
-    );
+    mockNoticeOfIntentSubmissionStatusService.listStatuses.mockResolvedValue([]);
 
     await controller.listStatuses();
-    expect(
-      mockNoticeOfIntentSubmissionStatusService.listStatuses,
-    ).toHaveBeenCalledTimes(1);
+    expect(mockNoticeOfIntentSubmissionStatusService.listStatuses).toHaveBeenCalledTimes(1);
   });
 
   it('should call service to get statuses by file number', async () => {
     const fakeFileNumber = 'fake';
 
-    mockNoticeOfIntentSubmissionStatusService.getCurrentStatusesByFileNumber.mockResolvedValue(
-      [new NoticeOfIntentSubmissionToSubmissionStatus()],
-    );
+    mockNoticeOfIntentSubmissionStatusService.getCurrentStatusesByFileNumber.mockResolvedValue([
+      new NoticeOfIntentSubmissionToSubmissionStatus(),
+    ]);
 
     const result = await controller.getStatusesByFileNumber(fakeFileNumber);
 
-    expect(
-      mockNoticeOfIntentSubmissionStatusService.getCurrentStatusesByFileNumber,
-    ).toBeCalledTimes(1);
-    expect(
-      mockNoticeOfIntentSubmissionStatusService.getCurrentStatusesByFileNumber,
-    ).toBeCalledWith(fakeFileNumber);
+    expect(mockNoticeOfIntentSubmissionStatusService.getCurrentStatusesByFileNumber).toHaveBeenCalledTimes(1);
+    expect(mockNoticeOfIntentSubmissionStatusService.getCurrentStatusesByFileNumber).toHaveBeenCalledWith(
+      fakeFileNumber,
+    );
     expect(result.length).toEqual(1);
     expect(result).toBeDefined();
   });
@@ -83,15 +75,10 @@ describe('NoticeOfIntentSubmissionStatusController', () => {
       new NoticeOfIntentSubmissionToSubmissionStatus(),
     );
 
-    const result =
-      await controller.getCurrentStatusByFileNumber(fakeFileNumber);
+    const result = await controller.getCurrentStatusByFileNumber(fakeFileNumber);
 
-    expect(
-      mockNoticeOfIntentSubmissionStatusService.getCurrentStatusByFileNumber,
-    ).toBeCalledTimes(1);
-    expect(
-      mockNoticeOfIntentSubmissionStatusService.getCurrentStatusByFileNumber,
-    ).toBeCalledWith(fakeFileNumber);
+    expect(mockNoticeOfIntentSubmissionStatusService.getCurrentStatusByFileNumber).toHaveBeenCalledTimes(1);
+    expect(mockNoticeOfIntentSubmissionStatusService.getCurrentStatusByFileNumber).toHaveBeenCalledWith(fakeFileNumber);
     expect(result).toBeDefined();
   });
 });
