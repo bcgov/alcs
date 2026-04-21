@@ -45,10 +45,10 @@
     "zone.js": "~0.15.1"
   },
   "devDependencies": {
-    "@angular-eslint/builder": "18.4.3",
+    "@angular-eslint/builder": "21.3.1",
     "@angular-eslint/eslint-plugin": "18.4.3",
     "@angular-eslint/eslint-plugin-template": "18.4.3",
-    "@angular-eslint/schematics": "18.4.3",
+    "@angular-eslint/schematics": "21.3.1",
     "@angular-eslint/template-parser": "18.4.3",
     "@angular/build": "^20.3.14",
     "@angular/cli": "^20.3.14",
