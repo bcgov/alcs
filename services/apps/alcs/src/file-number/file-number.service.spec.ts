@@ -61,9 +61,7 @@ describe('FileNumberService', () => {
 
     const promise = service.checkValidFileNumber('5');
     await expect(promise).rejects.toMatchObject(
-      new ServiceValidationException(
-        `Application/Planning Review/NOI already exists with File ID 5`,
-      ),
+      new ServiceValidationException(`Application/Planning Review/NOI already exists with File ID 5`),
     );
 
     expect(mockAppRepo.exists).toHaveBeenCalledTimes(1);
@@ -72,14 +70,12 @@ describe('FileNumberService', () => {
   });
 
   it('should generate and return new fileNumber', async () => {
-    mockAppRepo.findOne
-      .mockResolvedValueOnce({} as Application)
-      .mockResolvedValue(null);
+    mockAppRepo.findOne.mockResolvedValueOnce({} as Application).mockResolvedValue(null);
     mockAppRepo.query.mockResolvedValue([{ nextval: '2512' }]);
 
     const result = await service.generateNextFileNumber();
 
-    expect(mockAppRepo.query).toBeCalledTimes(1);
+    expect(mockAppRepo.query).toHaveBeenCalledTimes(1);
     expect(result).toEqual('2512');
   });
 });

@@ -63,9 +63,9 @@ describe('PdfGenerationController', () => {
       },
     });
 
-    expect(mockSubmissionDocumentService.generate).toBeCalledTimes(1);
-    expect(mockResponse.type).toBeCalledWith('application/pdf');
-    expect(mockResponse.send).toBeCalledWith('fake');
+    expect(mockSubmissionDocumentService.generate).toHaveBeenCalledTimes(1);
+    expect(mockResponse.type).toHaveBeenCalledWith('application/pdf');
+    expect(mockResponse.send).toHaveBeenCalledWith('fake');
   });
 
   it('should successfully call service for generateNoiSubmission', async () => {
@@ -81,9 +81,9 @@ describe('PdfGenerationController', () => {
       },
     });
 
-    expect(mockNoiSubmissionDocumentService.generate).toBeCalledTimes(1);
-    expect(mockResponse.type).toBeCalledWith('application/pdf');
-    expect(mockResponse.send).toBeCalledWith('fake');
+    expect(mockNoiSubmissionDocumentService.generate).toHaveBeenCalledTimes(1);
+    expect(mockResponse.type).toHaveBeenCalledWith('application/pdf');
+    expect(mockResponse.send).toHaveBeenCalledWith('fake');
   });
 
   it('should successfully call service for generateReview', async () => {
@@ -99,8 +99,8 @@ describe('PdfGenerationController', () => {
       },
     });
 
-    expect(mockReviewDocumentService.generate).toBeCalledTimes(1);
-    expect(mockResponse.type).toBeCalledWith('application/pdf');
-    expect(mockResponse.send).toBeCalledWith('fake');
+    expect(mockReviewDocumentService.generate).toHaveBeenCalledTimes(1);
+    expect(mockResponse.type).toHaveBeenCalledWith('application/pdf');
+    expect(mockResponse.send).toHaveBeenCalledWith('fake');
   });
 });

@@ -38,9 +38,7 @@ describe('ApplicationDecisionComponentController', () => {
       ],
     }).compile();
 
-    controller = module.get<ApplicationDecisionComponentController>(
-      ApplicationDecisionComponentController,
-    );
+    controller = module.get<ApplicationDecisionComponentController>(ApplicationDecisionComponentController);
   });
 
   it('should be defined', () => {
@@ -48,12 +46,8 @@ describe('ApplicationDecisionComponentController', () => {
   });
 
   it('should call update of ApplicationDecisionComponentService', async () => {
-    mockApplicationDecisionComponentService.createOrUpdate.mockResolvedValue([
-      new ApplicationDecisionComponent(),
-    ]);
-    mockApplicationDecisionComponentService.getOneOrFail.mockResolvedValue(
-      new ApplicationDecisionComponent(),
-    );
+    mockApplicationDecisionComponentService.createOrUpdate.mockResolvedValue([new ApplicationDecisionComponent()]);
+    mockApplicationDecisionComponentService.getOneOrFail.mockResolvedValue(new ApplicationDecisionComponent());
     const updates = {
       uuid: 'fake_uuid',
       alrArea: 10,
@@ -62,18 +56,10 @@ describe('ApplicationDecisionComponentController', () => {
 
     await controller.update('fake_uuid', updates);
 
-    expect(
-      mockApplicationDecisionComponentService.getOneOrFail,
-    ).toBeCalledTimes(1);
-    expect(mockApplicationDecisionComponentService.getOneOrFail).toBeCalledWith(
-      'fake_uuid',
-    );
-    expect(
-      mockApplicationDecisionComponentService.createOrUpdate,
-    ).toBeCalledTimes(1);
-    expect(
-      mockApplicationDecisionComponentService.createOrUpdate,
-    ).toBeCalledWith([
+    expect(mockApplicationDecisionComponentService.getOneOrFail).toHaveBeenCalledTimes(1);
+    expect(mockApplicationDecisionComponentService.getOneOrFail).toHaveBeenCalledWith('fake_uuid');
+    expect(mockApplicationDecisionComponentService.createOrUpdate).toHaveBeenCalledTimes(1);
+    expect(mockApplicationDecisionComponentService.createOrUpdate).toHaveBeenCalledWith([
       {
         uuid: 'fake_uuid',
         alrArea: 10,

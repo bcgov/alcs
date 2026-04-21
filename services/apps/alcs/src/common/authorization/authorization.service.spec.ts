@@ -96,15 +96,15 @@ describe('AuthorizationService', () => {
   it('should call out CreateUser and SendEmail on receiving token if user is not registered and from ALCS', async () => {
     await service.exchangeCodeForToken('fake-code', false);
 
-    expect(mockUserService.create).toBeCalledTimes(1);
-    expect(mockUserService.sendNewUserRequestEmail).toBeCalledTimes(1);
+    expect(mockUserService.create).toHaveBeenCalledTimes(1);
+    expect(mockUserService.sendNewUserRequestEmail).toHaveBeenCalledTimes(1);
   });
 
   it('should call out CreateUser and NOT SendEmail on receiving token if user is not registered and from Portal', async () => {
     await service.exchangeCodeForToken('fake-code', true);
 
-    expect(mockUserService.create).toBeCalledTimes(1);
-    expect(mockUserService.sendNewUserRequestEmail).toBeCalledTimes(0);
+    expect(mockUserService.create).toHaveBeenCalledTimes(1);
+    expect(mockUserService.sendNewUserRequestEmail).toHaveBeenCalledTimes(0);
   });
 
   it('should call out CreateUser but not SendEmail on receiving token if user is not registered but has CSS roles assigned', async () => {
@@ -114,15 +114,15 @@ describe('AuthorizationService', () => {
 
     await service.exchangeCodeForToken('fake-code', false);
 
-    expect(mockUserService.create).toBeCalledTimes(1);
-    expect(mockUserService.sendNewUserRequestEmail).toBeCalledTimes(0);
+    expect(mockUserService.create).toHaveBeenCalledTimes(1);
+    expect(mockUserService.sendNewUserRequestEmail).toHaveBeenCalledTimes(0);
   });
 
   it('should not call out CreateUser on receiving token if user is registered', async () => {
     mockUserService.getByGuid.mockResolvedValue(createMock<User>({} as User));
     mockUserService.update.mockResolvedValue(createMock<User>({} as User));
     await service.exchangeCodeForToken('fake-code', false);
-    expect(mockUserService.create).toBeCalledTimes(0);
-    expect(mockUserService.sendNewUserRequestEmail).toBeCalledTimes(0);
+    expect(mockUserService.create).toHaveBeenCalledTimes(0);
+    expect(mockUserService.sendNewUserRequestEmail).toHaveBeenCalledTimes(0);
   });
 });

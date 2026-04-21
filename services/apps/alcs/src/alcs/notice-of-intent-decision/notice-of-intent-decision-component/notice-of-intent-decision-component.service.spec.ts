@@ -9,9 +9,7 @@ import { NoticeOfIntentDecisionComponentService } from './notice-of-intent-decis
 
 describe('NoticeOfIntentDecisionComponentService', () => {
   let service: NoticeOfIntentDecisionComponentService;
-  let mockDecisionComponentRepository: DeepMocked<
-    Repository<NoticeOfIntentDecisionComponent>
-  >;
+  let mockDecisionComponentRepository: DeepMocked<Repository<NoticeOfIntentDecisionComponent>>;
 
   beforeEach(async () => {
     mockDecisionComponentRepository = createMock();
@@ -26,9 +24,7 @@ describe('NoticeOfIntentDecisionComponentService', () => {
       ],
     }).compile();
 
-    service = module.get<NoticeOfIntentDecisionComponentService>(
-      NoticeOfIntentDecisionComponentService,
-    );
+    service = module.get<NoticeOfIntentDecisionComponentService>(NoticeOfIntentDecisionComponentService);
   });
 
   it('should be defined', () => {
@@ -36,34 +32,25 @@ describe('NoticeOfIntentDecisionComponentService', () => {
   });
 
   it('should call repo to get one or fails with correct parameters', async () => {
-    mockDecisionComponentRepository.findOneOrFail.mockResolvedValue(
-      new NoticeOfIntentDecisionComponent(),
-    );
+    mockDecisionComponentRepository.findOneOrFail.mockResolvedValue(new NoticeOfIntentDecisionComponent());
 
     const result = await service.getOneOrFail('fake');
 
-    expect(mockDecisionComponentRepository.findOneOrFail).toBeCalledTimes(1);
-    expect(mockDecisionComponentRepository.findOneOrFail).toBeCalledWith({
+    expect(mockDecisionComponentRepository.findOneOrFail).toHaveBeenCalledTimes(1);
+    expect(mockDecisionComponentRepository.findOneOrFail).toHaveBeenCalledWith({
       where: { uuid: 'fake' },
     });
     expect(result).toBeDefined();
   });
 
   it('calls componentRepository.softRemove() method and soft removes an array of components', async () => {
-    const components = [
-      new NoticeOfIntentDecisionComponent(),
-      new NoticeOfIntentDecisionComponent(),
-    ];
+    const components = [new NoticeOfIntentDecisionComponent(), new NoticeOfIntentDecisionComponent()];
 
-    mockDecisionComponentRepository.softRemove.mockResolvedValue(
-      {} as NoticeOfIntentDecisionComponent,
-    );
+    mockDecisionComponentRepository.softRemove.mockResolvedValue({} as NoticeOfIntentDecisionComponent);
 
     await service.softRemove(components);
 
-    expect(mockDecisionComponentRepository.softRemove).toHaveBeenCalledWith(
-      components,
-    );
+    expect(mockDecisionComponentRepository.softRemove).toHaveBeenCalledWith(components);
   });
 
   it('throws validation error if there are duplicate components', () => {
@@ -90,7 +77,7 @@ describe('NoticeOfIntentDecisionComponentService', () => {
 
     expect(() => {
       return service.validate(mockComponentsDto);
-    }).toThrowError(ServiceValidationException);
+    }).toThrow(ServiceValidationException);
   });
 
   it('does not throw if there are no duplicate components', () => {
@@ -114,24 +101,19 @@ describe('NoticeOfIntentDecisionComponentService', () => {
 
     expect(() => {
       return service.validate(mockComponentsDto);
-    }).not.toThrowError(ServiceValidationException);
+    }).not.toThrow(ServiceValidationException);
   });
 
   it('should create new components when given a DTO without a UUID', async () => {
-    mockDecisionComponentRepository.findOneOrFail.mockResolvedValue(
-      {} as NoticeOfIntentDecisionComponent,
-    );
+    mockDecisionComponentRepository.findOneOrFail.mockResolvedValue({} as NoticeOfIntentDecisionComponent);
 
-    const updateDtos = [
-      new CreateNoticeOfIntentDecisionComponentDto(),
-      new CreateNoticeOfIntentDecisionComponentDto(),
-    ];
+    const updateDtos = [new CreateNoticeOfIntentDecisionComponentDto(), new CreateNoticeOfIntentDecisionComponentDto()];
 
     const result = await service.createOrUpdate(updateDtos, false);
 
     expect(result).toBeDefined();
     expect(result.length).toBe(2);
-    expect(mockDecisionComponentRepository.findOneOrFail).toBeCalledTimes(0);
+    expect(mockDecisionComponentRepository.findOneOrFail).toHaveBeenCalledTimes(0);
   });
 
   it('should update existing components when given a DTO with a UUID', async () => {
@@ -153,8 +135,8 @@ describe('NoticeOfIntentDecisionComponentService', () => {
 
     expect(result).toBeDefined();
     expect(result.length).toBe(1);
-    expect(mockDecisionComponentRepository.findOneOrFail).toBeCalledTimes(1);
-    expect(mockDecisionComponentRepository.findOneOrFail).toBeCalledWith({
+    expect(mockDecisionComponentRepository.findOneOrFail).toHaveBeenCalledTimes(1);
+    expect(mockDecisionComponentRepository.findOneOrFail).toHaveBeenCalledWith({
       where: { uuid: 'fake' },
     });
     expect(result[0].uuid).toEqual(mockDto.uuid);
@@ -163,43 +145,33 @@ describe('NoticeOfIntentDecisionComponentService', () => {
     expect(result[0].agCapSource).toEqual(mockDto.agCapSource);
     expect(result[0].agCapMap).toEqual(mockDto.agCapMap);
     expect(result[0].agCapConsultant).toEqual(mockDto.agCapConsultant);
-    expect(result[0].noticeOfIntentDecisionComponentTypeCode).toEqual(
-      'fake_code',
-    );
+    expect(result[0].noticeOfIntentDecisionComponentTypeCode).toEqual('fake_code');
   });
 
   it('should persist entity if persist flag is true', async () => {
-    mockDecisionComponentRepository.findOneOrFail.mockResolvedValue(
-      {} as NoticeOfIntentDecisionComponent,
-    );
-    mockDecisionComponentRepository.save.mockResolvedValue(
-      {} as NoticeOfIntentDecisionComponent,
-    );
+    mockDecisionComponentRepository.findOneOrFail.mockResolvedValue({} as NoticeOfIntentDecisionComponent);
+    mockDecisionComponentRepository.save.mockResolvedValue({} as NoticeOfIntentDecisionComponent);
 
     const updateDtos = [new CreateNoticeOfIntentDecisionComponentDto()];
 
     const result = await service.createOrUpdate(updateDtos, true);
 
     expect(result).toBeDefined();
-    expect(mockDecisionComponentRepository.findOneOrFail).toBeCalledTimes(0);
-    expect(mockDecisionComponentRepository.save).toBeCalledTimes(1);
+    expect(mockDecisionComponentRepository.findOneOrFail).toHaveBeenCalledTimes(0);
+    expect(mockDecisionComponentRepository.save).toHaveBeenCalledTimes(1);
   });
 
   it('should not persist entity if persist flag is false', async () => {
-    mockDecisionComponentRepository.findOneOrFail.mockResolvedValue(
-      {} as NoticeOfIntentDecisionComponent,
-    );
-    mockDecisionComponentRepository.save.mockResolvedValue(
-      {} as NoticeOfIntentDecisionComponent,
-    );
+    mockDecisionComponentRepository.findOneOrFail.mockResolvedValue({} as NoticeOfIntentDecisionComponent);
+    mockDecisionComponentRepository.save.mockResolvedValue({} as NoticeOfIntentDecisionComponent);
 
     const updateDtos = [new CreateNoticeOfIntentDecisionComponentDto()];
 
     const result = await service.createOrUpdate(updateDtos, false);
 
     expect(result).toBeDefined();
-    expect(mockDecisionComponentRepository.findOneOrFail).toBeCalledTimes(0);
-    expect(mockDecisionComponentRepository.save).toBeCalledTimes(0);
+    expect(mockDecisionComponentRepository.findOneOrFail).toHaveBeenCalledTimes(0);
+    expect(mockDecisionComponentRepository.save).toHaveBeenCalledTimes(0);
   });
 
   it('should validation decision component fields and throw error if any', async () => {

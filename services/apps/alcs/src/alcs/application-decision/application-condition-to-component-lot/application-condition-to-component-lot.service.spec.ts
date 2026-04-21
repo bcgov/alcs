@@ -18,17 +18,13 @@ describe('ApplicationConditionToComponentLotService', () => {
       providers: [
         ApplicationConditionToComponentLotService,
         {
-          provide: getRepositoryToken(
-            ApplicationDecisionConditionToComponentLot,
-          ),
+          provide: getRepositoryToken(ApplicationDecisionConditionToComponentLot),
           useValue: mockApplicationDecisionConditionToComponentLotRepository,
         },
       ],
     }).compile();
 
-    service = module.get<ApplicationConditionToComponentLotService>(
-      ApplicationConditionToComponentLotService,
-    );
+    service = module.get<ApplicationConditionToComponentLotService>(ApplicationConditionToComponentLotService);
   });
 
   it('should be defined', () => {
@@ -36,19 +32,13 @@ describe('ApplicationConditionToComponentLotService', () => {
   });
 
   it(' it should successfully call repo to find data', async () => {
-    mockApplicationDecisionConditionToComponentLotRepository.find.mockResolvedValue(
-      [],
-    );
+    mockApplicationDecisionConditionToComponentLotRepository.find.mockResolvedValue([]);
 
     const result = await service.fetch('fake-1', 'fake-2');
 
     expect(result).toBeDefined;
-    expect(
-      mockApplicationDecisionConditionToComponentLotRepository.find,
-    ).toBeCalledTimes(1);
-    expect(
-      mockApplicationDecisionConditionToComponentLotRepository.find,
-    ).toBeCalledWith({
+    expect(mockApplicationDecisionConditionToComponentLotRepository.find).toHaveBeenCalledTimes(1);
+    expect(mockApplicationDecisionConditionToComponentLotRepository.find).toHaveBeenCalledWith({
       where: {
         conditionUuid: 'fake-2',
         componentLot: {
@@ -67,8 +57,7 @@ describe('ApplicationConditionToComponentLotService', () => {
     );
 
     mockApplicationDecisionConditionToComponentLotRepository.save.mockImplementation(
-      (data: ApplicationDecisionConditionToComponentLot) =>
-        Promise.resolve(data),
+      (data: ApplicationDecisionConditionToComponentLot) => Promise.resolve(data),
     );
 
     const result = await service.createOrUpdate('1', '1', 'plan1');
@@ -76,23 +65,15 @@ describe('ApplicationConditionToComponentLotService', () => {
     expect(result.planNumbers).toEqual('plan1');
     expect(result.componentLotUuid).toEqual('1');
     expect(result.conditionUuid).toEqual('1');
-    expect(
-      mockApplicationDecisionConditionToComponentLotRepository.findOne,
-    ).toBeCalledTimes(1);
-    expect(
-      mockApplicationDecisionConditionToComponentLotRepository.findOne,
-    ).toBeCalledWith({
+    expect(mockApplicationDecisionConditionToComponentLotRepository.findOne).toHaveBeenCalledTimes(1);
+    expect(mockApplicationDecisionConditionToComponentLotRepository.findOne).toHaveBeenCalledWith({
       where: {
         componentLotUuid: '1',
         conditionUuid: '1',
       },
     });
-    expect(
-      mockApplicationDecisionConditionToComponentLotRepository.save,
-    ).toBeCalledTimes(1);
-    expect(
-      mockApplicationDecisionConditionToComponentLotRepository.save,
-    ).toBeCalledWith(
+    expect(mockApplicationDecisionConditionToComponentLotRepository.save).toHaveBeenCalledTimes(1);
+    expect(mockApplicationDecisionConditionToComponentLotRepository.save).toHaveBeenCalledWith(
       new ApplicationDecisionConditionToComponentLot({
         componentLotUuid: '1',
         conditionUuid: '1',
@@ -102,21 +83,16 @@ describe('ApplicationConditionToComponentLotService', () => {
   });
 
   it('should update an existing conditionLot', async () => {
-    const existingConditionLot = new ApplicationDecisionConditionToComponentLot(
-      {
-        conditionUuid: '2',
-        componentLotUuid: '2',
-        planNumbers: 'plan2',
-      },
-    );
+    const existingConditionLot = new ApplicationDecisionConditionToComponentLot({
+      conditionUuid: '2',
+      componentLotUuid: '2',
+      planNumbers: 'plan2',
+    });
 
-    mockApplicationDecisionConditionToComponentLotRepository.findOne.mockResolvedValue(
-      existingConditionLot,
-    );
+    mockApplicationDecisionConditionToComponentLotRepository.findOne.mockResolvedValue(existingConditionLot);
 
     mockApplicationDecisionConditionToComponentLotRepository.save.mockImplementation(
-      (data: ApplicationDecisionConditionToComponentLot) =>
-        Promise.resolve(data),
+      (data: ApplicationDecisionConditionToComponentLot) => Promise.resolve(data),
     );
 
     const result = await service.createOrUpdate('2', '2', 'updatedPlan');
@@ -124,22 +100,14 @@ describe('ApplicationConditionToComponentLotService', () => {
     expect(result.planNumbers).toEqual('updatedPlan');
     expect(result.componentLotUuid).toEqual('2');
     expect(result.conditionUuid).toEqual('2');
-    expect(
-      mockApplicationDecisionConditionToComponentLotRepository.findOne,
-    ).toBeCalledTimes(1);
-    expect(
-      mockApplicationDecisionConditionToComponentLotRepository.findOne,
-    ).toBeCalledWith({
+    expect(mockApplicationDecisionConditionToComponentLotRepository.findOne).toHaveBeenCalledTimes(1);
+    expect(mockApplicationDecisionConditionToComponentLotRepository.findOne).toHaveBeenCalledWith({
       where: {
         componentLotUuid: '2',
         conditionUuid: '2',
       },
     });
-    expect(
-      mockApplicationDecisionConditionToComponentLotRepository.save,
-    ).toBeCalledTimes(1);
-    expect(
-      mockApplicationDecisionConditionToComponentLotRepository.save,
-    ).toBeCalledWith(existingConditionLot);
+    expect(mockApplicationDecisionConditionToComponentLotRepository.save).toHaveBeenCalledTimes(1);
+    expect(mockApplicationDecisionConditionToComponentLotRepository.save).toHaveBeenCalledWith(existingConditionLot);
   });
 });
