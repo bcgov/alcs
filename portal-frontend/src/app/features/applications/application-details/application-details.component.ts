@@ -19,10 +19,10 @@ import { downloadFile } from '../../../shared/utils/file';
 import { ToastService } from '../../../services/toast/toast.service';
 
 @Component({
-    selector: 'app-application-details',
-    templateUrl: './application-details.component.html',
-    styleUrls: ['./application-details.component.scss'],
-    standalone: false
+  selector: 'app-application-details',
+  templateUrl: './application-details.component.html',
+  styleUrls: ['./application-details.component.scss'],
+  standalone: false,
 })
 export class ApplicationDetailsComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
@@ -103,7 +103,7 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
   async onNavigateToStep(step: number) {
     if (this.draftMode) {
       await this.router.navigateByUrl(
-        `alcs/application/${this.applicationSubmission?.fileNumber}/edit/${step}?errors=t`
+        `alcs/application/${this.applicationSubmission?.fileNumber}/edit/${step}?errors=t`,
       );
     } else {
       await this.router.navigateByUrl(`application/${this.applicationSubmission?.fileNumber}/edit/${step}?errors=t`);
@@ -142,7 +142,7 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  @HostListener('window:resize', ['$event'])
+  @HostListener('window:resize', [])
   onWindowResize() {
     this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
   }

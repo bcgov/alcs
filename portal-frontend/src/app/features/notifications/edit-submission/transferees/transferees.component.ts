@@ -12,10 +12,10 @@ import { MOBILE_BREAKPOINT } from '../../../../shared/utils/breakpoints';
 import { VISIBLE_COUNT_INCREMENT } from '../../../../shared/constants';
 
 @Component({
-    selector: 'app-transferees',
-    templateUrl: './transferees.component.html',
-    styleUrls: ['./transferees.component.scss'],
-    standalone: false
+  selector: 'app-transferees',
+  templateUrl: './transferees.component.html',
+  styleUrls: ['./transferees.component.scss'],
+  standalone: false,
 })
 export class TransfereesComponent extends StepComponent implements OnInit, OnDestroy {
   currentStep = EditNotificationSteps.Transferees;
@@ -114,7 +114,7 @@ export class TransfereesComponent extends StepComponent implements OnInit, OnDes
     }
   }
 
-  @HostListener('window:resize', ['$event'])
+  @HostListener('window:resize', [])
   onWindowResize() {
     this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
   }

@@ -18,12 +18,12 @@ import { MOBILE_BREAKPOINT } from '../../utils/breakpoints';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 @Component({
-    selector: 'app-parcel-owners[owners][fileId][submissionUuid][ownerService]',
-    templateUrl: './parcel-owners.component.html',
-    styleUrls: ['./parcel-owners.component.scss'],
-    standalone: false
+  selector: 'app-parcel-owners[owners][fileId][submissionUuid][ownerService]',
+  templateUrl: './parcel-owners.component.html',
+  styleUrls: ['./parcel-owners.component.scss'],
+  standalone: false,
 })
-export class ParcelOwnersComponent implements OnInit{
+export class ParcelOwnersComponent implements OnInit {
   @Output() saveParcel = new EventEmitter<void>();
   @Output() onOwnersUpdated = new EventEmitter<ApplicationOwnerDto>();
   @Output() onOwnerRemoved = new EventEmitter<string>();
@@ -72,7 +72,10 @@ export class ParcelOwnersComponent implements OnInit{
   VISIBLE_COUNT = 5;
   visibleCount = this.VISIBLE_COUNT;
 
-  constructor(private dialog: MatDialog, private confirmationDialogService: ConfirmationDialogService) {}
+  constructor(
+    private dialog: MatDialog,
+    private confirmationDialogService: ConfirmationDialogService,
+  ) {}
 
   ngOnInit(): void {
     this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
@@ -142,9 +145,9 @@ export class ParcelOwnersComponent implements OnInit{
       this.visibleCount += this.sortedOwners.length - this.visibleCount;
     }
   }
-  
+
   @HostListener('window:resize', ['$event'])
-  onWindowResize() {
+  onWindowResize(event: Event) {
     this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
   }
 }

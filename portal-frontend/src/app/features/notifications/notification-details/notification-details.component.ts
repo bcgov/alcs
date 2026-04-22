@@ -13,10 +13,10 @@ import { DocumentService } from '../../../services/document/document.service';
 import { ToastService } from '../../../services/toast/toast.service';
 
 @Component({
-    selector: 'app-notification-details',
-    templateUrl: './notification-details.component.html',
-    styleUrls: ['./notification-details.component.scss'],
-    standalone: false
+  selector: 'app-notification-details',
+  templateUrl: './notification-details.component.html',
+  styleUrls: ['./notification-details.component.scss'],
+  standalone: false,
 })
 export class NotificationDetailsComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
@@ -98,7 +98,7 @@ export class NotificationDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  @HostListener('window:resize', ['$event'])
+  @HostListener('window:resize', [])
   onWindowResize() {
     this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
   }
