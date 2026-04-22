@@ -18,13 +18,7 @@
     "esModuleInterop": true,
     "target": "ES2022",
     "module": "es2020",
-    "types": [
-      "jest"
-    ],
-    "lib": [
-      "es2020",
-      "dom"
-    ],
+    "types": ["jest"],
     "useDefineForClassFields": false
   },
   "angularCompilerOptions": {
