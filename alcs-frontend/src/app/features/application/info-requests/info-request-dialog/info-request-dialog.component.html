@@ -14,7 +14,7 @@
             [(ngModel)]="model.startDate"
             name="startDate"
             id="startDate"
-            required
+            [required]="true"
             (dateChange)="startDateSelected()"
           />
           <mat-datepicker-toggle matSuffix [for]="startDate"></mat-datepicker-toggle>
@@ -52,16 +52,14 @@
         >
           <mat-radio-button value="Waiting for additional information from applicant"
             >Waiting for additional information from applicant</mat-radio-button
-            >
-          <mat-radio-button class="other-radio-button" value="custom">
-            Other:
-          </mat-radio-button>
+          >
+          <mat-radio-button class="other-radio-button" value="custom"> Other: </mat-radio-button>
           <input
             class="other-text"
             #customReasonText
             matInput
             type="text"
-            [required]='model.reason === REASON_TYPE.CUSTOM'
+            [required]="model.reason === REASON_TYPE.CUSTOM"
             [(ngModel)]="model.reasonText"
             name="reasonText"
             (click)="onReasonInputClick()"

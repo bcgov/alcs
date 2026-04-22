@@ -6,7 +6,7 @@
     <div>
       <mat-form-field class="code" appearance="outline">
         <mat-label>Code</mat-label>
-        <input required maxlength="4" minlength="4" matInput id="code" formControlName="code" name="code" />
+        <input [required]="true" maxlength="4" minlength="4" matInput id="code" formControlName="code" name="code" />
       </mat-form-field>
       @if (conditionTypeForm.get('code')?.hasError('codeExists')) {
         <div>
@@ -18,25 +18,27 @@
     <div class="full-width">
       <mat-form-field class="label" appearance="outline">
         <mat-label>Label</mat-label>
-        <input required matInput id="label" formControlName="label" name="label" />
+        <input [required]="true" matInput id="label" formControlName="label" name="label" />
       </mat-form-field>
     </div>
 
     <div class="full-width">
       <mat-form-field class="description" appearance="outline">
         <mat-label>Description</mat-label>
-        <input required matInput id="description" formControlName="description" name="description" />
+        <input [required]="true" matInput id="description" formControlName="description" name="description" />
       </mat-form-field>
       @if (conditionTypeForm.get('description')?.hasError('descriptionExists')) {
         <div>
-          <app-error-message message="Description already in use or deteled, pick a different description."></app-error-message>
+          <app-error-message
+            message="Description already in use or deteled, pick a different description."
+          ></app-error-message>
         </div>
       }
     </div>
 
     <div class="dialog-field full-width">
       <mat-label>Status *</mat-label>
-      <mat-button-toggle-group required id="isActive" formControlName="isActive" name="isActive">
+      <mat-button-toggle-group [required]="true" id="isActive" formControlName="isActive" name="isActive">
         <mat-button-toggle [value]="true">Active</mat-button-toggle>
         <mat-button-toggle [value]="false">Inactive</mat-button-toggle>
       </mat-button-toggle-group>
@@ -54,9 +56,7 @@
           <div>
             <mat-checkbox formControlName="isAdministrativeFeeAmountChecked">Administrative Fee Amount</mat-checkbox>
             @if (!conditionTypeForm.controls['isAdministrativeFeeAmountChecked'].valid && !isLoading) {
-              <app-error-message
-                [message]="'Field contains data, cannot be removed'"
-              ></app-error-message>
+              <app-error-message [message]="'Field contains data, cannot be removed'"></app-error-message>
             }
           </div>
 
@@ -83,7 +83,7 @@
                 id="administrativeFeeAmount"
                 formControlName="administrativeFeeAmount"
                 name="administrativeFeeAmount"
-                />
+              />
             </mat-form-field>
           </div>
         }
@@ -94,9 +94,7 @@
           <div>
             <mat-checkbox formControlName="isDateChecked"> Date </mat-checkbox>
             @if (!conditionTypeForm.controls['isDateChecked'].valid && !isLoading) {
-              <app-error-message
-                [message]="'Field contains data, cannot be removed'"
-              ></app-error-message>
+              <app-error-message [message]="'Field contains data, cannot be removed'"></app-error-message>
             }
           </div>
 
@@ -105,16 +103,16 @@
               <mat-label [ngClass]="{ inactive: conditionTypeForm.get('isDateRequired')?.value ?? false }"
                 >Mark Field as Required (*)
               </mat-label>
-              <mat-slide-toggle formControlName="isDateRequired" aria-labelledby="isDateRequiredLabel"></mat-slide-toggle>
+              <mat-slide-toggle
+                formControlName="isDateRequired"
+                aria-labelledby="isDateRequiredLabel"
+              ></mat-slide-toggle>
             </div>
           }
         </div>
         <div>
           @if (conditionTypeForm.get('isDateChecked')?.value) {
-            <mat-radio-group
-              formControlName="dateType"
-              class="condition-date-types"
-              >
+            <mat-radio-group formControlName="dateType" class="condition-date-types">
               <mat-radio-button [value]="DateType.SINGLE">Single - Select date label </mat-radio-button>
               @if (conditionTypeForm.value.dateType === DateType.SINGLE) {
                 <div class="condition-fields-container">
@@ -123,7 +121,7 @@
                     formControlName="singleDateLabel"
                     name="singleDateLabel"
                     class="single-date-label-toggle"
-                    >
+                  >
                     <mat-button-toggle value="Due Date">Due Date</mat-button-toggle>
                     <mat-button-toggle value="End Date">End Date</mat-button-toggle>
                   </mat-button-toggle-group>
@@ -140,9 +138,7 @@
           <div>
             <mat-checkbox formControlName="isSecurityAmountChecked">Security Amount</mat-checkbox>
             @if (!conditionTypeForm.controls['isSecurityAmountChecked'].valid && !isLoading) {
-              <app-error-message
-                [message]="'Field contains data, cannot be removed'"
-              ></app-error-message>
+              <app-error-message [message]="'Field contains data, cannot be removed'"></app-error-message>
             }
           </div>
 
@@ -184,7 +180,7 @@
         color="primary"
         type="submit"
         [disabled]="!conditionTypeForm.valid"
-        >
+      >
         Save
       </button>
     </div>

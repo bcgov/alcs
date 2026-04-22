@@ -12,8 +12,8 @@
           [matDatepicker]="datePicker"
           formControlName="submittedDate"
           name="submittedDate"
-          required
-          />
+          [required]="true"
+        />
         <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
         <mat-datepicker #datePicker type="date"></mat-datepicker>
       </mat-form-field>
@@ -37,7 +37,7 @@
 
       <mat-form-field appearance="outline" class="full-grid-line">
         <mat-label>Description</mat-label>
-        <input matInput formControlName="description" name="description" required />
+        <input matInput formControlName="description" name="description" [required]="true" />
       </mat-form-field>
 
       <div class="full-grid-line toggle-group">

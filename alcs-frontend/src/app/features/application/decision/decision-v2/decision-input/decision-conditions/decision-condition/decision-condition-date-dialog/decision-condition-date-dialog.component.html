@@ -22,8 +22,8 @@
               [matDatepicker]="datePicker"
               [(ngModel)]="row.date"
               name="date-{{ i }}"
-              required
-              />
+              [required]="true"
+            />
             <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
             <mat-datepicker #datePicker type="date"></mat-datepicker>
           </mat-form-field>

@@ -14,10 +14,8 @@
     data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.TURP ||
     data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.COVE ||
     data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.SUBD
-    ) {
-    <div
-      class="row-no-flex"
-      >
+  ) {
+    <div class="row-no-flex">
       <div class="full-width">
         <mat-form-field appearance="outline" class="row">
           <mat-label>ALR Area Impacted (ha)</mat-label>
@@ -28,8 +26,8 @@
             thousandSeparator=","
             separatorLimit="9999999999"
             formControlName="alrArea"
-            required
-            />
+            [required]="true"
+          />
         </mat-form-field>
       </div>
     </div>
@@ -64,10 +62,8 @@
   @if (
     data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.EXCL ||
     data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.INCL
-    ) {
-    <div
-      class="row-no-flex"
-      >
+  ) {
+    <div class="row-no-flex">
       <app-incl-excl-input [form]="form"></app-incl-excl-input>
     </div>
   }
@@ -80,7 +76,7 @@
         appendTo="body"
         bindLabel="label"
         bindValue="value"
-        required
+        [required]="true"
         placeholder="Agricultural Capability*"
         [clearable]="false"
       ></ng-select>
@@ -94,7 +90,7 @@
         appendTo="body"
         bindLabel="label"
         bindValue="value"
-        required
+        [required]="true"
         placeholder="Agricultural Capability Source*"
         [clearable]="false"
       ></ng-select>

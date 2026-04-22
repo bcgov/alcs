@@ -12,8 +12,8 @@
           [matDatepicker]="datePicker"
           formControlName="submittedDate"
           name="submittedDate"
-          required
-          />
+          [required]="true"
+        />
         <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
         <mat-datepicker #datePicker type="date"></mat-datepicker>
       </mat-form-field>
@@ -40,13 +40,9 @@
           [class.invalid]="
             form.get('description')!.invalid && (form.get('description')!.dirty || form.get('description')!.touched)
           "
-          />
+        />
         @if (form.get('description')!.touched && form.get('description')!.hasError('description')) {
-          <mat-error
-            class="text-danger"
-            >
-            This field is required.
-          </mat-error>
+          <mat-error class="text-danger"> This field is required. </mat-error>
         }
       </mat-form-field>
 
