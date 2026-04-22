@@ -80,10 +80,10 @@ export const STRUCTURE_TYPE_OPTIONS = [
 ];
 
 @Component({
-    selector: 'app-additional-information',
-    templateUrl: './additional-information.component.html',
-    styleUrls: ['./additional-information.component.scss'],
-    standalone: false
+  selector: 'app-additional-information',
+  templateUrl: './additional-information.component.html',
+  styleUrls: ['./additional-information.component.scss'],
+  standalone: false,
 })
 export class AdditionalInformationComponent extends FilesStepComponent implements OnInit, OnDestroy {
   currentStep = EditNoiSteps.ExtraInfo;
@@ -541,7 +541,7 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
     formControl.setValidators([Validators.required]);
   }
 
-  @HostListener('window:resize', ['$event'])
+  @HostListener('window:resize', [])
   onWindowResize() {
     this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
   }

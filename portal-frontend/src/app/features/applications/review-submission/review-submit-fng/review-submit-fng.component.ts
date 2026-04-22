@@ -19,10 +19,10 @@ import { downloadFile } from '../../../../shared/utils/file';
 import { DocumentService } from '../../../../services/document/document.service';
 
 @Component({
-    selector: 'app-review-submit-fng[stepper]',
-    templateUrl: './review-submit-fng.component.html',
-    styleUrls: ['./review-submit-fng.component.scss'],
-    standalone: false
+  selector: 'app-review-submit-fng[stepper]',
+  templateUrl: './review-submit-fng.component.html',
+  styleUrls: ['./review-submit-fng.component.scss'],
+  standalone: false,
 })
 export class ReviewSubmitFngComponent implements OnInit, OnDestroy {
   @Input() $application!: BehaviorSubject<ApplicationSubmissionDto | undefined>;
@@ -52,10 +52,10 @@ export class ReviewSubmitFngComponent implements OnInit, OnDestroy {
     private toastService: ToastService,
     private pdfGenerationService: PdfGenerationService,
     private codeService: CodeService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
   ) {}
 
-  @HostListener('window:resize', ['$event'])
+  @HostListener('window:resize', [])
   onWindowResize() {
     this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
   }
@@ -71,10 +71,10 @@ export class ReviewSubmitFngComponent implements OnInit, OnDestroy {
 
     this.$applicationDocuments.pipe(takeUntil(this.$destroy)).subscribe((documents) => {
       this.resolutionDocument = documents.filter(
-        (document) => document.type?.code === DOCUMENT_TYPE.RESOLUTION_DOCUMENT
+        (document) => document.type?.code === DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
       );
       this.otherAttachments = documents.filter(
-        (document) => document.type?.code === DOCUMENT_TYPE.OTHER && document.source === DOCUMENT_SOURCE.LFNG
+        (document) => document.type?.code === DOCUMENT_TYPE.OTHER && document.source === DOCUMENT_SOURCE.LFNG,
       );
     });
 

@@ -40,10 +40,10 @@ const DECISION_MAP = {
 const SEARCH_SESSION_STORAGE_KEY = 'search';
 
 @Component({
-    selector: 'app-public',
-    templateUrl: './public-search.component.html',
-    styleUrls: ['./public-search.component.scss'],
-    standalone: false
+  selector: 'app-public',
+  templateUrl: './public-search.component.html',
+  styleUrls: ['./public-search.component.scss'],
+  standalone: false,
 })
 export class PublicSearchComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
@@ -107,7 +107,7 @@ export class PublicSearchComponent implements OnInit, OnDestroy {
 
   minDate = new Date(1970, 0);
 
-  @HostListener('window:resize', ['$event'])
+  @HostListener('window:resize', [])
   onWindowResize() {
     const isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
 

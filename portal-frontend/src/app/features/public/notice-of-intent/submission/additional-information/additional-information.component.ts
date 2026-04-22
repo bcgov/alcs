@@ -12,10 +12,10 @@ import {
 import { MOBILE_BREAKPOINT } from '../../../../../shared/utils/breakpoints';
 
 @Component({
-    selector: 'app-additional-information',
-    templateUrl: './additional-information.component.html',
-    styleUrls: ['./additional-information.component.scss'],
-    standalone: false
+  selector: 'app-additional-information',
+  templateUrl: './additional-information.component.html',
+  styleUrls: ['./additional-information.component.scss'],
+  standalone: false,
 })
 export class AdditionalInformationComponent implements OnInit {
   firstQuestion = 'FIX THIS';
@@ -101,7 +101,7 @@ export class AdditionalInformationComponent implements OnInit {
     return STRUCTURE_TYPE_LABEL_MAP[value];
   }
 
-  @HostListener('window:resize', ['$event'])
+  @HostListener('window:resize', [])
   onWindowResize() {
     this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
   }

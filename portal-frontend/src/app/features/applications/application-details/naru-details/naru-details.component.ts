@@ -9,10 +9,10 @@ import { DocumentService } from '../../../../services/document/document.service'
 import { ToastService } from '../../../../services/toast/toast.service';
 
 @Component({
-    selector: 'app-naru-details[applicationSubmission]',
-    templateUrl: './naru-details.component.html',
-    styleUrls: ['./naru-details.component.scss'],
-    standalone: false
+  selector: 'app-naru-details[applicationSubmission]',
+  templateUrl: './naru-details.component.html',
+  styleUrls: ['./naru-details.component.scss'],
+  standalone: false,
 })
 export class NaruDetailsComponent {
   @Input() showErrors = true;
@@ -63,7 +63,7 @@ export class NaruDetailsComponent {
     }
   }
 
-  @HostListener('window:resize', ['$event'])
+  @HostListener('window:resize', [])
   onWindowResize() {
     this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
   }
