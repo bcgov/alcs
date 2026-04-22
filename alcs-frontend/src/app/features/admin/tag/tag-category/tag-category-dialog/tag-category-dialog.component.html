@@ -3,11 +3,18 @@
 </div>
 <div mat-dialog-content class="dialog">
   <form (ngSubmit)="onSubmit()" #form="ngForm">
-
     <div class="full-width">
       <mat-form-field class="description" appearance="outline">
         <mat-label>Name</mat-label>
-        <input required matInput id="name" [(ngModel)]="name" name="name" (ngModelChange)="onChange()" [formControl]="nameControl" />
+        <input
+          [required]="true"
+          matInput
+          id="name"
+          [(ngModel)]="name"
+          name="name"
+          (ngModelChange)="onChange()"
+          [formControl]="nameControl"
+        />
       </mat-form-field>
       <div class="warning-section">
         @if (showNameWarning) {
@@ -17,7 +24,6 @@
         }
       </div>
     </div>
-
   </form>
 
   <mat-dialog-actions align="end">
@@ -30,7 +36,7 @@
         color="primary"
         type="submit"
         [disabled]="!form.form.valid"
-        >
+      >
         Save
       </button>
     </div>

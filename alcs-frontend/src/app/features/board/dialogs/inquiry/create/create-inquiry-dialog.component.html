@@ -42,8 +42,8 @@
             id="date"
             matInput
             name="date"
-            required
-            />
+            [required]="true"
+          />
           <mat-datepicker-toggle [for]="submissionDate" matSuffix></mat-datepicker-toggle>
           <mat-datepicker #submissionDate type="date"></mat-datepicker>
         </mat-form-field>
@@ -59,7 +59,7 @@
             bindValue="uuid"
             class="card-local-government"
             placeholder="Local/First Nation Government*"
-            >
+          >
             <ng-template let-item="item" let-search="searchTerm" ng-option-tmp>
               <div [ngOptionHighlight]="search">{{ item.name }}</div>
             </ng-template>
@@ -75,12 +75,12 @@
             bindLabel="label"
             bindValue="code"
             placeholder="Region*"
-            >
+          >
           </ng-select>
         </div>
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Summary</mat-label>
-          <input [formControl]="summaryControl" matInput required />
+          <input [formControl]="summaryControl" matInput [required]="true" />
         </mat-form-field>
       </div>
       <h4>Inquirer</h4>
@@ -120,7 +120,12 @@
           <th *matHeaderCellDef mat-header-cell>Civic Address*</th>
           <td *matCellDef="let row; let i = index" mat-cell style="width: 27%">
             <mat-form-field appearance="outline">
-              <input [(ngModel)]="parcels[i].civicAddress" [ngModelOptions]="{ standalone: true }" matInput required />
+              <input
+                [(ngModel)]="parcels[i].civicAddress"
+                [ngModelOptions]="{ standalone: true }"
+                matInput
+                [required]="true"
+              />
             </mat-form-field>
           </td>
         </ng-container>
@@ -171,7 +176,7 @@
           color="primary"
           mat-flat-button
           type="submit"
-          >
+        >
           Create
         </button>
       </div>

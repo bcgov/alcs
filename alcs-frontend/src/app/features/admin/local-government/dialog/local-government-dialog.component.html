@@ -6,7 +6,7 @@
     <div>
       <mat-form-field appearance="outline">
         <mat-label>Name</mat-label>
-        <input required matInput id="name" [(ngModel)]="model.name" name="name" />
+        <input [required]="true" matInput id="name" [(ngModel)]="model.name" name="name" />
       </mat-form-field>
     </div>
 
@@ -21,7 +21,7 @@
       <div>
         <ng-select
           appearance="outline"
-          required
+          [required]="true"
           name="preferredRegionCode"
           [items]="regions"
           appendTo="body"
@@ -30,7 +30,7 @@
           bindValue="code"
           [clearable]="false"
           [(ngModel)]="model.preferredRegionCode"
-          >
+        >
           <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
             <div [ngOptionHighlight]="search">{{ item.label }}</div>
           </ng-template>
@@ -47,7 +47,7 @@
               [editable]="true"
               (edited)="editEmail(email, $event)"
               [aria-description]="'press enter to edit ' + email"
-              >
+            >
               {{ email }}
               <button matChipRemove [attr.aria-label]="'remove ' + email">
                 <mat-icon>cancel</mat-icon>
@@ -62,7 +62,7 @@
           [matChipInputAddOnBlur]="true"
           (matChipInputTokenEnd)="addEmail($event)"
           [formControl]="email"
-          />
+        />
       </mat-form-field>
       @if (email.invalid) {
         <mat-error><mat-icon>warning</mat-icon>&nbsp;Please type a valid email address</mat-error>
@@ -71,7 +71,12 @@
 
     <div>
       <mat-label>This is a First Nation Government *</mat-label>
-      <mat-button-toggle-group required id="isFirstNation" [(ngModel)]="model.isFirstNation" name="isFirstNation">
+      <mat-button-toggle-group
+        [required]="true"
+        id="isFirstNation"
+        [(ngModel)]="model.isFirstNation"
+        name="isFirstNation"
+      >
         <mat-button-toggle value="true">Yes</mat-button-toggle>
         <mat-button-toggle value="false">No</mat-button-toggle>
       </mat-button-toggle-group>
@@ -79,7 +84,7 @@
 
     <div>
       <mat-label>Status * (Inactive governments cannot receive new applications)</mat-label>
-      <mat-button-toggle-group required id="isActive" [(ngModel)]="model.isActive" name="isActive">
+      <mat-button-toggle-group [required]="true" id="isActive" [(ngModel)]="model.isActive" name="isActive">
         <mat-button-toggle value="true">Active</mat-button-toggle>
         <mat-button-toggle value="false">Inactive</mat-button-toggle>
       </mat-button-toggle-group>
@@ -96,7 +101,7 @@
         color="primary"
         type="submit"
         [disabled]="!governmentForm.form.valid"
-        >
+      >
         Save
       </button>
     </div>

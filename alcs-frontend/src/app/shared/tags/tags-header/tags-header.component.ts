@@ -25,10 +25,10 @@ import { ToastService } from '../../../services/toast/toast.service';
 import { FileTagService } from '../../../services/common/file-tag.service';
 
 @Component({
-    selector: 'app-tags-header',
-    templateUrl: './tags-header.component.html',
-    styleUrl: './tags-header.component.scss',
-    standalone: false
+  selector: 'app-tags-header',
+  templateUrl: './tags-header.component.html',
+  styleUrl: './tags-header.component.scss',
+  standalone: false,
 })
 export class TagsHeaderComponent implements OnInit, OnChanges {
   destroy = new Subject<void>();
@@ -167,7 +167,7 @@ export class TagsHeaderComponent implements OnInit, OnChanges {
   }
 
   @HostListener('document:click', ['$event.target'])
-  public onDocumentClick(targetElement: HTMLElement): void {
+  public onDocumentClick(targetElement: EventTarget | null): void {
     const clickedInside = this.elementRef.nativeElement.contains(targetElement);
 
     if (!clickedInside) {

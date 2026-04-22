@@ -69,7 +69,7 @@
     <div class="double">
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Document Name</mat-label>
-        <input [formControl]="name" id="name" matInput name="name" required />
+        <input [formControl]="name" id="name" matInput name="name" [required]="true" />
         <span matTextSuffix>{{ extension }}</span>
       </mat-form-field>
     </div>

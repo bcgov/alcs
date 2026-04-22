@@ -14,7 +14,9 @@
         <app-no-data></app-no-data>
       }
     </div>
-    <div class="subheading2 grid-1">Is your proposal to retain an existing residence while building a new residence?</div>
+    <div class="subheading2 grid-1">
+      Is your proposal to retain an existing residence while building a new residence?
+    </div>
     <div class="grid-double">
       @if (_applicationSubmission.naruWillRetainResidence === true) {
         Yes
@@ -75,11 +77,13 @@
       _applicationSubmission.naruWillBeOverFiveHundredM2 ||
       _applicationSubmission.naruWillHaveAdditionalResidence ||
       _applicationSubmission.naruWillHaveTemporaryForeignWorkerHousing
-      ) {
+    ) {
       <div class="subheading2 grid-1">
-        Is your proposal necessary for farm use? If so, please explain@if (_applicationSubmission.naruWillHaveTemporaryForeignWorkerHousing) {
-        what the temporary foreign workers will be doing on the farm
-        }.
+        Is your proposal necessary for farm use? If so, please explain
+        @if (_applicationSubmission.naruWillHaveTemporaryForeignWorkerHousing) {
+          what the temporary foreign workers will be doing on the farm
+        }
+        .
       </div>
       <div class="grid-double">
         {{ _applicationSubmission.naruResidenceNecessity }}
@@ -125,7 +129,8 @@
       }
     </div>
     <div class="subheading2 grid-1">
-      Where on the parcel will the proposal be situated and is there an agricultural rationale for the proposed location?
+      Where on the parcel will the proposal be situated and is there an agricultural rationale for the proposed
+      location?
     </div>
     <div class="grid-double">
       {{ _applicationSubmission.naruLocationRationale }}
@@ -134,8 +139,8 @@
       }
     </div>
     <div class="subheading2 grid-1">
-      Describe any infrastructure required to support the proposed residence(s) and the approximate area (m<sup>2</sup>)
-      required for that infrastructure
+      Describe any infrastructure [required]="true" to support the proposed residence(s) and the approximate area
+      (m<sup>2</sup>) [required]="true" for that infrastructure
     </div>
     <div class="grid-double">
       {{ _applicationSubmission.naruInfrastructure }}
@@ -151,7 +156,11 @@
         @if (_applicationSubmission.naruExistingResidences.length === 0) {
           <app-no-data></app-no-data>
         }
-        @for (existingResidence of _applicationSubmission.naruExistingResidences; track existingResidence; let i = $index) {
+        @for (
+          existingResidence of _applicationSubmission.naruExistingResidences;
+          track existingResidence;
+          let i = $index
+        ) {
           <div class="grid-1">#{{ i + 1 }}</div>
           <div class="grid-2">
             @if (existingResidence.floorArea === 0) {
@@ -172,7 +181,11 @@
         @if (_applicationSubmission.naruExistingResidences?.length === 0) {
           <app-no-data></app-no-data>
         }
-        @for (proposedResidence of _applicationSubmission.naruProposedResidences; track proposedResidence; let i = $index) {
+        @for (
+          proposedResidence of _applicationSubmission.naruProposedResidences;
+          track proposedResidence;
+          let i = $index
+        ) {
           <div class="grid-1">#{{ i + 1 }}</div>
           <div class="grid-2">
             {{ proposedResidence.floorArea }} <span matTextSuffix>m<sup>2</sup></span>
