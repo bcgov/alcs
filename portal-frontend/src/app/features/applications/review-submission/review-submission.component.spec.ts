@@ -32,16 +32,12 @@ describe('ReviewSubmissionComponent', () => {
 
   beforeEach(async () => {
     mockAppReviewService = createMock();
-    mockAppReviewService.$applicationReview = new BehaviorSubject<ApplicationSubmissionReviewDto | undefined>(
-      undefined,
-    );
     mockAppService = createMock();
     mockRoute = createMock();
     mockPdfGenerationService = createMock();
     mockAuthenticationService = createMock();
     mockAppDocService = createMock();
     mockDialog = createMock();
-    mockAuthenticationService.$currentProfile = new BehaviorSubject<UserDto | undefined>(undefined);
 
     routeParamMap = new BehaviorSubject(new Map());
     mockRoute.paramMap = routeParamMap;

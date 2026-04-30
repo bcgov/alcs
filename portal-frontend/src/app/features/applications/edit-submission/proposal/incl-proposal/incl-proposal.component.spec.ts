@@ -23,7 +23,6 @@ describe('InclProposalComponent', () => {
     mockApplicationService = createMock();
     mockAppDocumentService = createMock();
     mockAuthService = createMock();
-    mockAuthService.$currentProfile = new BehaviorSubject<UserDto | undefined>(undefined);
 
     await TestBed.configureTestingModule({
       providers: [

@@ -31,10 +31,6 @@ describe('ViewApplicationSubmissionComponent', () => {
     mockAppDocumentService = createMock();
     mockDialogService = createMock();
 
-    mockAppReviewService.$applicationReview = new BehaviorSubject<ApplicationSubmissionReviewDto | undefined>(
-      undefined,
-    );
-
     routeParamMap = new BehaviorSubject(new Map());
     mockRoute.paramMap = routeParamMap;
 

@@ -1,4 +1,4 @@
-import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
@@ -138,6 +138,7 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
     noticeOfIntentDocumentService: NoticeOfIntentDocumentService,
     dialog: MatDialog,
     toastService: ToastService,
+    private cdr: ChangeDetectorRef,
   ) {
     super(noticeOfIntentDocumentService, dialog, toastService);
   }
@@ -160,6 +161,7 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
             this.firstQuestion = 'Are you removing soil and placing fill in order to build a structure?';
             break;
         }
+        this.cdr.detectChanges();
 
         if (noiSubmission.soilIsRemovingSoilForNewStructure) {
           this.confirmRemovalOfSoil = true;
