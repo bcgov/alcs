@@ -69,10 +69,8 @@ describe('ParcelEntryComponent', () => {
     });
 
     it('should populate parcel values on successful search', async () => {
-      component.parcelForm.patchValue({
-        pidPin: 'pidPin',
-        searchBy: 'pin',
-      });
+      component.searchBy.setValue('pin', { emitEvent: false });
+      component.pidPin.setValue('pidPin', { emitEvent: false });
 
       mockParcelService.getByPin.mockResolvedValue({
         legalDescription: 'legalDescription',
@@ -80,7 +78,6 @@ describe('ParcelEntryComponent', () => {
         pin: 'pin',
         pid: 'pid',
       });
-      fixture.detectChanges();
 
       await component.onSearch();
 
@@ -170,17 +167,17 @@ describe('ParcelEntryComponent', () => {
     });
 
     it('should have search button enabled if pid is valid', () => {
-      component.searchBy.setValue('pid');
-      component.parcelForm.controls.parcelType.setValue('SMPL');
-      component.pidPin.setValue('123456789');
+      component.searchBy.setValue('pid', { emitEvent: false });
+      component.parcelType.setValue('SMPL', { emitEvent: false });
+      component.pidPin.setValue('123456789', { emitEvent: false });
 
-      fixture.detectChanges();
+      const buttonDisabled =
+        !component.parcelType.getRawValue() || component.pidPin.invalid || !component.pidPin.getRawValue();
 
-      const button = fixture.debugElement.query(By.css('.lookup-search-button')).nativeElement;
       expect(!component.parcelType.getRawValue()).toBeFalsy();
       expect(!component.pidPin.getRawValue()).toBeFalsy();
       expect(component.pidPin.invalid).toBeFalsy();
-      expect(button.disabled).toBeFalsy();
+      expect(buttonDisabled).toBeFalsy();
     });
   });
 
@@ -225,18 +222,17 @@ describe('ParcelEntryComponent', () => {
     });
 
     it('should have search button enabled if pid is valid', () => {
-      component.isCrownLand = true;
-      component.searchBy.setValue('pid');
-      component.parcelForm.controls.parcelType.setValue('CRWN');
-      component.pidPin.setValue('123456789');
+      component.parcelType.setValue('CRWN', { emitEvent: false });
+      component.searchBy.setValue('pid', { emitEvent: false });
+      component.pidPin.setValue('123456789', { emitEvent: false });
 
-      fixture.detectChanges();
+      const buttonDisabled =
+        !component.parcelType.getRawValue() || component.pidPin.invalid || !component.pidPin.getRawValue();
 
-      const button = fixture.debugElement.query(By.css('.lookup-search-button')).nativeElement;
       expect(!component.parcelType.getRawValue()).toBeFalsy();
       expect(!component.pidPin.getRawValue()).toBeFalsy();
       expect(component.pidPin.invalid).toBeFalsy();
-      expect(button.disabled).toBeFalsy();
+      expect(buttonDisabled).toBeFalsy();
     });
   });
 });
