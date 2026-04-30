@@ -1,8 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
-import { BehaviorSubject } from 'rxjs';
-import { AuthenticationService, ICurrentUser } from '../../services/authentication/authentication.service';
+import { AuthenticationService } from '../../services/authentication/authentication.service';
 
 import { ProvisionComponent } from './provision.component';
 
@@ -13,7 +12,6 @@ describe('ProvisionComponent', () => {
 
   beforeEach(async () => {
     mockAuthenticationService = createMock();
-    mockAuthenticationService.$currentUser = new BehaviorSubject<ICurrentUser | undefined>(undefined);
 
     await TestBed.configureTestingModule({
       imports: [RouterTestingModule],

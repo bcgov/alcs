@@ -1,20 +1,20 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
+import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { AuthenticationService, ICurrentUser, ROLES } from '../../services/authentication/authentication.service';
 import { CARD_SUBTASK_TYPE } from '../../services/card/card-subtask/card-subtask.dto';
-import { UserDto } from '../../services/user/user.dto';
-import { UserService } from '../../services/user/user.service';
 import { ComplianceAndEnforcementService } from '../../services/compliance-and-enforcement/compliance-and-enforcement.service';
 import { ToastService } from '../../services/toast/toast.service';
-import { Router } from '@angular/router';
+import { UserDto } from '../../services/user/user.dto';
+import { UserService } from '../../services/user/user.service';
 
 @Component({
-    selector: 'app-home',
-    templateUrl: './home.component.html',
-    styleUrls: ['./home.component.scss'],
-    standalone: false
+  selector: 'app-home',
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.scss'],
+  standalone: false,
 })
 export class HomeComponent implements OnInit, OnDestroy {
   destroy = new Subject<void>();
@@ -87,5 +87,9 @@ export class HomeComponent implements OnInit, OnDestroy {
       console.error('Error creating C&E file draft', error);
       this.toastService.showErrorToast('Failed to create C&E file draft');
     }
+  }
+
+  userDisplayName(): string {
+    return this.userProfile?.prettyName || 'User';
   }
 }

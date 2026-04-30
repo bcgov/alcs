@@ -2,10 +2,8 @@ import { EventEmitter, NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
-import { BehaviorSubject } from 'rxjs';
 import { NotificationDetailService } from '../../services/notification/notification-detail.service';
 import { NotificationSubmissionStatusService } from '../../services/notification/notification-submission-status/notification-submission-status.service';
-import { NotificationDto } from '../../services/notification/notification.dto';
 
 import { NotificationComponent } from './notification.component';
 
@@ -17,7 +15,6 @@ describe('NotificationComponent', () => {
 
   beforeEach(async () => {
     mockNotificationDetailService = createMock();
-    mockNotificationDetailService.$notification = new BehaviorSubject<NotificationDto | undefined>(undefined);
     mockNotificationStatusService = createMock();
 
     await TestBed.configureTestingModule({

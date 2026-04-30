@@ -4,15 +4,11 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatDialog } from '@angular/material/dialog';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
-import { BehaviorSubject } from 'rxjs';
-import {
-  AdminLocalGovernmentService,
-  PaginatedLocalGovernmentResponse,
-} from '../../../services/admin-local-government/admin-local-government.service';
+import { AdminLocalGovernmentService } from '../../../services/admin-local-government/admin-local-government.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 
-import { LocalGovernmentComponent } from './local-government.component';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { LocalGovernmentComponent } from './local-government.component';
 
 describe('LocalGovernmentComponent', () => {
   let component: LocalGovernmentComponent;
@@ -25,29 +21,28 @@ describe('LocalGovernmentComponent', () => {
     mockLgService = createMock();
     mockDialog = createMock();
     mockConfirmationDialogService = createMock();
-    mockLgService.$localGovernments = new BehaviorSubject<PaginatedLocalGovernmentResponse>({ data: [], total: 0 });
 
     await TestBed.configureTestingModule({
-    declarations: [LocalGovernmentComponent],
-    schemas: [NO_ERRORS_SCHEMA],
-    imports: [MatAutocompleteModule],
-    providers: [
+      declarations: [LocalGovernmentComponent],
+      schemas: [NO_ERRORS_SCHEMA],
+      imports: [MatAutocompleteModule],
+      providers: [
         {
-            provide: AdminLocalGovernmentService,
-            useValue: mockLgService,
+          provide: AdminLocalGovernmentService,
+          useValue: mockLgService,
         },
         {
-            provide: MatDialog,
-            useValue: mockDialog,
+          provide: MatDialog,
+          useValue: mockDialog,
         },
         {
-            provide: ConfirmationDialogService,
-            useValue: mockConfirmationDialogService,
+          provide: ConfirmationDialogService,
+          useValue: mockConfirmationDialogService,
         },
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
-    ]
-}).compileComponents();
+      ],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(LocalGovernmentComponent);
     component = fixture.componentInstance;

@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
-import { FileTypeDataSourceService, TreeNode } from './file-type-data-source.service';
-import { AuthenticationService, ICurrentUser } from '../../authentication/authentication.service';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
+import { AuthenticationService, ICurrentUser } from '../../authentication/authentication.service';
+import { FileTypeDataSourceService, TreeNode } from './file-type-data-source.service';
 
 describe('FileTypeDataSourceService', () => {
   let service: FileTypeDataSourceService;
@@ -20,7 +20,6 @@ describe('FileTypeDataSourceService', () => {
         },
       ],
     });
-    mockAuthenticationService.$currentUser = currentUser;
     service = TestBed.inject(FileTypeDataSourceService);
   });
 

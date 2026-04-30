@@ -1,8 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
-import { BehaviorSubject, firstValueFrom, of, Subject } from 'rxjs';
-import { ApplicationRegionDto } from '../../../../services/application/application-code.dto';
+import { firstValueFrom, of, Subject } from 'rxjs';
 import { ApplicationLocalGovernmentService } from '../../../../services/application/application-local-government/application-local-government.service';
 import { ApplicationService } from '../../../../services/application/application.service';
 import { ComplianceAndEnforcementService } from '../../../../services/compliance-and-enforcement/compliance-and-enforcement.service';
@@ -30,7 +29,6 @@ describe('PropertyMapsComponent', () => {
     mockToastService = createMock<ToastService>();
     mockLocalGovernmentService = createMock<ApplicationLocalGovernmentService>();
     mockApplicationService = createMock<ApplicationService>();
-    mockApplicationService.$applicationRegions = new BehaviorSubject<ApplicationRegionDto[]>([]);
 
     TestBed.configureTestingModule({
       imports: [],

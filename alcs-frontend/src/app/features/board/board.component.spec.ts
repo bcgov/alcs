@@ -1,3 +1,5 @@
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
@@ -8,16 +10,19 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject, of } from 'rxjs';
 import { sleep } from '../../../../test/sleep';
+import { CardStatusDto } from '../../services/application/application-code.dto';
 import { ApplicationModificationService } from '../../services/application/application-modification/application-modification.service';
 import { ApplicationReconsiderationDto } from '../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../services/application/application-reconsideration/application-reconsideration.service';
 import { ApplicationDto } from '../../services/application/application.dto';
 import { ApplicationService } from '../../services/application/application.service';
+import { ApplicationDecisionConditionCardService } from '../../services/application/decision/application-decision-v2/application-decision-condition/application-decision-condition-card/application-decision-condition-card.service';
 import { BoardDto } from '../../services/board/board.dto';
 import { BoardService, BoardWithFavourite } from '../../services/board/board.service';
 import { CardDto } from '../../services/card/card.dto';
 import { CardService } from '../../services/card/card.service';
 import { InquiryService } from '../../services/inquiry/inquiry.service';
+import { NoticeOfIntentDecisionConditionCardService } from '../../services/notice-of-intent/decision-v2/notice-of-intent-decision-condition/notice-of-intent-decision-condition-card/notice-of-intent-decision-condition-card.service';
 import { NoticeOfIntentModificationService } from '../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.service';
 import { NoticeOfIntentService } from '../../services/notice-of-intent/notice-of-intent.service';
 import { NotificationDto } from '../../services/notification/notification.dto';
@@ -25,14 +30,9 @@ import { NotificationService } from '../../services/notification/notification.se
 import { PlanningReferralService } from '../../services/planning-review/planning-referral.service';
 import { PlanningReferralDto } from '../../services/planning-review/planning-review.dto';
 import { ToastService } from '../../services/toast/toast.service';
+import { AssigneeDto } from '../../services/user/user.dto';
 import { CardData, CardType } from '../../shared/card/card.component';
 import { BoardComponent } from './board.component';
-import { ApplicationDecisionConditionCardService } from '../../services/application/decision/application-decision-v2/application-decision-condition/application-decision-condition-card/application-decision-condition-card.service';
-import { NoticeOfIntentDecisionConditionCardService } from '../../services/notice-of-intent/decision-v2/notice-of-intent-decision-condition/notice-of-intent-decision-condition-card/notice-of-intent-decision-condition-card.service';
-import { AssigneeDto } from '../../services/user/user.dto';
-import { CardStatusDto } from '../../services/application/application-code.dto';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('BoardComponent', () => {
   let component: BoardComponent;
@@ -55,7 +55,7 @@ describe('BoardComponent', () => {
   let applicationDecisionConditionCardService: DeepMocked<ApplicationDecisionConditionCardService>;
   let noticeOfIntentDecisionConditionCardService: DeepMocked<NoticeOfIntentDecisionConditionCardService>;
 
-  let boardEmitter = new BehaviorSubject<BoardWithFavourite[]>([]);
+  let boardSubject = new BehaviorSubject<BoardWithFavourite[]>([]);
 
   const status: CardStatusDto = {
     label: 'card-status-label',
@@ -139,8 +139,9 @@ describe('BoardComponent', () => {
 
   beforeEach(async () => {
     applicationService = createMock();
-    boardService = createMock();
-    boardService.$boards = boardEmitter;
+    boardService = createMock<BoardService>({
+      $boards: boardSubject.asObservable(),
+    });
     boardService.fetchBoardWithCards.mockResolvedValue({
       board: mockDetailBoard,
       applications: [],
@@ -178,85 +179,85 @@ describe('BoardComponent', () => {
     queryParamMapEmitter = new BehaviorSubject(new Map());
 
     await TestBed.configureTestingModule({
-    declarations: [BoardComponent],
-    schemas: [NO_ERRORS_SCHEMA],
-    imports: [RouterTestingModule, MatMenuModule],
-    providers: [
+      declarations: [BoardComponent],
+      schemas: [NO_ERRORS_SCHEMA],
+      imports: [RouterTestingModule, MatMenuModule],
+      providers: [
         {
-            provide: ApplicationService,
-            useValue: applicationService,
+          provide: ApplicationService,
+          useValue: applicationService,
         },
         {
-            provide: BoardService,
-            useValue: boardService,
+          provide: BoardService,
+          useValue: boardService,
         },
         {
-            provide: MatDialog,
-            useValue: dialog,
+          provide: MatDialog,
+          useValue: dialog,
         },
         {
-            provide: ToastService,
-            useValue: toastService,
+          provide: ToastService,
+          useValue: toastService,
         },
         {
-            provide: Router,
-            useValue: router,
+          provide: Router,
+          useValue: router,
         },
         {
-            provide: CardService,
-            useValue: cardService,
+          provide: CardService,
+          useValue: cardService,
         },
         {
-            provide: ActivatedRoute,
-            useValue: {
-                params: of(params),
-                queryParamMap: queryParamMapEmitter,
-            },
+          provide: ActivatedRoute,
+          useValue: {
+            params: of(params),
+            queryParamMap: queryParamMapEmitter,
+          },
         },
         {
-            provide: ApplicationReconsiderationService,
-            useValue: reconsiderationService,
+          provide: ApplicationReconsiderationService,
+          useValue: reconsiderationService,
         },
         {
-            provide: PlanningReferralService,
-            useValue: planningReferralService,
+          provide: PlanningReferralService,
+          useValue: planningReferralService,
         },
         {
-            provide: ApplicationModificationService,
-            useValue: modificationService,
+          provide: ApplicationModificationService,
+          useValue: modificationService,
         },
         {
-            provide: NoticeOfIntentService,
-            useValue: noticeOfIntentService,
+          provide: NoticeOfIntentService,
+          useValue: noticeOfIntentService,
         },
         {
-            provide: NoticeOfIntentModificationService,
-            useValue: noticeOfIntentModificationService,
+          provide: NoticeOfIntentModificationService,
+          useValue: noticeOfIntentModificationService,
         },
         {
-            provide: NotificationService,
-            useValue: notificationService,
+          provide: NotificationService,
+          useValue: notificationService,
         },
         {
-            provide: InquiryService,
-            useValue: inquiryService,
+          provide: InquiryService,
+          useValue: inquiryService,
         },
         {
-            provide: ApplicationDecisionConditionCardService,
-            useValue: applicationDecisionConditionCardService,
+          provide: ApplicationDecisionConditionCardService,
+          useValue: applicationDecisionConditionCardService,
         },
         {
-            provide: NoticeOfIntentDecisionConditionCardService,
-            useValue: noticeOfIntentDecisionConditionCardService,
+          provide: NoticeOfIntentDecisionConditionCardService,
+          useValue: noticeOfIntentDecisionConditionCardService,
         },
         {
-            provide: Title,
-            useValue: titleService,
+          provide: Title,
+          useValue: titleService,
         },
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
-    ]
-}).compileComponents();
+      ],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(BoardComponent);
     component = fixture.componentInstance;
@@ -272,7 +273,7 @@ describe('BoardComponent', () => {
   });
 
   it('should set the title when provided a board code', async () => {
-    boardEmitter.next([mockBoard]);
+    boardSubject.next([mockBoard]);
 
     await fixture.whenStable();
 
@@ -296,9 +297,9 @@ describe('BoardComponent', () => {
       noticeOfIntentDecisionConditions: [],
     });
 
-    boardEmitter.next([mockBoard]);
+    boardSubject.next([mockBoard]);
 
-    await sleep(1);
+    await fixture.whenStable();
 
     expect(component.cards.length).toEqual(1);
     expect(component.cards[0].title).toEqual('1 (applicant)');
@@ -319,7 +320,7 @@ describe('BoardComponent', () => {
       noticeOfIntentDecisionConditions: [],
     });
 
-    boardEmitter.next([mockBoard]);
+    boardSubject.next([mockBoard]);
 
     await sleep(1);
 
@@ -350,6 +351,7 @@ describe('BoardComponent', () => {
         },
       },
     } as ApplicationDto;
+
     boardService.fetchBoardWithCards.mockResolvedValue({
       board: mockDetailBoard,
       applications: [mockApplication, highPriorityApplication, highActiveDays],
@@ -364,9 +366,9 @@ describe('BoardComponent', () => {
       noticeOfIntentDecisionConditions: [],
     });
 
-    boardEmitter.next([mockBoard]);
+    boardSubject.next([mockBoard]);
 
-    await sleep(1);
+    await fixture.whenStable();
 
     expect(component.cards.length).toEqual(3);
     expect(component.cards[0].highPriority).toBeTruthy();
@@ -384,7 +386,7 @@ describe('BoardComponent', () => {
       ]),
     );
 
-    await sleep(1);
+    await fixture.whenStable();
 
     expect(applicationService.fetchByCardUuid).toHaveBeenCalledTimes(1);
     expect(dialog.open).toHaveBeenCalledTimes(1);
@@ -479,7 +481,7 @@ describe('BoardComponent', () => {
       noticeOfIntentDecisionConditions: [],
     });
 
-    boardEmitter.next([mockBoard]);
+    boardSubject.next([mockBoard]);
 
     await sleep(1);
 

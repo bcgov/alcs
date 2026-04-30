@@ -2,8 +2,6 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
-import { BehaviorSubject } from 'rxjs';
-import { PlanningReviewDecisionDto } from '../../../../services/planning-review/planning-review-decision/planning-review-decision.dto';
 import { PlanningReviewDecisionService } from '../../../../services/planning-review/planning-review-decision/planning-review-decision.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 
@@ -20,7 +18,6 @@ describe('DecisionDocumentsComponent', () => {
     mockPRDecService = createMock();
     mockDialog = createMock();
     mockToastService = createMock();
-    mockPRDecService.$decision = new BehaviorSubject<PlanningReviewDecisionDto | undefined>(undefined);
 
     await TestBed.configureTestingModule({
       declarations: [DecisionDocumentsComponent],

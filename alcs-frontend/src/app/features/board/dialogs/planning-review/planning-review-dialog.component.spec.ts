@@ -1,3 +1,4 @@
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { EventEmitter, NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
@@ -7,18 +8,15 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { BehaviorSubject } from 'rxjs';
-import { BoardService, BoardWithFavourite } from '../../../../services/board/board.service';
+import { BoardService } from '../../../../services/board/board.service';
 import { CardDto } from '../../../../services/card/card.dto';
 import { CardService } from '../../../../services/card/card.service';
 import { PlanningReferralDto, PlanningReviewDto } from '../../../../services/planning-review/planning-review.dto';
 import { ToastService } from '../../../../services/toast/toast.service';
-import { AssigneeDto } from '../../../../services/user/user.dto';
 import { UserService } from '../../../../services/user/user.service';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { MomentPipe } from '../../../../shared/pipes/moment.pipe';
 import { PlanningReviewDialogComponent } from './planning-review-dialog.component';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('PlanningReviewDialogComponent', () => {
   let component: PlanningReviewDialogComponent;
@@ -70,54 +68,47 @@ describe('PlanningReviewDialogComponent', () => {
     };
 
     mockUserService = createMock();
-    mockUserService.$assignableUsers = new BehaviorSubject<AssigneeDto[]>([]);
-
     mockBoardService = createMock();
-    mockBoardService.$boards = new BehaviorSubject<BoardWithFavourite[]>([]);
 
     await TestBed.configureTestingModule({
-    declarations: [PlanningReviewDialogComponent, MomentPipe],
-    schemas: [NO_ERRORS_SCHEMA],
-    imports: [MatDialogModule,
-        MatSnackBarModule,
-        FormsModule,
-        MatMenuModule,
-        NgSelectModule],
-    providers: [
+      declarations: [PlanningReviewDialogComponent, MomentPipe],
+      schemas: [NO_ERRORS_SCHEMA],
+      imports: [MatDialogModule, MatSnackBarModule, FormsModule, MatMenuModule, NgSelectModule],
+      providers: [
         {
-            provide: MAT_DIALOG_DATA,
-            useValue: {
-                statusDetails: {
-                    code: 'fake',
-                },
+          provide: MAT_DIALOG_DATA,
+          useValue: {
+            statusDetails: {
+              code: 'fake',
             },
+          },
         },
         {
-            provide: UserService,
-            useValue: mockUserService,
+          provide: UserService,
+          useValue: mockUserService,
         },
         {
-            provide: CardService,
-            useValue: {},
+          provide: CardService,
+          useValue: {},
         },
         {
-            provide: BoardService,
-            useValue: mockBoardService,
+          provide: BoardService,
+          useValue: mockBoardService,
         },
         {
-            provide: ToastService,
-            useValue: {},
+          provide: ToastService,
+          useValue: {},
         },
         {
-            provide: ConfirmationDialogService,
-            useValue: {},
+          provide: ConfirmationDialogService,
+          useValue: {},
         },
         { provide: MatDialogRef, useValue: mockDialogRef },
         { provide: ConfirmationDialogService, useValue: {} },
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
-    ]
-}).compileComponents();
+      ],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(PlanningReviewDialogComponent);
     component = fixture.componentInstance;
