@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
-import { PortalStatusDataSourceService, TreeNode } from './portal-status-data-source.service';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
-import { AuthenticationService, ICurrentUser } from '../../authentication/authentication.service';
 import { BehaviorSubject } from 'rxjs';
+import { AuthenticationService, ICurrentUser } from '../../authentication/authentication.service';
+import { PortalStatusDataSourceService, TreeNode } from './portal-status-data-source.service';
 
 describe('PortalStatusDataSourceService', () => {
   let service: PortalStatusDataSourceService;
@@ -20,7 +20,6 @@ describe('PortalStatusDataSourceService', () => {
         },
       ],
     });
-    mockAuthenticationService.$currentUser = currentUser;
     service = TestBed.inject(PortalStatusDataSourceService);
   });
 

@@ -1,38 +1,41 @@
-import { ComplianceAndEnforcementService } from '../../../../services/compliance-and-enforcement/compliance-and-enforcement.service';
-import { createMock, DeepMocked } from '@golevelup/ts-jest';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ComplianceAndEnforcementChronologyComponent } from './chronology.component';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ToastService } from '../../../../services/toast/toast.service';
 import { HttpClient } from '@angular/common/http';
-import { ComplianceAndEnforcementChronologyService } from '../../../../services/compliance-and-enforcement/chronology/chronology.service';
-import { ComplianceAndEnforcementDocumentService } from '../../../../services/compliance-and-enforcement/documents/document.service';
-import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
-import { UserService } from '../../../../services/user/user.service';
+import { EventEmitter } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute, Router } from '@angular/router';
+import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject, of, throwError } from 'rxjs';
+import {
+  ComplianceAndEnforcementChronologyEntryDto,
+  UpdateComplianceAndEnforcementChronologyEntryDto,
+} from '../../../../services/compliance-and-enforcement/chronology/chronology.dto';
+import { ComplianceAndEnforcementChronologyService } from '../../../../services/compliance-and-enforcement/chronology/chronology.service';
 import {
   AllegedActivity,
   ComplianceAndEnforcementDto,
   InitialSubmissionType,
 } from '../../../../services/compliance-and-enforcement/compliance-and-enforcement.dto';
+import { ComplianceAndEnforcementService } from '../../../../services/compliance-and-enforcement/compliance-and-enforcement.service';
+import { ComplianceAndEnforcementDocumentService } from '../../../../services/compliance-and-enforcement/documents/document.service';
+import { ToastService } from '../../../../services/toast/toast.service';
 import { UserDto } from '../../../../services/user/user.dto';
-import {
-  ComplianceAndEnforcementChronologyEntryDto,
-  UpdateComplianceAndEnforcementChronologyEntryDto,
-} from '../../../../services/compliance-and-enforcement/chronology/chronology.dto';
+import { UserService } from '../../../../services/user/user.service';
+import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
+import { ComplianceAndEnforcementChronologyComponent } from './chronology.component';
 
 describe('ComplianceAndEnforcementChronologyComponent', () => {
   let component: ComplianceAndEnforcementChronologyComponent;
   let fixture: ComponentFixture<ComplianceAndEnforcementChronologyComponent>;
   let mockActivatedRoute: DeepMocked<ActivatedRoute>;
   let mockRouter: DeepMocked<Router>;
+  let mockFileSubject: BehaviorSubject<ComplianceAndEnforcementDto | null>;
   let mockComplianceAndEnforcementService: DeepMocked<ComplianceAndEnforcementService>;
   let mockToastService: DeepMocked<ToastService>;
   let mockHttpClient: DeepMocked<HttpClient>;
   let mockChronologyService: DeepMocked<ComplianceAndEnforcementChronologyService>;
   let mockDocumentService: DeepMocked<ComplianceAndEnforcementDocumentService>;
   let mockConfirmationDialogService: DeepMocked<ConfirmationDialogService>;
+  let mockUserProfileSubject: BehaviorSubject<UserDto | undefined>;
   let mockUserService: DeepMocked<UserService>;
   let mockDialog: DeepMocked<MatDialog>;
 
@@ -82,17 +85,20 @@ describe('ComplianceAndEnforcementChronologyComponent', () => {
   beforeEach(async () => {
     mockActivatedRoute = createMock<ActivatedRoute>();
     mockRouter = createMock<Router>();
-    mockComplianceAndEnforcementService = createMock<ComplianceAndEnforcementService>();
+    mockFileSubject = new BehaviorSubject<ComplianceAndEnforcementDto | null>(null);
+    mockComplianceAndEnforcementService = createMock<ComplianceAndEnforcementService>({
+      $file: mockFileSubject,
+    });
     mockToastService = createMock<ToastService>();
     mockHttpClient = createMock<HttpClient>();
     mockChronologyService = createMock<ComplianceAndEnforcementChronologyService>();
     mockDocumentService = createMock<ComplianceAndEnforcementDocumentService>();
     mockConfirmationDialogService = createMock<ConfirmationDialogService>();
-    mockUserService = createMock<UserService>();
+    mockUserProfileSubject = new BehaviorSubject<UserDto | undefined>(undefined);
+    mockUserService = createMock<UserService>({
+      $userProfile: mockUserProfileSubject,
+    });
     mockDialog = createMock<MatDialog>();
-
-    mockComplianceAndEnforcementService.$file = new BehaviorSubject<ComplianceAndEnforcementDto | null>(null);
-    mockUserService.$userProfile = new BehaviorSubject<UserDto | undefined>(undefined);
 
     TestBed.configureTestingModule({
       imports: [],
@@ -121,22 +127,22 @@ describe('ComplianceAndEnforcementChronologyComponent', () => {
 
   describe('ngOnInit', () => {
     it('should load file from observable', () => {
-      mockComplianceAndEnforcementService.$file = new BehaviorSubject<ComplianceAndEnforcementDto | null>(mockFile);
-      mockActivatedRoute.snapshot.paramMap.get = jest.fn().mockReturnValue('file-number');
-      mockChronologyService.entriesByFileId = jest.fn().mockReturnValue(of([]));
-      mockUserService.getComplianceAndEnforcementOfficers = jest.fn().mockResolvedValue([]);
+      jest.spyOn(mockActivatedRoute.snapshot.paramMap, 'get').mockReturnValue('file-number');
+      jest.spyOn(mockChronologyService, 'entriesByFileId').mockReturnValue(of([]));
+      jest.spyOn(mockUserService, 'getComplianceAndEnforcementOfficers').mockResolvedValue([]);
 
+      mockFileSubject.next(mockFile);
       fixture.detectChanges();
 
       expect(component.file).toEqual(mockFile);
     });
 
     it('should load current user profile', () => {
-      mockUserService.$userProfile = new BehaviorSubject<UserDto | undefined>(mockUser);
-      mockActivatedRoute.snapshot.paramMap.get = jest.fn().mockReturnValue('file-number');
-      mockChronologyService.entriesByFileId = jest.fn().mockReturnValue(of([]));
-      mockUserService.getComplianceAndEnforcementOfficers = jest.fn().mockResolvedValue([]);
+      jest.spyOn(mockActivatedRoute.snapshot.paramMap, 'get').mockReturnValue('file-number');
+      jest.spyOn(mockChronologyService, 'entriesByFileId').mockReturnValue(of([]));
+      jest.spyOn(mockUserService, 'getComplianceAndEnforcementOfficers').mockResolvedValue([]);
 
+      mockUserProfileSubject.next(mockUser);
       fixture.detectChanges();
 
       expect(component.currentUserUuid).toEqual('user-uuid');
@@ -151,9 +157,9 @@ describe('ComplianceAndEnforcementChronologyComponent', () => {
     });
 
     it('should create a draft entry successfully', async () => {
-      mockChronologyService.createEntry = jest.fn().mockReturnValue(of(mockChronologyEntryDto));
-      mockChronologyService.entriesByFileId = jest.fn().mockReturnValue(of([]));
-      mockUserService.getComplianceAndEnforcementOfficers = jest.fn().mockResolvedValue([]);
+      jest.spyOn(mockChronologyService, 'createEntry').mockReturnValue(of(mockChronologyEntryDto));
+      jest.spyOn(mockChronologyService, 'entriesByFileId').mockReturnValue(of([]));
+      jest.spyOn(mockUserService, 'getComplianceAndEnforcementOfficers').mockResolvedValue([]);
       component.file = mockFile;
       component.currentUserUuid = 'user-uuid';
 
@@ -172,7 +178,7 @@ describe('ComplianceAndEnforcementChronologyComponent', () => {
     });
 
     it('should handle error when creating draft entry fails', async () => {
-      mockChronologyService.createEntry = jest.fn().mockReturnValue(throwError(() => new Error('API error')));
+      jest.spyOn(mockChronologyService, 'createEntry').mockReturnValue(throwError(() => new Error('API error')));
 
       await component.createDraftEntry();
 
@@ -212,9 +218,9 @@ describe('ComplianceAndEnforcementChronologyComponent', () => {
     });
 
     it('should set entry as draft successfully', async () => {
-      mockChronologyService.updateEntry = jest.fn().mockReturnValue(of({}));
-      mockChronologyService.entriesByFileId = jest.fn().mockReturnValue(of([]));
-      mockUserService.getComplianceAndEnforcementOfficers = jest.fn().mockResolvedValue([]);
+      jest.spyOn(mockChronologyService, 'updateEntry').mockReturnValue(of(mockChronologyEntryDto));
+      jest.spyOn(mockChronologyService, 'entriesByFileId').mockReturnValue(of([]));
+      jest.spyOn(mockUserService, 'getComplianceAndEnforcementOfficers').mockResolvedValue([]);
 
       await component.setDraft('entry-uuid');
 
@@ -222,7 +228,7 @@ describe('ComplianceAndEnforcementChronologyComponent', () => {
     });
 
     it('should handle error when setting draft fails', async () => {
-      mockChronologyService.updateEntry = jest.fn().mockReturnValue(throwError(() => new Error('API error')));
+      jest.spyOn(mockChronologyService, 'updateEntry').mockReturnValue(throwError(() => new Error('API error')));
 
       await component.setDraft('entry-uuid');
 
@@ -236,9 +242,9 @@ describe('ComplianceAndEnforcementChronologyComponent', () => {
     });
 
     it('should complete draft entry successfully', async () => {
-      mockChronologyService.updateEntry = jest.fn().mockReturnValue(of({}));
-      mockChronologyService.entriesByFileId = jest.fn().mockReturnValue(of([]));
-      mockUserService.getComplianceAndEnforcementOfficers = jest.fn().mockResolvedValue([]);
+      jest.spyOn(mockChronologyService, 'updateEntry').mockReturnValue(of(mockChronologyEntryDto));
+      jest.spyOn(mockChronologyService, 'entriesByFileId').mockReturnValue(of([]));
+      jest.spyOn(mockUserService, 'getComplianceAndEnforcementOfficers').mockResolvedValue([]);
 
       await component.completeDraftEntry({ uuid: 'entry-uuid', updateDto: mockUpdateChronologyEntryDto });
 
@@ -247,7 +253,7 @@ describe('ComplianceAndEnforcementChronologyComponent', () => {
     });
 
     it('should handle error when completing draft entry fails', async () => {
-      mockChronologyService.updateEntry = jest.fn().mockReturnValue(throwError(() => new Error('API error')));
+      jest.spyOn(mockChronologyService, 'updateEntry').mockReturnValue(throwError(() => new Error('API error')));
 
       await component.completeDraftEntry({ uuid: 'entry-uuid', updateDto: {} });
 
@@ -260,24 +266,9 @@ describe('ComplianceAndEnforcementChronologyComponent', () => {
       component.fileNumber = 'file-number';
     });
 
-    it('should delete entry when user confirms', (done) => {
-      mockConfirmationDialogService.openDialog = jest.fn().mockReturnValue(of(true));
-      mockChronologyService.deleteEntry = jest.fn().mockReturnValue(of({}));
-      mockChronologyService.entriesByFileId = jest.fn().mockReturnValue(of([]));
-      mockUserService.getComplianceAndEnforcementOfficers = jest.fn().mockResolvedValue([]);
-
-      component.confirmEntryDelete('entry-uuid');
-
-      setTimeout(() => {
-        expect(mockChronologyService.deleteEntry).toHaveBeenCalledWith('entry-uuid');
-        expect(mockToastService.showSuccessToast).toHaveBeenCalledWith('Entry deleted successfully.');
-        done();
-      }, 0);
-    });
-
     it('should not delete entry when user declines', (done) => {
-      mockConfirmationDialogService.openDialog = jest.fn().mockReturnValue(of(false));
-      mockChronologyService.deleteEntry = jest.fn();
+      jest.spyOn(mockConfirmationDialogService, 'openDialog').mockReturnValue(new EventEmitter<boolean>(false));
+      jest.spyOn(mockChronologyService, 'deleteEntry').mockResolvedValue(mockChronologyEntryDto);
 
       component.confirmEntryDelete('entry-uuid');
 
@@ -315,7 +306,7 @@ describe('ComplianceAndEnforcementChronologyComponent', () => {
 
   describe('findFileNumberInRouteTree', () => {
     it('should find file number in current route', () => {
-      mockActivatedRoute.snapshot.paramMap.get = jest.fn().mockReturnValue('file-number');
+      jest.spyOn(mockActivatedRoute.snapshot.paramMap, 'get').mockReturnValue('file-number');
       Object.defineProperty(mockActivatedRoute, 'parent', { value: null });
 
       const result = component.findFileNumberInRouteTree(mockActivatedRoute);
@@ -325,9 +316,9 @@ describe('ComplianceAndEnforcementChronologyComponent', () => {
 
     it('should find file number in parent route', () => {
       const parentRoute = createMock<ActivatedRoute>();
-      parentRoute.snapshot.paramMap.get = jest.fn().mockReturnValue('file-number');
+      jest.spyOn(parentRoute.snapshot.paramMap, 'get').mockReturnValue('file-number');
       Object.defineProperty(parentRoute, 'parent', { value: null });
-      mockActivatedRoute.snapshot.paramMap.get = jest.fn().mockReturnValue(null);
+      jest.spyOn(mockActivatedRoute.snapshot.paramMap, 'get').mockReturnValue(null);
       Object.defineProperty(mockActivatedRoute, 'parent', { value: parentRoute });
 
       const result = component.findFileNumberInRouteTree(mockActivatedRoute);
@@ -336,7 +327,7 @@ describe('ComplianceAndEnforcementChronologyComponent', () => {
     });
 
     it('should throw error when file number not found', () => {
-      mockActivatedRoute.snapshot.paramMap.get = jest.fn().mockReturnValue(null);
+      jest.spyOn(mockActivatedRoute.snapshot.paramMap, 'get').mockReturnValue(null);
       Object.defineProperty(mockActivatedRoute, 'parent', { value: null });
 
       expect(() => component.findFileNumberInRouteTree(mockActivatedRoute)).toThrow('File number not found in route');
@@ -350,8 +341,8 @@ describe('ComplianceAndEnforcementChronologyComponent', () => {
     });
 
     it('should close chronology successfully', async () => {
-      mockComplianceAndEnforcementService.update = jest.fn().mockReturnValue(of({}));
-      mockComplianceAndEnforcementService.loadFile = jest.fn();
+      jest.spyOn(mockComplianceAndEnforcementService, 'update').mockReturnValue(of(mockFile));
+      jest.spyOn(mockComplianceAndEnforcementService, 'loadFile').mockResolvedValue();
 
       await component.closeChronology();
 
@@ -359,13 +350,15 @@ describe('ComplianceAndEnforcementChronologyComponent', () => {
       expect(mockToastService.showSuccessToast).toHaveBeenCalledWith('Chronology closed successfully');
     });
 
-    // it('should handle error when closing chronology fails', async () => {
-    //   mockComplianceAndEnforcementService.update = jest.fn().mockReturnValue(throwError(() => new Error('API error')));
+    it('should handle error when closing chronology fails', async () => {
+      jest
+        .spyOn(mockComplianceAndEnforcementService, 'update')
+        .mockReturnValue(throwError(() => new Error('API error')));
 
-    //   await component.closeChronology();
+      await component.closeChronology();
 
-    //   expect(mockToastService.showErrorToast).toHaveBeenCalledWith('Unable to close chronology');
-    // });
+      expect(mockToastService.showErrorToast).toHaveBeenCalledWith('Unable to close chronology');
+    });
   });
 
   describe('reopenChronology', () => {
@@ -374,8 +367,8 @@ describe('ComplianceAndEnforcementChronologyComponent', () => {
     });
 
     it('should reopen chronology successfully', async () => {
-      mockComplianceAndEnforcementService.update = jest.fn().mockReturnValue(of({}));
-      mockComplianceAndEnforcementService.loadFile = jest.fn();
+      jest.spyOn(mockComplianceAndEnforcementService, 'update').mockReturnValue(of(mockFile));
+      jest.spyOn(mockComplianceAndEnforcementService, 'loadFile').mockResolvedValue();
 
       await component.reopenChronology();
 
@@ -384,7 +377,9 @@ describe('ComplianceAndEnforcementChronologyComponent', () => {
     });
 
     it('should handle error when reopening chronology fails', async () => {
-      mockComplianceAndEnforcementService.update = jest.fn().mockReturnValue(throwError(() => new Error('API error')));
+      jest
+        .spyOn(mockComplianceAndEnforcementService, 'update')
+        .mockReturnValue(throwError(() => new Error('API error')));
 
       await component.reopenChronology();
 

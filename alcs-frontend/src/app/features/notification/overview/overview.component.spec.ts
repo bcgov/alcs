@@ -2,11 +2,9 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
-import { BehaviorSubject } from 'rxjs';
 import { NotificationDetailService } from '../../../services/notification/notification-detail.service';
 import { NotificationSubmissionStatusService } from '../../../services/notification/notification-submission-status/notification-submission-status.service';
 import { NotificationTimelineService } from '../../../services/notification/notification-timeline/notification-timeline.service';
-import { NotificationDto } from '../../../services/notification/notification.dto';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 import { OverviewComponent } from './overview.component';
@@ -18,7 +16,6 @@ describe('OverviewComponent', () => {
 
   beforeEach(async () => {
     mockNOIDetailService = createMock();
-    mockNOIDetailService.$notification = new BehaviorSubject<NotificationDto | undefined>(undefined);
     await TestBed.configureTestingModule({
       providers: [
         {

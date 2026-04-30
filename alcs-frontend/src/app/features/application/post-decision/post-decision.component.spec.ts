@@ -1,16 +1,14 @@
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
-import { BehaviorSubject } from 'rxjs';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
-import { ApplicationDto } from '../../../services/application/application.dto';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 
-import { PostDecisionComponent } from './post-decision.component';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { PostDecisionComponent } from './post-decision.component';
 
 describe('PostDecisionComponent', () => {
   let component: PostDecisionComponent;
@@ -19,33 +17,32 @@ describe('PostDecisionComponent', () => {
 
   beforeEach(async () => {
     mockAppDetailService = createMock();
-    mockAppDetailService.$application = new BehaviorSubject<ApplicationDto | undefined>(undefined);
 
     await TestBed.configureTestingModule({
-    declarations: [PostDecisionComponent],
-    schemas: [NO_ERRORS_SCHEMA],
-    imports: [MatSnackBarModule],
-    providers: [
+      declarations: [PostDecisionComponent],
+      schemas: [NO_ERRORS_SCHEMA],
+      imports: [MatSnackBarModule],
+      providers: [
         {
-            provide: ApplicationDetailService,
-            useValue: mockAppDetailService,
+          provide: ApplicationDetailService,
+          useValue: mockAppDetailService,
         },
         {
-            provide: MAT_DIALOG_DATA,
-            useValue: {},
+          provide: MAT_DIALOG_DATA,
+          useValue: {},
         },
         {
-            provide: MatDialog,
-            useValue: {},
+          provide: MatDialog,
+          useValue: {},
         },
         {
-            provide: ConfirmationDialogService,
-            useValue: {},
+          provide: ConfirmationDialogService,
+          useValue: {},
         },
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
-    ]
-}).compileComponents();
+      ],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(PostDecisionComponent);
     component = fixture.componentInstance;

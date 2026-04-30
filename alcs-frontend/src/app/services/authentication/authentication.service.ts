@@ -96,8 +96,12 @@ export class AuthenticationService {
     const logoutUrl = await this.getLogoutUrl();
     if (logoutUrl) {
       this.clearTokens();
-      window.location.href = logoutUrl.url;
+      await this.navigateTo(logoutUrl.url);
     }
+  }
+
+  async navigateTo(url: string) {
+    window.location.href = url;
   }
 
   getCurrentUser = () => this.currentUser;
@@ -128,7 +132,7 @@ export class AuthenticationService {
         //Take user to login
         const targetUrl = window.location.href;
         localStorage.setItem('targetUrl', targetUrl);
-        window.location.href = e.error;
+        await this.navigateTo(e.error);
         return;
       }
       throw e;
@@ -145,7 +149,7 @@ export class AuthenticationService {
     return res;
   }
 
-  private async getLogoutUrl() {
+  public async getLogoutUrl() {
     return firstValueFrom(this.http.get<{ url: string }>(`${environment.authUrl}/logout/alcs`));
   }
 }

@@ -2,11 +2,9 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
-import { BehaviorSubject } from 'rxjs';
-import { AuthenticationService, ICurrentUser } from '../../../services/authentication/authentication.service';
+import { AuthenticationService } from '../../../services/authentication/authentication.service';
 import { CardSubtaskService } from '../../../services/card/card-subtask/card-subtask.service';
 import { HomeService } from '../../../services/home/home.service';
-import { AssigneeDto } from '../../../services/user/user.dto';
 import { UserService } from '../../../services/user/user.service';
 
 import { SubtaskComponent } from './subtask.component';
@@ -20,10 +18,8 @@ describe('AuditComponent', () => {
 
   beforeEach(async () => {
     mockUserService = createMock();
-    mockUserService.$assignableUsers = new BehaviorSubject<AssigneeDto[]>([]);
 
     mockAuthenticationService = createMock();
-    mockAuthenticationService.$currentUser = new BehaviorSubject<ICurrentUser | undefined>(undefined);
 
     mockHomeService = createMock();
 
