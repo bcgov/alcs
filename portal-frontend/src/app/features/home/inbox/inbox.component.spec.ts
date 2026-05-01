@@ -28,7 +28,6 @@ describe('InboxComponent', () => {
     mockCodeService = createMock();
     activatedRoute = createMock();
 
-    mockAuthService.$currentProfile = new BehaviorSubject<UserDto | undefined>(undefined);
     Object.assign(activatedRoute, { paramMap: new Observable<ParamMap>() });
 
     await TestBed.configureTestingModule({

@@ -34,9 +34,6 @@ describe('ReviewSubmitFngComponent', () => {
 
   beforeEach(async () => {
     mockAppReviewService = createMock();
-    mockAppReviewService.$applicationReview = new BehaviorSubject<ApplicationSubmissionReviewDto | undefined>(
-      undefined
-    );
     mockAppDocumentService = createMock();
     mockToastService = createMock();
     mockPdfGenerationService = createMock();

@@ -3,12 +3,10 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
-import { BehaviorSubject } from 'rxjs';
-import { UserDto } from '../../services/user/user.dto';
 import { UserService } from '../../services/user/user.service';
 
-import { FavoriteButtonComponent } from './favorite-button.component';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { FavoriteButtonComponent } from './favorite-button.component';
 
 describe('FavoriteButtonComponent', () => {
   let component: FavoriteButtonComponent;
@@ -17,21 +15,20 @@ describe('FavoriteButtonComponent', () => {
 
   beforeEach(async () => {
     mockUserService = createMock();
-    mockUserService.$userProfile = new BehaviorSubject<UserDto | undefined>(undefined);
 
     await TestBed.configureTestingModule({
-    declarations: [FavoriteButtonComponent],
-    schemas: [NO_ERRORS_SCHEMA],
-    imports: [MatSnackBarModule],
-    providers: [
+      declarations: [FavoriteButtonComponent],
+      schemas: [NO_ERRORS_SCHEMA],
+      imports: [MatSnackBarModule],
+      providers: [
         {
-            provide: UserService,
-            useValue: mockUserService,
+          provide: UserService,
+          useValue: mockUserService,
         },
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
-    ]
-}).compileComponents();
+      ],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(FavoriteButtonComponent);
     component = fixture.componentInstance;

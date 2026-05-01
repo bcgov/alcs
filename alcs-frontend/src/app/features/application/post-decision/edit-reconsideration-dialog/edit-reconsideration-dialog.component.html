@@ -12,8 +12,8 @@
           [matDatepicker]="datePicker"
           formControlName="submittedDate"
           name="submittedDate"
-          required
-          />
+          [required]="true"
+        />
         <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
         <mat-datepicker #datePicker type="date"> </mat-datepicker>
       </mat-form-field>
@@ -25,7 +25,7 @@
           formControlName="type"
           name="reviewOutcome"
           (change)="onTypeReconsiderationChange($event.value)"
-          >
+        >
           @for (type of codes; track type) {
             <mat-button-toggle value="{{ type.code }}">{{ type.label }}</mat-button-toggle>
           }
@@ -43,7 +43,7 @@
 
       <div>
         <mat-label [class.field-disabled]="disable331Fields">New Evidence*</mat-label>
-        <mat-button-toggle-group required id="isNewEvidence" formControlName="isNewEvidence">
+        <mat-button-toggle-group [required]="true" id="isNewEvidence" formControlName="isNewEvidence">
           <mat-button-toggle value="true">Yes</mat-button-toggle>
           <mat-button-toggle value="false">No</mat-button-toggle>
         </mat-button-toggle-group>
@@ -51,7 +51,7 @@
 
       <div>
         <mat-label [class.field-disabled]="disable331Fields">Incorrect or False Info*</mat-label>
-        <mat-button-toggle-group required id="isIncorrectFalseInfo" formControlName="isIncorrectFalseInfo">
+        <mat-button-toggle-group [required]="true" id="isIncorrectFalseInfo" formControlName="isIncorrectFalseInfo">
           <mat-button-toggle value="true">Yes</mat-button-toggle>
           <mat-button-toggle value="false">No</mat-button-toggle>
         </mat-button-toggle-group>
@@ -59,7 +59,7 @@
 
       <div>
         <mat-label [class.field-disabled]="disable331Fields">New Proposal*</mat-label>
-        <mat-button-toggle-group required id="isNewProposal" formControlName="isNewProposal">
+        <mat-button-toggle-group [required]="true" id="isNewProposal" formControlName="isNewProposal">
           <mat-button-toggle value="true">Yes</mat-button-toggle>
           <mat-button-toggle value="false">No</mat-button-toggle>
         </mat-button-toggle-group>
@@ -71,13 +71,15 @@
       </mat-form-field>
 
       <div class="full-grid-line toggle-group">
-        <mat-label [class.field-disabled]="disable331Fields" class="toggle-label">Review Outcome <span>*</span></mat-label>
+        <mat-label [class.field-disabled]="disable331Fields" class="toggle-label"
+          >Review Outcome <span>*</span></mat-label
+        >
         <mat-button-toggle-group
           (change)="onChangeReviewOutcome()"
           id="reviewOutcomeCode"
           formControlName="reviewOutcomeCode"
           name="reviewOutcomeCode"
-          >
+        >
           <mat-button-toggle value="PEN">Pending</mat-button-toggle>
           <mat-button-toggle value="PRC">Proceed to Reconsider</mat-button-toggle>
           <mat-button-toggle value="REF">Refuse to Reconsider</mat-button-toggle>
@@ -87,46 +89,43 @@
       <div class="full-grid-line toggle-group">
         <mat-label class="toggle-label"
           >Does the reconsideration confirm, reverse, or vary the previous decision?</mat-label
-          >
-          <mat-button-toggle-group
-            id="decisionOutcomeCode"
-            formControlName="decisionOutcomeCode"
-            name="decisionOutcomeCode"
-            >
-            <mat-button-toggle value="CONF">Confirm</mat-button-toggle>
-            <mat-button-toggle value="REVE">Reverse</mat-button-toggle>
-            <mat-button-toggle value="VARY">Vary</mat-button-toggle>
-          </mat-button-toggle-group>
-        </div>
+        >
+        <mat-button-toggle-group
+          id="decisionOutcomeCode"
+          formControlName="decisionOutcomeCode"
+          name="decisionOutcomeCode"
+        >
+          <mat-button-toggle value="CONF">Confirm</mat-button-toggle>
+          <mat-button-toggle value="REVE">Reverse</mat-button-toggle>
+          <mat-button-toggle value="VARY">Vary</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
 
-        @if (typeControl.value === '33' && reviewOutcomeCodeControl.value === 'REF') {
-          <mat-form-field
-            appearance="outline"
-            class="date-picker full-grid-line"
-            >
-            <mat-label>
-              Outcome Notification Date
-              <mat-icon matTooltip="The date that the applicant/affected party is notified of the review outcome">
-                info
-              </mat-icon>
-            </mat-label>
-            <input
-              matInput
-              (click)="reviewDatePicker.open()"
-              [matDatepicker]="reviewDatePicker"
-              formControlName="reviewDate"
-              name="reviewDate"
-              />
-            <mat-datepicker-toggle matSuffix [for]="reviewDatePicker"></mat-datepicker-toggle>
-            <mat-datepicker #reviewDatePicker type="date"> </mat-datepicker>
-          </mat-form-field>
-        }
-      </div>
-    </mat-dialog-content>
-    <mat-dialog-actions align="end">
-      <div class="button-container">
-        <button mat-stroked-button color="primary" mat-dialog-close="false">Close</button>
-        <button [loading]="isLoading" mat-flat-button color="primary" type="submit" [disabled]="!form.valid">Save</button>
-      </div>
-    </mat-dialog-actions>
-  </form>
+      @if (typeControl.value === '33' && reviewOutcomeCodeControl.value === 'REF') {
+        <mat-form-field appearance="outline" class="date-picker full-grid-line">
+          <mat-label>
+            Outcome Notification Date
+            <mat-icon matTooltip="The date that the applicant/affected party is notified of the review outcome">
+              info
+            </mat-icon>
+          </mat-label>
+          <input
+            matInput
+            (click)="reviewDatePicker.open()"
+            [matDatepicker]="reviewDatePicker"
+            formControlName="reviewDate"
+            name="reviewDate"
+          />
+          <mat-datepicker-toggle matSuffix [for]="reviewDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #reviewDatePicker type="date"> </mat-datepicker>
+        </mat-form-field>
+      }
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <div class="button-container">
+      <button mat-stroked-button color="primary" mat-dialog-close="false">Close</button>
+      <button [loading]="isLoading" mat-flat-button color="primary" type="submit" [disabled]="!form.valid">Save</button>
+    </div>
+  </mat-dialog-actions>
+</form>

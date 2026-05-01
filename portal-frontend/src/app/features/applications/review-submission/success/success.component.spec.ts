@@ -26,10 +26,6 @@ describe('SuccessComponent', () => {
     codeService = createMock();
     appSubmissionReviewService = createMock();
 
-    appSubmissionReviewService.$applicationReview = new BehaviorSubject<ApplicationSubmissionReviewDto | undefined>(
-      undefined
-    );
-
     Object.assign(activatedRoute, { paramMap: new Observable<ParamMap>() });
 
     codeService.loadCodes.mockResolvedValue({

@@ -4,12 +4,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { AdminLocalGovernmentService } from '../../../../services/admin-local-government/admin-local-government.service';
 
-import { DeepMocked, createMock } from '@golevelup/ts-jest';
-import { BehaviorSubject } from 'rxjs';
-import { PaginatedTagResponse, TagService } from '../../../../services/tag/tag.service';
-import { TagDialogComponent } from './tag-dialog.component';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { DeepMocked, createMock } from '@golevelup/ts-jest';
+import { TagService } from '../../../../services/tag/tag.service';
+import { TagDialogComponent } from './tag-dialog.component';
 
 describe('TagDialogComponent', () => {
   let component: TagDialogComponent;
@@ -18,27 +17,26 @@ describe('TagDialogComponent', () => {
 
   beforeEach(async () => {
     mockTagService = createMock();
-    mockTagService.$tags = new BehaviorSubject<PaginatedTagResponse>({ data: [], total: 0 });
 
     await TestBed.configureTestingModule({
-    declarations: [TagDialogComponent],
-    schemas: [NO_ERRORS_SCHEMA],
-    imports: [ReactiveFormsModule, FormsModule],
-    providers: [
+      declarations: [TagDialogComponent],
+      schemas: [NO_ERRORS_SCHEMA],
+      imports: [ReactiveFormsModule, FormsModule],
+      providers: [
         { provide: MAT_DIALOG_DATA, useValue: undefined },
         { provide: MatDialogRef, useValue: {} },
         {
-            provide: AdminLocalGovernmentService,
-            useValue: {},
+          provide: AdminLocalGovernmentService,
+          useValue: {},
         },
         {
-            provide: TagService,
-            useValue: mockTagService,
+          provide: TagService,
+          useValue: mockTagService,
         },
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
-    ]
-}).compileComponents();
+      ],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(TagDialogComponent);
     component = fixture.componentInstance;

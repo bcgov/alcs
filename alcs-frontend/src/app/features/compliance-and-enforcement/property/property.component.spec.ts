@@ -1,3 +1,4 @@
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -8,14 +9,12 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
-import { BehaviorSubject, first, skip } from 'rxjs';
-import { ApplicationRegionDto } from '../../../services/application/application-code.dto';
+import { first, skip } from 'rxjs';
 import { ApplicationLocalGovernmentDto } from '../../../services/application/application-local-government/application-local-government.dto';
 import { ApplicationLocalGovernmentService } from '../../../services/application/application-local-government/application-local-government.service';
 import { ApplicationService } from '../../../services/application/application.service';
 import { ComplianceAndEnforcementPropertyDto } from '../../../services/compliance-and-enforcement/property/property.dto';
 import { PropertyComponent } from './property.component';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('PropertyComponent', () => {
   let component: PropertyComponent;
@@ -27,24 +26,25 @@ describe('PropertyComponent', () => {
     mockLocalGovernmentService = createMock();
     mockLocalGovernmentService.list.mockResolvedValue([]);
     mockApplicationService = createMock();
-    mockApplicationService.$applicationRegions = new BehaviorSubject<ApplicationRegionDto[]>([]);
 
     await TestBed.configureTestingModule({
-    declarations: [PropertyComponent],
-    imports: [ReactiveFormsModule,
+      declarations: [PropertyComponent],
+      imports: [
+        ReactiveFormsModule,
         MatFormFieldModule,
         MatInputModule,
         MatSelectModule,
         MatButtonToggleModule,
         MatAutocompleteModule,
-        NoopAnimationsModule],
-    providers: [
+        NoopAnimationsModule,
+      ],
+      providers: [
         { provide: ApplicationLocalGovernmentService, useValue: mockLocalGovernmentService },
         { provide: ApplicationService, useValue: mockApplicationService },
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
-    ]
-}).compileComponents();
+      ],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(PropertyComponent);
     component = fixture.componentInstance;
@@ -692,7 +692,7 @@ describe('PropertyComponent', () => {
     it('should format latitude/longitude in emitted changes', (done) => {
       // Skip initial empty emission
       component.$changes.pipe(skip(1), first()).subscribe((changes) => {
-        expect(changes.latitude).toBe(49.00000);
+        expect(changes.latitude).toBe(49.0);
         done();
       });
 

@@ -4,15 +4,12 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
-import { BehaviorSubject } from 'rxjs';
-import { NoticeOfIntentMeetingDto } from '../../../services/notice-of-intent/meeting/notice-of-intent-meeting.dto';
 import { NoticeOfIntentMeetingService } from '../../../services/notice-of-intent/meeting/notice-of-intent-meeting.service';
 import { NoticeOfIntentDetailService } from '../../../services/notice-of-intent/notice-of-intent-detail.service';
-import { NoticeOfIntentDto } from '../../../services/notice-of-intent/notice-of-intent.dto';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 
-import { InfoRequestsComponent } from './info-requests.component';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { InfoRequestsComponent } from './info-requests.component';
 
 describe('InfoRequestsComponent', () => {
   let component: InfoRequestsComponent;
@@ -28,38 +25,34 @@ describe('InfoRequestsComponent', () => {
     mockNoticeOfIntentDetailService = createMock();
 
     await TestBed.configureTestingModule({
-    declarations: [InfoRequestsComponent],
-    schemas: [NO_ERRORS_SCHEMA],
-    imports: [MatSnackBarModule],
-    providers: [
+      declarations: [InfoRequestsComponent],
+      schemas: [NO_ERRORS_SCHEMA],
+      imports: [MatSnackBarModule],
+      providers: [
         {
-            provide: NoticeOfIntentMeetingService,
-            useValue: mockNoticeOfIntentMeetingService,
+          provide: NoticeOfIntentMeetingService,
+          useValue: mockNoticeOfIntentMeetingService,
         },
         {
-            provide: ConfirmationDialogService,
-            useValue: mockConfirmationDialogService,
+          provide: ConfirmationDialogService,
+          useValue: mockConfirmationDialogService,
         },
         {
-            provide: NoticeOfIntentDetailService,
-            useValue: mockNoticeOfIntentDetailService,
+          provide: NoticeOfIntentDetailService,
+          useValue: mockNoticeOfIntentDetailService,
         },
         {
-            provide: MatDialogRef,
-            useValue: {},
+          provide: MatDialogRef,
+          useValue: {},
         },
         {
-            provide: MatDialog,
-            useValue: {},
+          provide: MatDialog,
+          useValue: {},
         },
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
-    ]
-}).compileComponents();
-
-    mockNoticeOfIntentDetailService.$noticeOfIntent = new BehaviorSubject<NoticeOfIntentDto | undefined>(undefined);
-    mockNoticeOfIntentMeetingService.$meetings = new BehaviorSubject<NoticeOfIntentMeetingDto[]>([]);
-
+      ],
+    }).compileComponents();
     fixture = TestBed.createComponent(InfoRequestsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

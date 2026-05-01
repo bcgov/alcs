@@ -26,10 +26,6 @@ describe('LfngReviewComponent', () => {
     mockAppDocumentService = createMock();
     mockDocumentService = createMock();
 
-    mockAppSubReviewService.$applicationReview = new BehaviorSubject<ApplicationSubmissionReviewDto | undefined>(
-      undefined
-    );
-
     await TestBed.configureTestingModule({
       providers: [
         {

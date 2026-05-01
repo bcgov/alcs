@@ -1,43 +1,43 @@
 <form [formGroup]="form" class="nfu-component-form">
-    <div class="full-width">
-      <mat-form-field appearance="outline" class="row">
-        <mat-label>ALR Area Impacted (ha)</mat-label>
-        <input
-          matInput
-          min="0.01"
-          mask="separator.5"
-          thousandSeparator=","
-          separatorLimit="9999999999"
-          formControlName="alrArea"
-          required
-        />
-      </mat-form-field>
+  <div class="full-width">
+    <mat-form-field appearance="outline" class="row">
+      <mat-label>ALR Area Impacted (ha)</mat-label>
+      <input
+        matInput
+        min="0.01"
+        mask="separator.5"
+        thousandSeparator=","
+        separatorLimit="9999999999"
+        formControlName="alrArea"
+        [required]="true"
+      />
+    </mat-form-field>
+  </div>
+  <div class="grid-2">
+    <div>
+      <ng-select
+        appearance="outline"
+        [items]="nfuTypeOptions"
+        formControlName="nfuType"
+        appendTo="body"
+        bindLabel="label"
+        bindValue="value"
+        placeholder="Non-Farm Use Type*"
+        [clearable]="false"
+      ></ng-select>
     </div>
-    <div class="grid-2">
-      <div>
-        <ng-select
-          appearance="outline"
-          [items]="nfuTypeOptions"
-          formControlName="nfuType"
-          appendTo="body"
-          bindLabel="label"
-          bindValue="value"
-          placeholder="Non-Farm Use Type*"
-          [clearable]="false"
-        ></ng-select>
-      </div>
 
-      <div>
-        <ng-select
-          appearance="outline"
-          [items]="nfuSubTypeOptions"
-          formControlName="nfuSubType"
-          appendTo="body"
-          bindLabel="label"
-          bindValue="value"
-          placeholder="Non-Farm Use Sub-Type*"
-          [clearable]="false"
-        ></ng-select>
-      </div>
+    <div>
+      <ng-select
+        appearance="outline"
+        [items]="nfuSubTypeOptions"
+        formControlName="nfuSubType"
+        appendTo="body"
+        bindLabel="label"
+        bindValue="value"
+        placeholder="Non-Farm Use Sub-Type*"
+        [clearable]="false"
+      ></ng-select>
     </div>
+  </div>
 </form>

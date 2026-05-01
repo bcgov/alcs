@@ -1,7 +1,8 @@
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { EventEmitter, NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
@@ -14,7 +15,6 @@ import { ConfirmationDialogService } from '../../../../shared/confirmation-dialo
 import { SYSTEM_SOURCE_TYPES } from '../../../../shared/dto/system-source.types.dto';
 import { SharedModule } from '../../../../shared/shared.module';
 import { ApplicationDialogComponent } from './application-dialog.component';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('ApplicationDialogComponent', () => {
   let component: ApplicationDialogComponent;
@@ -87,7 +87,6 @@ describe('ApplicationDialogComponent', () => {
     };
 
     mockBoardService = createMock();
-    mockBoardService.$boards = new EventEmitter();
     mockBoardService.fetchBoardDetail.mockResolvedValue({
       allowedCardTypes: [],
       code: '',
@@ -99,24 +98,24 @@ describe('ApplicationDialogComponent', () => {
     });
 
     await TestBed.configureTestingModule({
-    declarations: [ApplicationDialogComponent],
-    schemas: [NO_ERRORS_SCHEMA],
-    imports: [SharedModule, BrowserAnimationsModule, RouterTestingModule],
-    providers: [
+      declarations: [ApplicationDialogComponent],
+      schemas: [NO_ERRORS_SCHEMA],
+      imports: [SharedModule, BrowserAnimationsModule, RouterTestingModule],
+      providers: [
         { provide: MAT_DIALOG_DATA, useValue: {} },
         {
-            provide: MatDialogRef,
-            useValue: mockDialogRef,
+          provide: MatDialogRef,
+          useValue: mockDialogRef,
         },
         {
-            provide: BoardService,
-            useValue: mockBoardService,
+          provide: BoardService,
+          useValue: mockBoardService,
         },
         { provide: ConfirmationDialogService, useValue: {} },
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
-    ]
-}).compileComponents();
+      ],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ApplicationDialogComponent);
     component = fixture.componentInstance;

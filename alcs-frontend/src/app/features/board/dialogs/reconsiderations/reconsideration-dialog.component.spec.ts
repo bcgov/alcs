@@ -1,13 +1,12 @@
 import { EventEmitter, NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { RouterTestingModule } from '@angular/router/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { BehaviorSubject } from 'rxjs';
 import { ApplicationRegionDto, ApplicationTypeDto } from '../../../../services/application/application-code.dto';
 import { ApplicationLocalGovernmentDto } from '../../../../services/application/application-local-government/application-local-government.dto';
 import {
@@ -15,12 +14,11 @@ import {
   ReconsiderationTypeDto,
 } from '../../../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../../../services/application/application-reconsideration/application-reconsideration.service';
-import { AuthenticationService, ICurrentUser } from '../../../../services/authentication/authentication.service';
-import { BoardService, BoardWithFavourite } from '../../../../services/board/board.service';
+import { AuthenticationService } from '../../../../services/authentication/authentication.service';
+import { BoardService } from '../../../../services/board/board.service';
 import { CardDto } from '../../../../services/card/card.dto';
 import { CardService } from '../../../../services/card/card.service';
 import { ToastService } from '../../../../services/toast/toast.service';
-import { AssigneeDto } from '../../../../services/user/user.dto';
 import { UserService } from '../../../../services/user/user.service';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 
@@ -71,13 +69,8 @@ describe('ReconsiderationDialogComponent', () => {
       subscribe: jest.fn(),
     };
     mockUserService = createMock();
-    mockUserService.$assignableUsers = new BehaviorSubject<AssigneeDto[]>([]);
-
     mockBoardService = createMock();
-    mockBoardService.$boards = new BehaviorSubject<BoardWithFavourite[]>([]);
-
     authenticationService = createMock();
-    authenticationService.$currentUser = new BehaviorSubject<ICurrentUser | undefined>(undefined);
 
     await TestBed.configureTestingModule({
       declarations: [ReconsiderationDialogComponent],

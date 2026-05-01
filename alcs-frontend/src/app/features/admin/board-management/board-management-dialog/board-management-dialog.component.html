@@ -7,14 +7,14 @@
       <div>
         <mat-form-field class="label" appearance="outline">
           <mat-label>Name</mat-label>
-          <input required matInput [formControl]="title" id="label" />
+          <input [required]="true" matInput [formControl]="title" id="label" />
         </mat-form-field>
         <mat-hint>Note: The change will be reflected on all boards</mat-hint>
       </div>
       <div>
         <mat-form-field class="code" appearance="outline">
           <mat-label>Code</mat-label>
-          <input [formControl]="code" required maxlength="4" minlength="4" matInput id="code" name="code" />
+          <input [formControl]="code" [required]="true" maxlength="4" minlength="4" matInput id="code" name="code" />
         </mat-form-field>
         @if (form.get('code')?.hasError('codeExists')) {
           <div>
@@ -96,9 +96,7 @@
   <div class="split">
     <div [matTooltip]="canDeleteReason" [matTooltipDisabled]="canDelete">
       @if (isEdit) {
-        <button [disabled]="!canDelete" mat-stroked-button color="warn" (click)="onDelete()">
-          Delete
-        </button>
+        <button [disabled]="!canDelete" mat-stroked-button color="warn" (click)="onDelete()">Delete</button>
       }
     </div>
     <div class="button-container">
@@ -109,7 +107,7 @@
           mat-flat-button
           color="primary"
           [disabled]="!form.valid || selectedCardStatuses.length === 0"
-          >
+        >
           Next
         </button>
       }
@@ -122,7 +120,7 @@
           color="primary"
           type="submit"
           [disabled]="!form.valid || selectedCardStatuses.length === 0"
-          >
+        >
           Save
         </button>
       }

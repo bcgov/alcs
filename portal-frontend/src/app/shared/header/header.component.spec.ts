@@ -16,7 +16,6 @@ describe('HeaderComponent', () => {
 
   beforeEach(async () => {
     mockAuthService = createMock();
-    mockAuthService.$currentProfile = new BehaviorSubject<UserDto | undefined>(undefined);
     mockMaintenanceService = createMock();
 
     await TestBed.configureTestingModule({

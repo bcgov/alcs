@@ -3,10 +3,10 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { FileTypeDataSourceService } from '../../../services/search/file-type/file-type-data-source.service';
 
-import { FileTypeFilterDropDownComponent } from './file-type-filter-drop-down.component';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
+import { BehaviorSubject } from 'rxjs';
 import { AuthenticationService, ICurrentUser } from '../../../services/authentication/authentication.service';
-import { BehaviorSubject, of } from 'rxjs';
+import { FileTypeFilterDropDownComponent } from './file-type-filter-drop-down.component';
 
 describe('FileTypeFilterDropDownComponent', () => {
   let component: FileTypeFilterDropDownComponent;
@@ -32,7 +32,6 @@ describe('FileTypeFilterDropDownComponent', () => {
     fixture = TestBed.createComponent(FileTypeFilterDropDownComponent);
     component = fixture.componentInstance;
     component.label = 'Label';
-    mockAuthenticationService.$currentUser = currentUser;
     component.fileTypeData = new FileTypeDataSourceService(mockAuthenticationService);
     fixture.detectChanges();
   });

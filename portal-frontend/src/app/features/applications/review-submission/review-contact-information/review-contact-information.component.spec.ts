@@ -14,9 +14,6 @@ describe('ReviewContactInformationComponent', () => {
 
   beforeEach(async () => {
     mockAppReviewService = createMock();
-    mockAppReviewService.$applicationReview = new BehaviorSubject<ApplicationSubmissionReviewDto | undefined>(
-      undefined
-    );
 
     await TestBed.configureTestingModule({
       declarations: [ReviewContactInformationComponent],

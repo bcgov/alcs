@@ -9,20 +9,20 @@
         thousandSeparator=","
         separatorLimit="9999999999"
         formControlName="alrArea"
-        required
-        />
+        [required]="true"
+      />
     </mat-form-field>
     <div class="full-width">
       <mat-label class="toggle-label">Applicant Type*</mat-label>
       <mat-button-toggle-group
-        required
+        [required]="true"
         id="isFirstNation"
         formControlName="applicantType"
         name="isFirstNation"
         [ngClass]="{
-          'error-field-outlined': !form.controls['applicantType'].valid && form.controls['applicantType'].touched
+          'error-field-outlined': !form.controls['applicantType'].valid && form.controls['applicantType'].touched,
         }"
-        >
+      >
         <mat-button-toggle value="Land Owner">Land Owner</mat-button-toggle>
         <mat-button-toggle value="L/FNG Initiated">L/FNG Initiated</mat-button-toggle>
       </mat-button-toggle-group>

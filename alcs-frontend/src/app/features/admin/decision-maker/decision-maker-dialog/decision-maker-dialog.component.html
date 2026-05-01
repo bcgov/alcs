@@ -8,7 +8,7 @@
         <mat-label>Code</mat-label>
         <input
           [disabled]="isEdit"
-          required
+          [required]="true"
           maxlength="4"
           minlength="4"
           matInput
@@ -16,31 +16,31 @@
           [(ngModel)]="code"
           #codeModel="ngModel"
           name="code"
-          />
+        />
       </mat-form-field>
     </div>
     @if (isCodeExisiting(codeModel) && !isEdit) {
       <div class="full-width code-error-message">
-        <app-error-message message="Code already in use or deteled, pick a different code."></app-error-message>
+        <app-error-message message="Code already in use or deleted, pick a different code."></app-error-message>
       </div>
     }
     <div class="full-width">
       <mat-form-field class="label" appearance="outline">
         <mat-label>Label</mat-label>
-        <input required matInput id="label" [(ngModel)]="label" name="label" />
+        <input [required]="true" matInput id="label" [(ngModel)]="label" name="label" />
       </mat-form-field>
     </div>
 
     <div class="full-width">
       <mat-form-field class="description" appearance="outline">
         <mat-label>Description</mat-label>
-        <input required matInput id="description" [(ngModel)]="description" name="description" />
+        <input [required]="true" matInput id="description" [(ngModel)]="description" name="description" />
       </mat-form-field>
     </div>
 
     <div>
       <mat-label>Status</mat-label>
-      <mat-button-toggle-group required id="isActive" [(ngModel)]="isActive" name="isActive">
+      <mat-button-toggle-group [required]="true" id="isActive" [(ngModel)]="isActive" name="isActive">
         <mat-button-toggle value="true">Active</mat-button-toggle>
         <mat-button-toggle value="false">Inactive</mat-button-toggle>
       </mat-button-toggle-group>
@@ -57,7 +57,7 @@
         color="primary"
         type="submit"
         [disabled]="!form.form.valid || (isCodeExisiting(codeModel) && !isEdit)"
-        >
+      >
         Save
       </button>
     </div>
