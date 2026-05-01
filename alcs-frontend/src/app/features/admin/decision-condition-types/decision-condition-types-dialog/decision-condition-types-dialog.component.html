@@ -10,7 +10,7 @@
       </mat-form-field>
       @if (conditionTypeForm.get('code')?.hasError('codeExists')) {
         <div>
-          <app-error-message message="Code already in use or deteled, pick a different code."></app-error-message>
+          <app-error-message message="Code already in use or deleted, pick a different code."></app-error-message>
         </div>
       }
     </div>
@@ -30,7 +30,7 @@
       @if (conditionTypeForm.get('description')?.hasError('descriptionExists')) {
         <div>
           <app-error-message
-            message="Description already in use or deteled, pick a different description."
+            message="Description already in use or deleted, pick a different description."
           ></app-error-message>
         </div>
       }
