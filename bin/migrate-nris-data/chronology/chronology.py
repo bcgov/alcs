@@ -48,6 +48,7 @@ def etl(batch_size):
         REL_PATH / "sql/close_count.sql",
         REL_PATH / "sql/close_et.sql",
         REL_PATH / "sql/close_l.sql",
+        row_processor=set_chronology_closer_uuid,
     )
     logger.info("C&E file closure complete.")
 
@@ -55,6 +56,13 @@ def etl(batch_size):
 def set_author_uuid(row):
     if row["author_uuid"] is None:
         row["author_uuid"] = config.AUTHOR_UUID
+
+    return row
+
+
+def set_chronology_closer_uuid(row):
+    if row["chronology_closed_by_uuid"] is None:
+        row["chronology_closed_by_uuid"] = config.AUTHOR_UUID
 
     return row
 
