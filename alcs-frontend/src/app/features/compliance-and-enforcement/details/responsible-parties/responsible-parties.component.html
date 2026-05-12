@@ -53,17 +53,19 @@
           @if (party.foippaCategory === FOIPPACategory.INDIVIDUAL) {
             <div class="contact-row">
               <!-- Address (if individual) -->
-              @if (getPartyAddress(party)) {
                 <div class="field">
                   <div class="field-heading">Mailing Address</div>
+                @if (getPartyAddress(party)) {
                   <div>{{ getPartyAddress(party) }}</div>
-                </div>
+                } @else {
+                  <app-inline-text
+                    [value]="getPartyAddress(party)"
+                    addText="Add Mailing Address"
+                    placeholder="Add Mailing Address"
+                    (save)="saveInlineEdit(party, 'mailingAddress', $event)"
+                  ></app-inline-text>
               }
-              <!-- Empty div for spacing if no address -->
-              @if (!getPartyAddress(party)) {
-                <div class="field">
                 </div>
-              }
               <!-- Email -->
               <div class="field">
                 <div class="field-heading">Email</div>

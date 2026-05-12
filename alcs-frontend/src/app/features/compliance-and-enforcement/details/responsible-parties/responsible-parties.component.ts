@@ -205,7 +205,11 @@ export class ResponsiblePartiesDetailsComponent implements OnInit, OnDestroy {
     return 'Responsible Parties';
   }
 
-  async saveInlineEdit(party: ResponsiblePartyDto, field: 'email' | 'phone' | 'notes', newValue: string | null) {
+  async saveInlineEdit(
+    party: ResponsiblePartyDto,
+    field: 'email' | 'phone' | 'notes' | 'mailingAddress',
+    newValue: string | null,
+  ) {
     // Handle Crown notes separately (stored locally for now)
     if (party.uuid === 'crown' && field === 'notes') {
       this.crownNotes = newValue || '';
@@ -221,6 +225,7 @@ export class ResponsiblePartiesDetailsComponent implements OnInit, OnDestroy {
       if (field === 'email') updateDto.individualEmail = value;
       else if (field === 'phone') updateDto.individualTelephone = value;
       else if (field === 'notes') updateDto.individualNote = value;
+      else if (field === 'mailingAddress') updateDto.individualMailingAddress = value;
     } else {
       if (field === 'email') updateDto.organizationEmail = value;
       else if (field === 'phone') updateDto.organizationTelephone = value;
