@@ -1,3 +1,4 @@
+import { OVERLAY_DEFAULT_CONFIG } from '@angular/cdk/overlay';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule, inject, provideAppInitializer } from '@angular/core';
 import { MomentDateModule } from '@angular/material-moment-adapter';
@@ -40,13 +41,14 @@ import { SharedModule } from './shared/shared.module';
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: UnauthorizedInterceptor, multi: true },
     { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { panelClass: 'mat-dialog-override' } },
+    { provide: OVERLAY_DEFAULT_CONFIG, useValue: { usePopover: false } },
     provideEnvironmentNgxMask(),
     provideAppInitializer(() => {
-        const initializerFn = ((service: TokenRefreshService) => () => {
+      const initializerFn = ((service: TokenRefreshService) => () => {
         return service.init();
       })(inject(TokenRefreshService));
-        return initializerFn();
-      }),
+      return initializerFn();
+    }),
   ],
   bootstrap: [AppComponent],
 })
