@@ -237,7 +237,7 @@
   <!-- Dropdown Menu for Adding Parties -->
   <mat-menu #addPartyMenu="matMenu">
     @for (type of responsiblePartyTypes; track type) {
-      <button mat-menu-item (click)="addPartyOfType(type.value)">
+      <button class="add-party-menu-item" mat-menu-item (click)="addPartyOfType(type.value)">
         {{ type.value }}
       </button>
     }

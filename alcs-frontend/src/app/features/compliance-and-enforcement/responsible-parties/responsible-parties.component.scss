@@ -224,7 +224,7 @@
           width: 80px;
           text-align: center;
           color: #666;
-          
+
           &.hidden {
             visibility: hidden;
           }
@@ -240,7 +240,7 @@
       gap: 24px;
       background-color: #fff;
 
-         .director-item {
+      .director-item {
         &.director-number {
           width: 50px;
           display: flex;
@@ -474,4 +474,9 @@ mat-form-field {
       color: rgba(0, 0, 0, 0.87);
     }
   }
+}
+
+.add-party-menu-item {
+  font-size: 16px !important;
+  font-weight: normal !important;
 }
