@@ -1,39 +1,36 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
-import { sleep } from '../../../../test/sleep';
 import { ApplicationDocumentService } from '../../services/application/application-document/application-document.service';
 import { BoardService, BoardWithFavourite } from '../../services/board/board.service';
 import { DecisionMeetingService } from '../../services/decision-meeting/decision-meeting.service';
 import { ToastService } from '../../services/toast/toast.service';
-import { AssigneeDto, UserDto } from '../../services/user/user.dto';
 import { UserService } from '../../services/user/user.service';
-import { CardType } from '../card/card.component';
-import { RouterTestingModule } from '@angular/router/testing';
 
-import { MeetingOverviewComponent } from './meeting-overview.component';
 import { IncomingFileService } from '../../services/incoming-file/incoming-file.service';
+import { AssigneeDto } from '../../services/user/user.dto';
+import { CardType } from '../card/card.component';
+import { MeetingOverviewComponent } from './meeting-overview.component';
 
 describe('MeetingOverviewComponent', () => {
   let component: MeetingOverviewComponent;
   let fixture: ComponentFixture<MeetingOverviewComponent>;
+  let mockBoardSubject: BehaviorSubject<BoardWithFavourite[]>;
   let mockBoardService: DeepMocked<BoardService>;
   let mockIncomingFileService: DeepMocked<IncomingFileService>;
-  let boardEmitter: BehaviorSubject<BoardWithFavourite[]>;
   let mockUserService: DeepMocked<UserService>;
   let mockMeetingService: DeepMocked<DecisionMeetingService>;
   let mockToastService: DeepMocked<ToastService>;
 
   beforeEach(async () => {
-    mockBoardService = createMock();
+    mockBoardSubject = new BehaviorSubject<BoardWithFavourite[]>([]);
+    mockBoardService = createMock<BoardService>({
+      $boards: mockBoardSubject.asObservable(),
+    });
     mockIncomingFileService = createMock();
-    boardEmitter = new BehaviorSubject<BoardWithFavourite[]>([]);
-    mockBoardService.$boards = boardEmitter;
-
     mockUserService = createMock();
-    mockUserService.$userProfile = new BehaviorSubject<UserDto | undefined>(undefined);
-
     mockMeetingService = createMock();
     mockToastService = createMock();
 
@@ -92,8 +89,9 @@ describe('MeetingOverviewComponent', () => {
         },
       ],
     });
+    mockIncomingFileService.fetchAndSort.mockResolvedValue({});
 
-    boardEmitter.next([
+    mockBoardSubject.next([
       {
         isFavourite: true,
         title: '',
@@ -104,7 +102,6 @@ describe('MeetingOverviewComponent', () => {
       },
     ]);
 
-    await sleep(1);
     await component.loadMeetings();
     expect(component.viewData.length).toEqual(1);
   });

@@ -1,4 +1,4 @@
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { ChangeDetectorRef, NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
@@ -22,6 +22,7 @@ describe('AdditionalInformationComponent', () => {
   let mockNoticeOfIntentDocumentService: DeepMocked<NoticeOfIntentDocumentService>;
   let mockDialogService: DeepMocked<ConfirmationDialogService>;
   let mockDialog: DeepMocked<MatDialog>;
+  let mockChangeDetectorRef: DeepMocked<ChangeDetectorRef>;
 
   const emptySubmission = {
     applicant: '',
@@ -96,6 +97,7 @@ describe('AdditionalInformationComponent', () => {
     mockNoticeOfIntentDocumentService = createMock();
     mockDialog = createMock();
     mockDialogService = createMock();
+    mockChangeDetectorRef = createMock();
 
     await TestBed.configureTestingModule({
       declarations: [AdditionalInformationComponent],
@@ -112,6 +114,10 @@ describe('AdditionalInformationComponent', () => {
         },
         {
           provide: ToastService,
+          useValue: {},
+        },
+        {
+          provide: ChangeDetectorRef,
           useValue: {},
         },
       ],

@@ -7,8 +7,8 @@ export interface FileHandle {
 }
 
 @Directive({
-    selector: '[dragDropFile]',
-    standalone: false
+  selector: '[dragDropFile]',
+  standalone: false,
 })
 export class DragDropDirective {
   private backgroundColor = '#fff';
@@ -16,8 +16,8 @@ export class DragDropDirective {
 
   @Input() disabled = false;
   @Output() files: EventEmitter<FileHandle> = new EventEmitter();
-  @HostBinding('style.background') private background = this.backgroundColor;
-  @HostBinding('style.border') private border = this.borderStyle;
+  @HostBinding('style.background') protected background = this.backgroundColor;
+  @HostBinding('style.border') protected border = this.borderStyle;
 
   constructor(private sanitizer: DomSanitizer) {}
 

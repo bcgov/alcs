@@ -38,9 +38,7 @@ describe('ApplicationDecisionComponentLotController', () => {
       ],
     }).compile();
 
-    controller = module.get<ApplicationDecisionComponentLotController>(
-      ApplicationDecisionComponentLotController,
-    );
+    controller = module.get<ApplicationDecisionComponentLotController>(ApplicationDecisionComponentLotController);
   });
 
   it('should be defined', () => {
@@ -48,9 +46,7 @@ describe('ApplicationDecisionComponentLotController', () => {
   });
 
   it('should successfully call service to update', async () => {
-    mockApplicationDecisionComponentLotService.update.mockResolvedValue(
-      new ApplicationDecisionComponentLot(),
-    );
+    mockApplicationDecisionComponentLotService.update.mockResolvedValue(new ApplicationDecisionComponentLot());
 
     const updateDto = {
       type: 'Lot',
@@ -62,12 +58,7 @@ describe('ApplicationDecisionComponentLotController', () => {
     const result = await controller.update('fake', updateDto);
 
     expect(result).toBeDefined();
-    expect(mockApplicationDecisionComponentLotService.update).toBeCalledTimes(
-      1,
-    );
-    expect(mockApplicationDecisionComponentLotService.update).toBeCalledWith(
-      'fake',
-      updateDto,
-    );
+    expect(mockApplicationDecisionComponentLotService.update).toHaveBeenCalledTimes(1);
+    expect(mockApplicationDecisionComponentLotService.update).toHaveBeenCalledWith('fake', updateDto);
   });
 });

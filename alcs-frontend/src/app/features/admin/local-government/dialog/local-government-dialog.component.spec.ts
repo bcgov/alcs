@@ -5,8 +5,6 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { AdminLocalGovernmentService } from '../../../../services/admin-local-government/admin-local-government.service';
 
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
-import { BehaviorSubject } from 'rxjs';
-import { ApplicationRegionDto } from '../../../../services/application/application-code.dto';
 import { ApplicationService } from '../../../../services/application/application.service';
 import { LocalGovernmentDialogComponent } from './local-government-dialog.component';
 
@@ -17,7 +15,6 @@ describe('LocalGovernmentDialogComponent', () => {
 
   beforeEach(async () => {
     mockApplicationService = createMock();
-    mockApplicationService.$applicationRegions = new BehaviorSubject<ApplicationRegionDto[]>([]);
 
     await TestBed.configureTestingModule({
       imports: [ReactiveFormsModule, FormsModule],

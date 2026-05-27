@@ -38,14 +38,14 @@ describe('HttpExceptionFilter', () => {
       const mockHttpException = new HttpException({ message: 'Sample Exception' }, HttpStatus.BAD_REQUEST);
       service.catch(mockHttpException, mockArgumentsHost);
 
-      expect(mockHttpArgumentsHost).toBeCalledTimes(1);
-      expect(mockHttpArgumentsHost).toBeCalledWith();
-      expect(mockGetResponse).toBeCalledTimes(1);
-      expect(mockGetResponse).toBeCalledWith();
-      expect(mockStatus).toBeCalledTimes(1);
-      expect(mockStatus).toBeCalledWith(HttpStatus.BAD_REQUEST);
-      expect(mockSend).toBeCalledTimes(1);
-      expect(mockSend).toBeCalledWith(
+      expect(mockHttpArgumentsHost).toHaveBeenCalledTimes(1);
+      expect(mockHttpArgumentsHost).toHaveBeenCalledWith();
+      expect(mockGetResponse).toHaveBeenCalledTimes(1);
+      expect(mockGetResponse).toHaveBeenCalledWith();
+      expect(mockStatus).toHaveBeenCalledTimes(1);
+      expect(mockStatus).toHaveBeenCalledWith(HttpStatus.BAD_REQUEST);
+      expect(mockSend).toHaveBeenCalledTimes(1);
+      expect(mockSend).toHaveBeenCalledWith(
         new BaseErrorResponseModel(
           mockHttpException.getStatus(),
           mockHttpException.name,

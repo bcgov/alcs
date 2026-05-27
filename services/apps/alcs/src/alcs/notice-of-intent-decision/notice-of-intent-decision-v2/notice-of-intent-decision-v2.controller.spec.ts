@@ -11,10 +11,7 @@ import { CodeService } from '../../code/code.service';
 import { NoticeOfIntent } from '../../notice-of-intent/notice-of-intent.entity';
 import { NoticeOfIntentService } from '../../notice-of-intent/notice-of-intent.service';
 import { NoticeOfIntentDecisionOutcome } from '../notice-of-intent-decision-outcome.entity';
-import {
-  CreateNoticeOfIntentDecisionDto,
-  UpdateNoticeOfIntentDecisionDto,
-} from '../notice-of-intent-decision.dto';
+import { CreateNoticeOfIntentDecisionDto, UpdateNoticeOfIntentDecisionDto } from '../notice-of-intent-decision.dto';
 import { NoticeOfIntentDecision } from '../notice-of-intent-decision.entity';
 import { NoticeOfIntentModificationService } from '../notice-of-intent-modification/notice-of-intent-modification.service';
 import { NoticeOfIntentDecisionV2Controller } from './notice-of-intent-decision-v2.controller';
@@ -76,9 +73,7 @@ describe('NoticeOfIntentDecisionV2Controller', () => {
       ],
     }).compile();
 
-    controller = module.get<NoticeOfIntentDecisionV2Controller>(
-      NoticeOfIntentDecisionV2Controller,
-    );
+    controller = module.get<NoticeOfIntentDecisionV2Controller>(NoticeOfIntentDecisionV2Controller);
 
     mockDecisionService.fetchCodes.mockResolvedValue({
       outcomes: [
@@ -101,7 +96,7 @@ describe('NoticeOfIntentDecisionV2Controller', () => {
 
     const result = await controller.getByFileNumber('fake-number');
 
-    expect(mockDecisionService.getByFileNumber).toBeCalledTimes(1);
+    expect(mockDecisionService.getByFileNumber).toHaveBeenCalledTimes(1);
     expect(result[0].uuid).toStrictEqual(mockDecision.uuid);
   });
 
@@ -109,7 +104,7 @@ describe('NoticeOfIntentDecisionV2Controller', () => {
     mockDecisionService.get.mockResolvedValue(mockDecision);
     const result = await controller.get('fake-uuid');
 
-    expect(mockDecisionService.get).toBeCalledTimes(1);
+    expect(mockDecisionService.get).toHaveBeenCalledTimes(1);
     expect(result.uuid).toStrictEqual(mockDecision.uuid);
   });
 
@@ -118,14 +113,12 @@ describe('NoticeOfIntentDecisionV2Controller', () => {
 
     await controller.delete('fake-uuid');
 
-    expect(mockDecisionService.delete).toBeCalledTimes(1);
-    expect(mockDecisionService.delete).toBeCalledWith('fake-uuid');
+    expect(mockDecisionService.delete).toHaveBeenCalledTimes(1);
+    expect(mockDecisionService.delete).toHaveBeenCalledWith('fake-uuid');
   });
 
   it('should create the decision if noi exists', async () => {
-    mockNoticeOfIntentService.getByFileNumber.mockResolvedValue(
-      mockNoticeOfintent,
-    );
+    mockNoticeOfIntentService.getByFileNumber.mockResolvedValue(mockNoticeOfintent);
     mockDecisionService.create.mockResolvedValue(mockDecision);
 
     const decisionToCreate: CreateNoticeOfIntentDecisionDto = {
@@ -137,8 +130,8 @@ describe('NoticeOfIntentDecisionV2Controller', () => {
 
     await controller.create(decisionToCreate);
 
-    expect(mockDecisionService.create).toBeCalledTimes(1);
-    expect(mockDecisionService.create).toBeCalledWith(
+    expect(mockDecisionService.create).toHaveBeenCalledTimes(1);
+    expect(mockDecisionService.create).toHaveBeenCalledWith(
       {
         fileNumber: mockNoticeOfintent.fileNumber,
         outcomeCode: 'outcome',
@@ -153,9 +146,7 @@ describe('NoticeOfIntentDecisionV2Controller', () => {
   it('should update the decision', async () => {
     mockNoticeOfIntentService.getFileNumber.mockResolvedValue('file-number');
     mockDecisionService.get.mockResolvedValue(new NoticeOfIntentDecision());
-    mockDecisionService.getByFileNumber.mockResolvedValue([
-      new NoticeOfIntentDecision(),
-    ]);
+    mockDecisionService.getByFileNumber.mockResolvedValue([new NoticeOfIntentDecision()]);
     mockDecisionService.update.mockResolvedValue(mockDecision);
 
     const updates = {
@@ -166,8 +157,8 @@ describe('NoticeOfIntentDecisionV2Controller', () => {
 
     await controller.update('fake-uuid', updates);
 
-    expect(mockDecisionService.update).toBeCalledTimes(1);
-    expect(mockDecisionService.update).toBeCalledWith(
+    expect(mockDecisionService.update).toHaveBeenCalledTimes(1);
+    expect(mockDecisionService.update).toHaveBeenCalledWith(
       'fake-uuid',
       {
         outcome: 'New Outcome',
@@ -190,7 +181,7 @@ describe('NoticeOfIntentDecisionV2Controller', () => {
       },
     });
 
-    expect(mockDecisionService.attachDocument).toBeCalledTimes(1);
+    expect(mockDecisionService.attachDocument).toHaveBeenCalledTimes(1);
   });
 
   it('should throw an exception if there is no file for file upload', async () => {
@@ -203,9 +194,7 @@ describe('NoticeOfIntentDecisionV2Controller', () => {
       },
     });
 
-    await expect(promise).rejects.toMatchObject(
-      new Error('Request is not multipart'),
-    );
+    await expect(promise).rejects.toMatchObject(new Error('Request is not multipart'));
   });
 
   it('should call through for getting download url', async () => {
@@ -213,7 +202,7 @@ describe('NoticeOfIntentDecisionV2Controller', () => {
     mockDecisionService.getDownloadUrl.mockResolvedValue(fakeUrl);
     const res = await controller.getDownloadUrl('fake-uuid', 'document-uuid');
 
-    expect(mockDecisionService.getDownloadUrl).toBeCalledTimes(1);
+    expect(mockDecisionService.getDownloadUrl).toHaveBeenCalledTimes(1);
     expect(res.url).toEqual(fakeUrl);
   });
 
@@ -223,7 +212,7 @@ describe('NoticeOfIntentDecisionV2Controller', () => {
       fileName: '',
     });
 
-    expect(mockDecisionService.updateDocument).toBeCalledTimes(1);
+    expect(mockDecisionService.updateDocument).toHaveBeenCalledTimes(1);
   });
 
   it('should call through for getting open url', async () => {
@@ -231,7 +220,7 @@ describe('NoticeOfIntentDecisionV2Controller', () => {
     mockDecisionService.getDownloadUrl.mockResolvedValue(fakeUrl);
     const res = await controller.getOpenUrl('fake-uuid', 'document-uuid');
 
-    expect(mockDecisionService.getDownloadUrl).toBeCalledTimes(1);
+    expect(mockDecisionService.getDownloadUrl).toHaveBeenCalledTimes(1);
     expect(res.url).toEqual(fakeUrl);
   });
 
@@ -239,14 +228,14 @@ describe('NoticeOfIntentDecisionV2Controller', () => {
     mockDecisionService.deleteDocument.mockResolvedValue({} as any);
     await controller.deleteDocument('fake-uuid', 'document-uuid');
 
-    expect(mockDecisionService.deleteDocument).toBeCalledTimes(1);
+    expect(mockDecisionService.deleteDocument).toHaveBeenCalledTimes(1);
   });
 
   it('should call through for resolution number generation', async () => {
     mockDecisionService.generateResolutionNumber.mockResolvedValue(1);
     await controller.getNextAvailableResolutionNumber(2023);
 
-    expect(mockDecisionService.generateResolutionNumber).toBeCalledTimes(1);
-    expect(mockDecisionService.generateResolutionNumber).toBeCalledWith(2023);
+    expect(mockDecisionService.generateResolutionNumber).toHaveBeenCalledTimes(1);
+    expect(mockDecisionService.generateResolutionNumber).toHaveBeenCalledWith(2023);
   });
 });

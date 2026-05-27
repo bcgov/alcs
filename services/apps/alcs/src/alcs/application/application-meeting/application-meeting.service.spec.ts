@@ -1,15 +1,9 @@
-import {
-  ServiceNotFoundException,
-  ServiceValidationException,
-} from '@app/common/exceptions/base.exception';
+import { ServiceNotFoundException, ServiceValidationException } from '@app/common/exceptions/base.exception';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import {
-  initApplicationMeetingMock,
-  initApplicationMockEntity,
-} from '../../../../test/mocks/mockEntities';
+import { initApplicationMeetingMock, initApplicationMockEntity } from '../../../../test/mocks/mockEntities';
 import { ApplicationPaused } from '../application-paused.entity';
 import { ApplicationService } from '../application.service';
 import { UpdateApplicationMeetingDto } from './application-meeting.dto';
@@ -87,14 +81,14 @@ describe('ApplicationMeetingService', () => {
     mockAppMeetingRepository.softRemove.mockResolvedValue({} as any);
     await service.remove(mockMeeting);
 
-    expect(mockAppMeetingRepository.softRemove).toBeCalledTimes(1);
+    expect(mockAppMeetingRepository.softRemove).toHaveBeenCalledTimes(1);
   });
 
   it('should create meeting', async () => {
     await service.create({} as ApplicationMeeting);
 
-    expect(mockAppMeetingRepository.findOne).toBeCalledTimes(1);
-    expect(mockAppMeetingRepository.save).toBeCalledTimes(1);
+    expect(mockAppMeetingRepository.findOne).toHaveBeenCalledTimes(1);
+    expect(mockAppMeetingRepository.save).toHaveBeenCalledTimes(1);
   });
 
   it('should update meeting', async () => {
@@ -108,8 +102,8 @@ describe('ApplicationMeetingService', () => {
       description: '',
     });
 
-    expect(mockAppMeetingRepository.findOne).toBeCalledTimes(2);
-    expect(mockAppMeetingRepository.findOne).toBeCalledWith({
+    expect(mockAppMeetingRepository.findOne).toHaveBeenCalledTimes(2);
+    expect(mockAppMeetingRepository.findOne).toHaveBeenCalledWith({
       where: { uuid: meetingToUpdate.uuid },
       relations: {
         type: true,
@@ -117,7 +111,7 @@ describe('ApplicationMeetingService', () => {
         reportPause: true,
       },
     });
-    expect(mockAppMeetingRepository.save).toBeCalledTimes(1);
+    expect(mockAppMeetingRepository.save).toHaveBeenCalledTimes(1);
   });
 
   it('should allow setting end date to null', async () => {
@@ -131,8 +125,8 @@ describe('ApplicationMeetingService', () => {
       description: '',
     });
 
-    expect(mockAppMeetingRepository.findOne).toBeCalledTimes(2);
-    expect(mockAppMeetingRepository.findOne).toBeCalledWith({
+    expect(mockAppMeetingRepository.findOne).toHaveBeenCalledTimes(2);
+    expect(mockAppMeetingRepository.findOne).toHaveBeenCalledWith({
       where: { uuid: meetingToUpdate.uuid },
       relations: {
         type: true,
@@ -140,33 +134,27 @@ describe('ApplicationMeetingService', () => {
         reportPause: true,
       },
     });
-    expect(mockAppMeetingRepository.save).toBeCalledTimes(1);
+    expect(mockAppMeetingRepository.save).toHaveBeenCalledTimes(1);
   });
 
   it('should fail on update if meeting not found', async () => {
     mockAppMeetingRepository.findOne.mockResolvedValue(null);
 
-    expect(mockAppMeetingRepository.save).toBeCalledTimes(0);
-    await expect(
-      service.update('fake-uuid', {} as UpdateApplicationMeetingDto),
-    ).rejects.toMatchObject(
+    expect(mockAppMeetingRepository.save).toHaveBeenCalledTimes(0);
+    await expect(service.update('fake-uuid', {} as UpdateApplicationMeetingDto)).rejects.toMatchObject(
       new ServiceNotFoundException(`Meeting not found fake-uuid`),
     );
   });
 
   it('should fail on update if meeting start date > end date', async () => {
-    expect(mockAppMeetingRepository.save).toBeCalledTimes(0);
+    expect(mockAppMeetingRepository.save).toHaveBeenCalledTimes(0);
     await expect(
       service.update('fake-uuid', {
         meetingStartDate: 5,
         meetingEndDate: 1,
         description: '',
       }),
-    ).rejects.toMatchObject(
-      new ServiceValidationException(
-        'Start Date must be smaller than End Date',
-      ),
-    );
+    ).rejects.toMatchObject(new ServiceValidationException('Start Date must be smaller than End Date'));
   });
 
   it('should delete the meeting pause if one exists and there is no start and end date', async () => {

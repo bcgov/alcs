@@ -6,9 +6,9 @@ import { ApplicationService } from '../../../services/application/application.se
 import { SearchService } from '../../../services/search/search.service';
 import { ToastService } from '../../../services/toast/toast.service';
 
-import { SearchBarComponent } from './search-bar.component';
-import { AuthenticationService, ICurrentUser } from '../../../services/authentication/authentication.service';
 import { BehaviorSubject } from 'rxjs';
+import { AuthenticationService, ICurrentUser } from '../../../services/authentication/authentication.service';
+import { SearchBarComponent } from './search-bar.component';
 
 describe('SearchBarComponent', () => {
   let component: SearchBarComponent;
@@ -46,7 +46,6 @@ describe('SearchBarComponent', () => {
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
-    mockAuthenticationService.$currentUser = currentUser;
     fixture = TestBed.createComponent(SearchBarComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

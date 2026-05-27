@@ -1,6 +1,29 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { CardComponent, CardType } from './card.component';
+import { CardComponent, CardData, CardType } from './card.component';
+
+const mockCardData = {
+  id: '1',
+  status: '',
+  typeLabel: 'typeLabel',
+  title: 'Title',
+  titleTooltip: 'Tooltip',
+  activeDays: 2,
+  paused: false,
+  highPriority: false,
+  decisionMeetings: [],
+  cardUuid: 'fake',
+  cardType: CardType.APP,
+  dateReceived: 11111,
+  labels: [
+    {
+      textColor: '#000',
+      shortLabel: 'LUP',
+      backgroundColor: '#fff',
+      label: 'LUP',
+    },
+  ],
+} as CardData;
 
 describe('CardComponent', () => {
   let component: CardComponent;
@@ -14,28 +37,7 @@ describe('CardComponent', () => {
 
     fixture = TestBed.createComponent(CardComponent);
     component = fixture.componentInstance;
-    component.cardData = {
-      id: '1',
-      status: '',
-      typeLabel: 'typeLabel',
-      title: 'Title',
-      titleTooltip: 'Tooltip',
-      activeDays: 2,
-      paused: false,
-      highPriority: false,
-      decisionMeetings: [],
-      cardUuid: 'fake',
-      cardType: CardType.APP,
-      dateReceived: 11111,
-      labels: [
-        {
-          textColor: '#000',
-          shortLabel: 'LUP',
-          backgroundColor: '#fff',
-          label: 'LUP',
-        },
-      ],
-    };
+    component.cardData = mockCardData;
 
     fixture.detectChanges();
   });
@@ -56,29 +58,8 @@ describe('CardComponent', () => {
     expect(pausedCard).toBeFalsy();
   });
 
-  it('should apply the paused class to paused application', () => {
-    component.cardData = {
-      id: '1',
-      status: '',
-      typeLabel: 'typeLabel',
-      title: 'Title',
-      titleTooltip: 'tooltip',
-      activeDays: 2,
-      paused: true,
-      highPriority: false,
-      decisionMeetings: [],
-      cardUuid: 'fake',
-      cardType: CardType.APP,
-      dateReceived: 11111,
-      labels: [
-        {
-          textColor: '#000',
-          shortLabel: 'LUP',
-          backgroundColor: '#fff',
-          label: 'LUP',
-        },
-      ],
-    };
+  it('should apply the paused class to paused application', async () => {
+    fixture.componentRef.setInput('cardData', { ...mockCardData, paused: true });
     fixture.detectChanges();
 
     const compiled = fixture.debugElement.nativeElement;

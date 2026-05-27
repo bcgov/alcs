@@ -37,9 +37,7 @@ describe('NotificationSubmissionStatusController', () => {
       ],
     }).compile();
 
-    controller = module.get<NotificationSubmissionStatusController>(
-      NotificationSubmissionStatusController,
-    );
+    controller = module.get<NotificationSubmissionStatusController>(NotificationSubmissionStatusController);
   });
 
   it('should be defined', () => {
@@ -49,18 +47,16 @@ describe('NotificationSubmissionStatusController', () => {
   it('should call service to get statuses by file number', async () => {
     const fakeFileNumber = 'fake';
 
-    mockNoticeOfIntentSubmissionStatusService.getCurrentStatusesByFileNumber.mockResolvedValue(
-      [new NotificationSubmissionToSubmissionStatus()],
-    );
+    mockNoticeOfIntentSubmissionStatusService.getCurrentStatusesByFileNumber.mockResolvedValue([
+      new NotificationSubmissionToSubmissionStatus(),
+    ]);
 
     const result = await controller.getStatusesByFileNumber(fakeFileNumber);
 
-    expect(
-      mockNoticeOfIntentSubmissionStatusService.getCurrentStatusesByFileNumber,
-    ).toBeCalledTimes(1);
-    expect(
-      mockNoticeOfIntentSubmissionStatusService.getCurrentStatusesByFileNumber,
-    ).toBeCalledWith(fakeFileNumber);
+    expect(mockNoticeOfIntentSubmissionStatusService.getCurrentStatusesByFileNumber).toHaveBeenCalledTimes(1);
+    expect(mockNoticeOfIntentSubmissionStatusService.getCurrentStatusesByFileNumber).toHaveBeenCalledWith(
+      fakeFileNumber,
+    );
     expect(result.length).toEqual(1);
     expect(result).toBeDefined();
   });
@@ -72,15 +68,10 @@ describe('NotificationSubmissionStatusController', () => {
       new NotificationSubmissionToSubmissionStatus(),
     );
 
-    const result =
-      await controller.getCurrentStatusByFileNumber(fakeFileNumber);
+    const result = await controller.getCurrentStatusByFileNumber(fakeFileNumber);
 
-    expect(
-      mockNoticeOfIntentSubmissionStatusService.getCurrentStatusByFileNumber,
-    ).toBeCalledTimes(1);
-    expect(
-      mockNoticeOfIntentSubmissionStatusService.getCurrentStatusByFileNumber,
-    ).toBeCalledWith(fakeFileNumber);
+    expect(mockNoticeOfIntentSubmissionStatusService.getCurrentStatusByFileNumber).toHaveBeenCalledTimes(1);
+    expect(mockNoticeOfIntentSubmissionStatusService.getCurrentStatusByFileNumber).toHaveBeenCalledWith(fakeFileNumber);
     expect(result).toBeDefined();
   });
 });

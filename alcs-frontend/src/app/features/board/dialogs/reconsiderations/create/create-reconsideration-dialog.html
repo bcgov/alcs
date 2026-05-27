@@ -18,7 +18,7 @@
             createForm.get('fileNumber')!.invalid &&
             (createForm.get('fileNumber')!.dirty || createForm.get('fileNumber')!.touched)
           "
-          />
+        />
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Applicant Name</mat-label>
@@ -35,7 +35,7 @@
             createForm.get('applicant')!.invalid &&
             (createForm.get('applicant')!.dirty || createForm.get('applicant')!.touched)
           "
-          />
+        />
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Local Government</mat-label>
@@ -50,7 +50,7 @@
               createForm.get('localGovernment')!.invalid &&
               (createForm.get('localGovernment')!.dirty || createForm.get('localGovernment')!.touched)
             "
-          />
+        />
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Region</mat-label>
@@ -66,7 +66,7 @@
             createForm.get('applicant')!.invalid &&
             (createForm.get('applicant')!.dirty || createForm.get('applicant')!.touched)
           "
-          />
+        />
       </mat-form-field>
       <div>
         <ng-select
@@ -79,7 +79,7 @@
           bindValue="code"
           [clearable]="false"
           formControlName="applicationType"
-          >
+        >
           <ng-template ng-option-tmp let-item="item">
             <div class="application-type">
               <div
@@ -114,7 +114,7 @@
           bindValue="code"
           [clearable]="false"
           formControlName="board"
-          >
+        >
           <ng-template ng-option-tmp let-item="item">
             <div>
               <span>{{ item.title }}</span>
@@ -135,8 +135,8 @@
             (click)="datePicker.open()"
             [matDatepicker]="datePicker"
             formControlName="submittedDate"
-            required
-            />
+            [required]="true"
+          />
           <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
           <mat-datepicker #datePicker type="date"></mat-datepicker>
         </mat-form-field>
@@ -145,7 +145,7 @@
         <mat-label>Resolutions to be Reconsidered</mat-label>
         <mat-select [formControl]="reconsidersDecisions" multiple>
           @for (decision of decisions; track decision) {
-            <mat-option [value]="decision.uuid">{{decision.resolution}}</mat-option>
+          <mat-option [value]="decision.uuid">{{decision.resolution}}</mat-option>
           }
         </mat-select>
       </mat-form-field>
@@ -161,26 +161,26 @@
           [clearable]="false"
           formControlName="reconType"
           (change)="onTypeReconsiderationChange()"
-          >
+        >
         </ng-select>
       </div>
       <div>
         <mat-label [class.field-disabled]="disable331Fields">New Evidence*</mat-label>
-        <mat-button-toggle-group required id="isNewEvidence" formControlName="isNewEvidence">
+        <mat-button-toggle-group [required]="true" id="isNewEvidence" formControlName="isNewEvidence">
           <mat-button-toggle value="true">Yes</mat-button-toggle>
           <mat-button-toggle value="false">No</mat-button-toggle>
         </mat-button-toggle-group>
       </div>
       <div>
         <mat-label [class.field-disabled]="disable331Fields">Incorrect or False Info*</mat-label>
-        <mat-button-toggle-group required id="isIncorrectFalseInfo" formControlName="isIncorrectFalseInfo">
+        <mat-button-toggle-group [required]="true" id="isIncorrectFalseInfo" formControlName="isIncorrectFalseInfo">
           <mat-button-toggle value="true">Yes</mat-button-toggle>
           <mat-button-toggle value="false">No</mat-button-toggle>
         </mat-button-toggle-group>
       </div>
       <div>
         <mat-label [class.field-disabled]="disable331Fields">New Proposal*</mat-label>
-        <mat-button-toggle-group required id="isNewProposal" formControlName="isNewProposal">
+        <mat-button-toggle-group [required]="true" id="isNewProposal" formControlName="isNewProposal">
           <mat-button-toggle value="true">Yes</mat-button-toggle>
           <mat-button-toggle value="false">No</mat-button-toggle>
         </mat-button-toggle-group>
@@ -193,10 +193,10 @@
 
     <div class="warning-section">
       @if (isDecisionDateEmpty) {
-        <div class="warning">
-          <mat-icon>warning</mat-icon>
-          File does not have a decision
-        </div>
+      <div class="warning">
+        <mat-icon>warning</mat-icon>
+        File does not have a decision
+      </div>
       }
     </div>
   </mat-dialog-content>

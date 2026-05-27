@@ -2,16 +2,14 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
-import { BehaviorSubject } from 'rxjs';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import { ApplicationDocumentService } from '../../../services/application/application-document/application-document.service';
 import { ApplicationSubmissionStatusService } from '../../../services/application/application-submission-status/application-submission-status.service';
-import { ApplicationDto } from '../../../services/application/application.dto';
 import { ToastService } from '../../../services/toast/toast.service';
 
-import { DocumentsComponent } from './documents.component';
 import { ApplicationParcelService } from '../../../services/application/application-parcel/application-parcel.service';
 import { ApplicationSubmissionService } from '../../../services/application/application-submission/application-submission.service';
+import { DocumentsComponent } from './documents.component';
 
 describe('DocumentsComponent', () => {
   let component: DocumentsComponent;
@@ -29,7 +27,6 @@ describe('DocumentsComponent', () => {
     mockAppDetailService = createMock();
     mockDialog = createMock();
     mockToastService = createMock();
-    mockAppDetailService.$application = new BehaviorSubject<ApplicationDto | undefined>(undefined);
     mockAppSubStatusService = createMock();
     mockAppSubService = createMock();
     mockAppParcelService = createMock();

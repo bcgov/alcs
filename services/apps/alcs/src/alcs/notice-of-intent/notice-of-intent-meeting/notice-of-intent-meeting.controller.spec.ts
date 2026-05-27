@@ -9,10 +9,7 @@ import { NoticeOfIntent } from '../notice-of-intent.entity';
 import { NoticeOfIntentService } from '../notice-of-intent.service';
 import { NoticeOfIntentMeetingType } from './notice-of-intent-meeting-type.entity';
 import { NoticeOfIntentMeetingController } from './notice-of-intent-meeting.controller';
-import {
-  CreateNoticeOfIntentMeetingDto,
-  UpdateNoticeOfIntentMeetingDto,
-} from './notice-of-intent-meeting.dto';
+import { CreateNoticeOfIntentMeetingDto, UpdateNoticeOfIntentMeetingDto } from './notice-of-intent-meeting.dto';
 import { NoticeOfIntentMeeting } from './notice-of-intent-meeting.entity';
 import { NoticeOfIntentMeetingService } from './notice-of-intent-meeting.service';
 
@@ -53,17 +50,13 @@ describe('NoticeOfIntentMeetingController', () => {
       ],
     }).compile();
 
-    controller = module.get<NoticeOfIntentMeetingController>(
-      NoticeOfIntentMeetingController,
-    );
+    controller = module.get<NoticeOfIntentMeetingController>(NoticeOfIntentMeetingController);
 
-    mockNoticeOfIntentMeetingService.fetNoticeOfIntentMeetingTypes.mockResolvedValue(
-      [
-        {
-          code: 'fake',
-        } as NoticeOfIntentMeetingType,
-      ],
-    );
+    mockNoticeOfIntentMeetingService.fetNoticeOfIntentMeetingTypes.mockResolvedValue([
+      {
+        code: 'fake',
+      } as NoticeOfIntentMeetingType,
+    ]);
 
     mockNoi = createMock<DeepMocked<NoticeOfIntent>>();
     mockNoi.uuid = 'fakeUuid';
@@ -80,12 +73,10 @@ describe('NoticeOfIntentMeetingController', () => {
   });
 
   it('should get all for notice of intent', async () => {
-    mockNoticeOfIntentMeetingService.getByFileNumber.mockResolvedValue([
-      mockMeeting,
-    ]);
+    mockNoticeOfIntentMeetingService.getByFileNumber.mockResolvedValue([mockMeeting]);
     const result = await controller.getAllForApplication('fake-number');
 
-    expect(mockNoticeOfIntentMeetingService.getByFileNumber).toBeCalledTimes(1);
+    expect(mockNoticeOfIntentMeetingService.getByFileNumber).toHaveBeenCalledTimes(1);
     expect(result[0].uuid).toStrictEqual(mockMeeting.uuid);
   });
 
@@ -95,8 +86,8 @@ describe('NoticeOfIntentMeetingController', () => {
 
     await controller.delete('fake-uuid');
 
-    expect(mockNoticeOfIntentMeetingService.remove).toBeCalledTimes(1);
-    expect(mockNoticeOfIntentMeetingService.remove).toBeCalledWith(mockMeeting);
+    expect(mockNoticeOfIntentMeetingService.remove).toHaveBeenCalledTimes(1);
+    expect(mockNoticeOfIntentMeetingService.remove).toHaveBeenCalledWith(mockMeeting);
   });
 
   it('should create meeting if notice of intent exists', async () => {
@@ -111,11 +102,9 @@ describe('NoticeOfIntentMeetingController', () => {
 
     await controller.create(meetingToUpdate, 'file-number');
 
-    expect(mockNoticeOfIntentMeetingService.create).toBeCalledTimes(1);
+    expect(mockNoticeOfIntentMeetingService.create).toHaveBeenCalledTimes(1);
     const calledData = mockNoticeOfIntentMeetingService.create.mock.calls[0][0];
-    expect(calledData.noticeOfIntentUuid).toEqual(
-      mockMeeting.noticeOfIntent.uuid,
-    );
+    expect(calledData.noticeOfIntentUuid).toEqual(mockMeeting.noticeOfIntent.uuid);
     expect(calledData.meetingTypeCode).toBe(mockMeeting.typeCode);
   });
 
@@ -128,13 +117,10 @@ describe('NoticeOfIntentMeetingController', () => {
 
     await controller.update(meetingToUpdate, mockMeeting.uuid);
 
-    expect(mockNoticeOfIntentMeetingService.update).toBeCalledTimes(1);
-    expect(mockNoticeOfIntentMeetingService.update).toBeCalledWith(
-      mockMeeting.uuid,
-      {
-        meetingStartDate: meetingToUpdate.meetingStartDate,
-        meetingEndDate: meetingToUpdate.meetingEndDate,
-      },
-    );
+    expect(mockNoticeOfIntentMeetingService.update).toHaveBeenCalledTimes(1);
+    expect(mockNoticeOfIntentMeetingService.update).toHaveBeenCalledWith(mockMeeting.uuid, {
+      meetingStartDate: meetingToUpdate.meetingStartDate,
+      meetingEndDate: meetingToUpdate.meetingEndDate,
+    });
   });
 });

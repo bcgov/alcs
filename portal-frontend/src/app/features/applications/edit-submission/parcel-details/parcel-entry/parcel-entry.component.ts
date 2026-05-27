@@ -40,10 +40,10 @@ export interface ParcelEntryFormData {
 }
 
 @Component({
-    selector: 'app-parcel-entry[parcel][fileId][submissionUuid]',
-    templateUrl: './parcel-entry.component.html',
-    styleUrls: ['./parcel-entry.component.scss'],
-    standalone: false
+  selector: 'app-parcel-entry[parcel][fileId][submissionUuid]',
+  templateUrl: './parcel-entry.component.html',
+  styleUrls: ['./parcel-entry.component.scss'],
+  standalone: false,
 })
 export class ParcelEntryComponent implements OnInit {
   @Input() parcel!: ApplicationParcelDto;
@@ -634,7 +634,7 @@ export class ParcelEntryComponent implements OnInit {
     }
   }
 
-  @HostListener('window:resize', ['$event'])
+  @HostListener('window:resize', [])
   onWindowResize() {
     this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
   }

@@ -1,12 +1,9 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
-import { BehaviorSubject } from 'rxjs';
-import { ApplicationRegionDto } from '../../../services/application/application-code.dto';
 import { ApplicationLocalGovernmentService } from '../../../services/application/application-local-government/application-local-government.service';
 import { ApplicationService } from '../../../services/application/application.service';
 import { InquiryDetailService } from '../../../services/inquiry/inquiry-detail.service';
-import { InquiryDto } from '../../../services/inquiry/inquiry.dto';
 import { InquiryService } from '../../../services/inquiry/inquiry.service';
 
 import { DetailsComponent } from './details.component';
@@ -27,8 +24,6 @@ describe('DetailsComponent', () => {
     localGovernmentService = createMock();
 
     localGovernmentService.list.mockResolvedValue([]);
-    inquiryDetailService.$inquiry = new BehaviorSubject<InquiryDto | undefined>(undefined);
-    applicationService.$applicationRegions = new BehaviorSubject<ApplicationRegionDto[]>([]);
 
     await TestBed.configureTestingModule({
       providers: [

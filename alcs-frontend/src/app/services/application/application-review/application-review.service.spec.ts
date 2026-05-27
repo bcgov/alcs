@@ -37,6 +37,6 @@ describe('ApplicationReviewService', () => {
     const result = await service.fetchReview('1');
 
     expect(result).toBeDefined();
-    expect(mockHttpClient.get).toBeCalledTimes(1);
+    expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
   });
 });

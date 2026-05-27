@@ -14,10 +14,10 @@ import { DocumentService } from '../../../../services/document/document.service'
 import { ToastService } from '../../../../services/toast/toast.service';
 
 @Component({
-    selector: 'app-additional-information',
-    templateUrl: './additional-information.component.html',
-    styleUrls: ['./additional-information.component.scss'],
-    standalone: false
+  selector: 'app-additional-information',
+  templateUrl: './additional-information.component.html',
+  styleUrls: ['./additional-information.component.scss'],
+  standalone: false,
 })
 export class AdditionalInformationComponent {
   @Input() showErrors = true;
@@ -72,13 +72,13 @@ export class AdditionalInformationComponent {
 
   private setVisibilityForResidentialFields() {
     this.isSoilStructureResidentialUseReasonVisible = !!this._noiSubmission?.soilProposedStructures.some(
-      (structure) => structure.type && RESIDENTIAL_STRUCTURE_TYPES.includes(structure.type)
+      (structure) => structure.type && RESIDENTIAL_STRUCTURE_TYPES.includes(structure.type),
     );
   }
 
   private setValidatorsForAccessoryFields() {
     this.isSoilStructureResidentialAccessoryUseReasonVisible = !!this._noiSubmission?.soilProposedStructures.some(
-      (structure) => structure.type === STRUCTURE_TYPES.ACCESSORY_STRUCTURE
+      (structure) => structure.type === STRUCTURE_TYPES.ACCESSORY_STRUCTURE,
     );
   }
 
@@ -96,14 +96,14 @@ export class AdditionalInformationComponent {
 
   private setVisibilityForOtherFields() {
     this.isSoilOtherStructureVisible = !!this._noiSubmission?.soilProposedStructures.some(
-      (structure) => structure.type === STRUCTURE_TYPES.OTHER_STRUCTURE
+      (structure) => structure.type === STRUCTURE_TYPES.OTHER_STRUCTURE,
     );
   }
 
   async onEditSection(step: number) {
     if (this.draftMode) {
       await this.router.navigateByUrl(
-        `/alcs/notice-of-intent/${this._noiSubmission?.fileNumber}/edit/${step}?errors=t`
+        `/alcs/notice-of-intent/${this._noiSubmission?.fileNumber}/edit/${step}?errors=t`,
       );
     } else {
       await this.router.navigateByUrl(`notice-of-intent/${this._noiSubmission?.fileNumber}/edit/${step}?errors=t`);
@@ -128,7 +128,7 @@ export class AdditionalInformationComponent {
     return STRUCTURE_TYPE_LABEL_MAP[value];
   }
 
-  @HostListener('window:resize', ['$event'])
+  @HostListener('window:resize', [])
   onWindowResize() {
     this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
   }

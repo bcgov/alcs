@@ -2,9 +2,8 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { InquiryDetailService } from '../../services/inquiry/inquiry-detail.service';
-import { InquiryDto } from '../../services/inquiry/inquiry.dto';
 
 import { InquiryComponent } from './inquiry.component';
 
@@ -19,7 +18,6 @@ describe('InquiryComponent', () => {
     mockActivateRoute = createMock();
 
     Object.assign(mockActivateRoute, { params: new Observable<ParamMap>() });
-    mockPlanningReviewDetailService.$inquiry = new BehaviorSubject<InquiryDto | undefined>(undefined);
 
     TestBed.configureTestingModule({
       declarations: [InquiryComponent],

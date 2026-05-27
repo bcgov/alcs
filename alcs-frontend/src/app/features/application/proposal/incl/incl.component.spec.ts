@@ -1,12 +1,10 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ApplicationSubmissionService } from '../../../../services/application/application-submission/application-submission.service';
-import { InclProposalComponent } from './incl.component';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { ApplicationDetailService } from '../../../../services/application/application-detail.service';
+import { ApplicationSubmissionService } from '../../../../services/application/application-submission/application-submission.service';
 import { ToastService } from '../../../../services/toast/toast.service';
-import { BehaviorSubject } from 'rxjs';
-import { ApplicationDto } from '../../../../services/application/application.dto';
+import { InclProposalComponent } from './incl.component';
 
 describe('InclProposalComponent', () => {
   let component: InclProposalComponent;
@@ -35,8 +33,6 @@ describe('InclProposalComponent', () => {
       ],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
-
-    mockApplicationDetailService.$application = new BehaviorSubject<ApplicationDto | undefined>(undefined);
 
     fixture = TestBed.createComponent(InclProposalComponent);
     component = fixture.componentInstance;

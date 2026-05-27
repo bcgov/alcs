@@ -1,9 +1,7 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
-import { BehaviorSubject } from 'rxjs';
 import { InquiryDetailService } from '../../../services/inquiry/inquiry-detail.service';
-import { InquiryDto } from '../../../services/inquiry/inquiry.dto';
 
 import { OverviewComponent } from './overview.component';
 
@@ -14,7 +12,6 @@ describe('OverviewComponent', () => {
 
   beforeEach(async () => {
     inquiryDetailService = createMock();
-    inquiryDetailService.$inquiry = new BehaviorSubject<InquiryDto | undefined>(undefined);
 
     await TestBed.configureTestingModule({
       providers: [

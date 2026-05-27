@@ -20,7 +20,6 @@ describe('LoginComponent', () => {
   beforeEach(async () => {
     mockMaintenanceService = createMock();
     mockAuthService = createMock();
-    mockAuthService.$currentProfile = new BehaviorSubject<UserDto | undefined>(undefined);
     mockToastService = createMock();
 
     await TestBed.configureTestingModule({

@@ -3,12 +3,11 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
-import { BehaviorSubject } from 'rxjs';
-import { HolidayService, PaginatedHolidayResponse } from '../../../services/stat-holiday/holiday.service';
+import { HolidayService } from '../../../services/stat-holiday/holiday.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 
-import { HolidayComponent } from './holiday.component';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HolidayComponent } from './holiday.component';
 
 describe('HolidayComponent', () => {
   let component: HolidayComponent;
@@ -21,29 +20,28 @@ describe('HolidayComponent', () => {
     mockHolidayService = createMock();
     mockDialog = createMock();
     mockConfirmationDialogService = createMock();
-    mockHolidayService.$statHolidays = new BehaviorSubject<PaginatedHolidayResponse>({ data: [], total: 0 });
 
     await TestBed.configureTestingModule({
-    declarations: [HolidayComponent],
-    schemas: [NO_ERRORS_SCHEMA],
-    imports: [],
-    providers: [
+      declarations: [HolidayComponent],
+      schemas: [NO_ERRORS_SCHEMA],
+      imports: [],
+      providers: [
         {
-            provide: HolidayService,
-            useValue: mockHolidayService,
+          provide: HolidayService,
+          useValue: mockHolidayService,
         },
         {
-            provide: MatDialog,
-            useValue: mockDialog,
+          provide: MatDialog,
+          useValue: mockDialog,
         },
         {
-            provide: ConfirmationDialogService,
-            useValue: mockConfirmationDialogService,
+          provide: ConfirmationDialogService,
+          useValue: mockConfirmationDialogService,
         },
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
-    ]
-}).compileComponents();
+      ],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(HolidayComponent);
     component = fixture.componentInstance;

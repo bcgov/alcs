@@ -1,9 +1,7 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
-import { BehaviorSubject } from 'rxjs';
 import { NoticeOfIntentDetailService } from '../../../services/notice-of-intent/notice-of-intent-detail.service';
-import { NoticeOfIntentDto } from '../../../services/notice-of-intent/notice-of-intent.dto';
 import { ToastService } from '../../../services/toast/toast.service';
 
 import { ProposalComponent } from './proposal.component';
@@ -18,10 +16,8 @@ describe('ProposalComponent', () => {
     mockNoiDetailService = createMock();
     mockToastService = createMock();
 
-    mockNoiDetailService.$noticeOfIntent = new BehaviorSubject<NoticeOfIntentDto | undefined>(undefined);
-
     await TestBed.configureTestingModule({
-      declarations: [ ProposalComponent ],
+      declarations: [ProposalComponent],
       providers: [
         {
           provide: NoticeOfIntentDetailService,
@@ -33,8 +29,7 @@ describe('ProposalComponent', () => {
         },
       ],
       schemas: [NO_ERRORS_SCHEMA],
-    })
-    .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ProposalComponent);
     component = fixture.componentInstance;

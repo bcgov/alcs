@@ -154,7 +154,7 @@ describe('ApplicationSubmissionService', () => {
     const result = await service.fetchSubmission('1');
 
     expect(result).toEqual(mockSubmittedApplication);
-    expect(mockHttpClient.get).toBeCalledTimes(1);
+    expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
   });
 
   it('should call patch when updating a submission', async () => {
@@ -163,7 +163,7 @@ describe('ApplicationSubmissionService', () => {
     const result = await service.update('1', {});
 
     expect(result).toEqual(mockSubmittedApplication);
-    expect(mockHttpClient.patch).toBeCalledTimes(1);
+    expect(mockHttpClient.patch).toHaveBeenCalledTimes(1);
   });
 
   it('should call get for loading transferees', async () => {
@@ -172,7 +172,7 @@ describe('ApplicationSubmissionService', () => {
     const result = await service.fetchTransferees('1');
 
     expect(result).toEqual(mockSubmittedApplication);
-    expect(mockHttpClient.get).toBeCalledTimes(1);
+    expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
   });
 
   it('should call post for return to lfng', async () => {
@@ -181,6 +181,6 @@ describe('ApplicationSubmissionService', () => {
     const result = await service.returnToLfng('1', '');
 
     expect(result).toEqual(mockSubmittedApplication);
-    expect(mockHttpClient.post).toBeCalledTimes(1);
+    expect(mockHttpClient.post).toHaveBeenCalledTimes(1);
   });
 });

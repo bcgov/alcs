@@ -1,17 +1,16 @@
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
-import { BehaviorSubject } from 'rxjs';
-import { AuthenticationService, ICurrentUser } from '../../services/authentication/authentication.service';
+import { AuthenticationService } from '../../services/authentication/authentication.service';
+import { ComplianceAndEnforcementDto } from '../../services/compliance-and-enforcement/compliance-and-enforcement.dto';
+import { ComplianceAndEnforcementService } from '../../services/compliance-and-enforcement/compliance-and-enforcement.service';
+import { ToastService } from '../../services/toast/toast.service';
 import { UserDto } from '../../services/user/user.dto';
 import { UserService } from '../../services/user/user.service';
 import { HomeComponent } from './home.component';
-import { ComplianceAndEnforcementService } from '../../services/compliance-and-enforcement/compliance-and-enforcement.service';
-import { ToastService } from '../../services/toast/toast.service';
-import { Router } from '@angular/router';
-import { ComplianceAndEnforcementDto } from '../../services/compliance-and-enforcement/compliance-and-enforcement.dto';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
@@ -24,51 +23,49 @@ describe('HomeComponent', () => {
 
   beforeEach(async () => {
     mockAuthService = createMock();
-    mockAuthService.$currentUser = new BehaviorSubject<ICurrentUser | undefined>(undefined);
-
     mockUserService = createMock();
-    mockUserService.$userProfile = new BehaviorSubject<UserDto | undefined>({ prettyName: 'agent' } as UserDto);
+    mockComplianceAndEnforcementService = createMock();
+    mockToastService = createMock();
+    mockRouter = createMock();
 
     mockAuthService.getCurrentUser.mockReturnValue({
       name: 'agent',
       email: 'secret',
     });
-
-    mockComplianceAndEnforcementService = createMock();
-    mockToastService = createMock();
-    mockRouter = createMock();
+    mockAuthService.getCurrentUser();
 
     await TestBed.configureTestingModule({
-    declarations: [HomeComponent],
-    imports: [RouterTestingModule],
-    providers: [
+      declarations: [HomeComponent],
+      imports: [RouterTestingModule],
+      providers: [
         {
-            provide: AuthenticationService,
-            useValue: mockAuthService,
+          provide: AuthenticationService,
+          useValue: mockAuthService,
         },
         {
-            provide: UserService,
-            useValue: mockUserService,
+          provide: UserService,
+          useValue: mockUserService,
         },
         {
-            provide: ComplianceAndEnforcementService,
-            useValue: mockComplianceAndEnforcementService,
+          provide: ComplianceAndEnforcementService,
+          useValue: mockComplianceAndEnforcementService,
         },
         {
-            provide: ToastService,
-            useValue: mockToastService,
+          provide: ToastService,
+          useValue: mockToastService,
         },
         {
-            provide: Router,
-            useValue: mockRouter,
+          provide: Router,
+          useValue: mockRouter,
         },
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
-    ]
-}).compileComponents();
+      ],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(HomeComponent);
     component = fixture.componentInstance;
+    jest.spyOn(component, 'userDisplayName').mockReturnValue('agent');
     fixture.detectChanges();
   });
 
@@ -76,9 +73,10 @@ describe('HomeComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should show currently logged in user', () => {
+  it('should show currently logged in user', async () => {
     const compiled = fixture.debugElement.nativeElement;
     const welcomeTitle = compiled.querySelector('.welcome-title');
+
     expect(welcomeTitle).toBeTruthy();
     expect(welcomeTitle.textContent.trim()).toEqual('Welcome agent to ALCS');
   });

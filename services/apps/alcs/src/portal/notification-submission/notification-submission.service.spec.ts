@@ -87,9 +87,7 @@ describe('NotificationSubmissionService', () => {
       ],
     }).compile();
 
-    service = module.get<NotificationSubmissionService>(
-      NotificationSubmissionService,
-    );
+    service = module.get<NotificationSubmissionService>(NotificationSubmissionService);
 
     mockSubmission = new NotificationSubmission({
       fileNumber: 'file-number',
@@ -109,8 +107,7 @@ describe('NotificationSubmissionService', () => {
       {
         user_uuid: 'user_uuid',
         bceid_business_guid: 'bceid_business_guid',
-        localGovernment_bceid_business_guid:
-          'localGovernment_bceid_business_guid',
+        localGovernment_bceid_business_guid: 'localGovernment_bceid_business_guid',
       },
     ]);
   });
@@ -256,7 +253,7 @@ describe('NotificationSubmissionService', () => {
     mockNotificationService.submit.mockResolvedValue(notification);
     await service.submitToAlcs(mockSubmission, new Date());
 
-    expect(mockNotificationService.submit).toBeCalledTimes(1);
+    expect(mockNotificationService.submit).toHaveBeenCalledTimes(1);
     expect(mockStatusService.setStatusDate).toHaveBeenCalledTimes(1);
   });
 
@@ -280,8 +277,8 @@ describe('NotificationSubmissionService', () => {
       }),
     );
 
-    expect(mockRepository.save).toBeCalledTimes(1);
-    expect(mockRepository.findOneOrFail).toBeCalledTimes(2);
+    expect(mockRepository.save).toHaveBeenCalledTimes(1);
+    expect(mockRepository.findOneOrFail).toHaveBeenCalledTimes(2);
   });
 
   it('should return the fetched notification when fetching with file number', async () => {
@@ -335,16 +332,10 @@ describe('NotificationSubmissionService', () => {
         emails: ['gov@gov'],
       }),
     );
-    mockNotificationService.getByFileNumber.mockResolvedValue(
-      new Notification(),
-    );
+    mockNotificationService.getByFileNumber.mockResolvedValue(new Notification());
     mockEmailService.sendEmail.mockResolvedValue(true);
-    mockDocumentService.attachDocumentAsBuffer.mockResolvedValue(
-      new NotificationDocument(),
-    );
-    mockStatusService.setStatusDate.mockResolvedValue(
-      new NotificationSubmissionToSubmissionStatus(),
-    );
+    mockDocumentService.attachDocumentAsBuffer.mockResolvedValue(new NotificationDocument());
+    mockStatusService.setStatusDate.mockResolvedValue(new NotificationSubmissionToSubmissionStatus());
 
     await service.sendAndRecordLTSAPackage(noiSubmission, document, new User());
 
@@ -383,9 +374,7 @@ describe('NotificationSubmissionService', () => {
         emails: ['gov@gov'],
       }),
     );
-    mockNotificationService.getByFileNumber.mockResolvedValue(
-      new Notification(),
-    );
+    mockNotificationService.getByFileNumber.mockResolvedValue(new Notification());
     mockEmailService.sendEmail.mockResolvedValue(false);
 
     await service.sendAndRecordLTSAPackage(noiSubmission, document, new User());

@@ -1,6 +1,6 @@
 psycopg2==2.9.10
 tqdm==4.64.1
-python-dotenv==0.21.0
+python-dotenv==1.2.2
 pyyaml==6.0.2
 rich==13.3.1
 pytz==2023.3

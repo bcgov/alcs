@@ -6,19 +6,13 @@ import { ClsService } from 'nestjs-cls';
 import { ApplicationRegion } from '../../code/application-code/application-region/application-region.entity';
 import { CodeService } from '../../code/code.service';
 import { ApplicationProfile } from '../../../common/automapper/application.automapper.profile';
-import {
-  initApplicationMeetingMock,
-  initApplicationMockEntity,
-} from '../../../../test/mocks/mockEntities';
+import { initApplicationMeetingMock, initApplicationMockEntity } from '../../../../test/mocks/mockEntities';
 import { mockKeyCloakProviders } from '../../../../test/mocks/mockTypes';
 import { ApplicationPaused } from '../application-paused.entity';
 import { ApplicationPausedService } from '../application-paused/application-paused.service';
 import { ApplicationService } from '../application.service';
 import { ApplicationMeetingController } from './application-meeting.controller';
-import {
-  CreateApplicationMeetingDto,
-  UpdateApplicationMeetingDto,
-} from './application-meeting.dto';
+import { CreateApplicationMeetingDto, UpdateApplicationMeetingDto } from './application-meeting.dto';
 import { ApplicationMeetingService } from './application-meeting.service';
 
 describe('ApplicationMeetingController', () => {
@@ -67,9 +61,7 @@ describe('ApplicationMeetingController', () => {
       ],
     }).compile();
 
-    controller = module.get<ApplicationMeetingController>(
-      ApplicationMeetingController,
-    );
+    controller = module.get<ApplicationMeetingController>(ApplicationMeetingController);
 
     mockApplicationCodeService.fetchMeetingType.mockResolvedValue({
       code: 'fake',
@@ -86,7 +78,7 @@ describe('ApplicationMeetingController', () => {
     mockMeetingService.getByAppFileNumber.mockResolvedValue([mockMeeting]);
     const result = await controller.getAllForApplication('fake-number');
 
-    expect(mockMeetingService.getByAppFileNumber).toBeCalledTimes(1);
+    expect(mockMeetingService.getByAppFileNumber).toHaveBeenCalledTimes(1);
     expect(result[0].uuid).toStrictEqual(mockMeeting.uuid);
   });
 
@@ -99,8 +91,8 @@ describe('ApplicationMeetingController', () => {
 
     await controller.delete('fake-uuid');
 
-    expect(mockMeetingService.remove).toBeCalledTimes(1);
-    expect(mockMeetingService.remove).toBeCalledWith(mockMeeting);
+    expect(mockMeetingService.remove).toHaveBeenCalledTimes(1);
+    expect(mockMeetingService.remove).toHaveBeenCalledWith(mockMeeting);
     expect(mockPausedService.remove).toHaveBeenCalledTimes(1);
   });
 
@@ -120,7 +112,7 @@ describe('ApplicationMeetingController', () => {
 
     await controller.create(meetingToUpdate, 'file-number');
 
-    expect(mockMeetingService.create).toBeCalledTimes(1);
+    expect(mockMeetingService.create).toHaveBeenCalledTimes(1);
     const calledData = mockMeetingService.create.mock.calls[0][0];
     expect(calledData.application).toEqual(appMock);
     expect(calledData.meetingPause).toBe(fakePause);
@@ -140,8 +132,8 @@ describe('ApplicationMeetingController', () => {
 
     await controller.update(meetingToUpdate, mockMeeting.uuid);
 
-    expect(mockMeetingService.update).toBeCalledTimes(1);
-    expect(mockMeetingService.update).toBeCalledWith(mockMeeting.uuid, {
+    expect(mockMeetingService.update).toHaveBeenCalledTimes(1);
+    expect(mockMeetingService.update).toHaveBeenCalledWith(mockMeeting.uuid, {
       meetingStartDate: meetingToUpdate.meetingStartDate,
       meetingEndDate: meetingToUpdate.meetingEndDate,
       reportStartDate: meetingToUpdate.reportStartDate,

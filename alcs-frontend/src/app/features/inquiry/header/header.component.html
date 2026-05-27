@@ -34,7 +34,7 @@
         </button>
         <mat-menu class="move-board-menu" xPosition="before" #goToMenu="matMenu">
           @for (card of linkedCards; track card) {
-            <button mat-menu-item (click)="onGoToCard(card)">
+            <button class="goto-card-menu-item" mat-menu-item (click)="onGoToCard(card)">
               {{ card.displayName }}
             </button>
           }

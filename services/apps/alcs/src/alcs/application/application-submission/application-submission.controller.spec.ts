@@ -70,9 +70,7 @@ describe('ApplicationSubmissionController', () => {
       ],
     }).compile();
 
-    controller = module.get<ApplicationSubmissionController>(
-      ApplicationSubmissionController,
-    );
+    controller = module.get<ApplicationSubmissionController>(ApplicationSubmissionController);
   });
 
   it('should be defined', () => {
@@ -85,14 +83,12 @@ describe('ApplicationSubmissionController', () => {
     mockApplicationSubmissionService.get.mockResolvedValue({
       fileNumber: fakeFileNumber,
     } as ApplicationSubmission);
-    mockApplicationSubmissionService.mapToDto.mockResolvedValue(
-      createMock<AlcsApplicationSubmissionDto>(),
-    );
+    mockApplicationSubmissionService.mapToDto.mockResolvedValue(createMock<AlcsApplicationSubmissionDto>());
 
     const result = await controller.get(fakeFileNumber);
 
-    expect(mockApplicationSubmissionService.get).toBeCalledTimes(1);
-    expect(mockApplicationSubmissionService.mapToDto).toBeCalledTimes(1);
+    expect(mockApplicationSubmissionService.get).toHaveBeenCalledTimes(1);
+    expect(mockApplicationSubmissionService.mapToDto).toHaveBeenCalledTimes(1);
     expect(result).toBeDefined();
   });
 
@@ -103,10 +99,8 @@ describe('ApplicationSubmissionController', () => {
 
     const result = await controller.getCovenantTransferees(fakeFileNumber);
 
-    expect(mockApplicationSubmissionService.getTransferees).toBeCalledTimes(1);
-    expect(mockApplicationSubmissionService.getTransferees).toBeCalledWith(
-      fakeFileNumber,
-    );
+    expect(mockApplicationSubmissionService.getTransferees).toHaveBeenCalledTimes(1);
+    expect(mockApplicationSubmissionService.getTransferees).toHaveBeenCalledWith(fakeFileNumber);
     expect(result).toEqual([]);
   });
 
@@ -119,9 +113,7 @@ describe('ApplicationSubmissionController', () => {
         uuid: fakeUuid,
       }),
     );
-    mockAppSubStatusService.setStatusDate.mockResolvedValue(
-      new ApplicationSubmissionToSubmissionStatus(),
-    );
+    mockAppSubStatusService.setStatusDate.mockResolvedValue(new ApplicationSubmissionToSubmissionStatus());
     mockApplicationSubmissionService.mapToDto.mockResolvedValue({} as any);
     const mockDto = {
       returnComment: 'returned comment',
@@ -137,34 +129,24 @@ describe('ApplicationSubmissionController', () => {
     await controller.returnToLfng(fakeFileNumber, mockDto);
 
     expect(mockApplicationSubmissionService.update).toHaveBeenCalledTimes(1);
-    expect(mockApplicationSubmissionService.update).toHaveBeenCalledWith(
-      fakeFileNumber,
-      mockDto,
-    );
+    expect(mockApplicationSubmissionService.update).toHaveBeenCalledWith(fakeFileNumber, mockDto);
     expect(mockApplicationSubmissionService.get).toHaveBeenCalledTimes(2);
-    expect(mockAppSubStatusService.setStatusDate).toBeCalledTimes(3);
-    expect(mockAppSubStatusService.setStatusDate).toBeCalledWith(
-      fakeUuid,
-      SUBMISSION_STATUS.RETURNED_TO_LG,
-    );
-    expect(mockAppSubStatusService.setStatusDate).toBeCalledWith(
+    expect(mockAppSubStatusService.setStatusDate).toHaveBeenCalledTimes(3);
+    expect(mockAppSubStatusService.setStatusDate).toHaveBeenCalledWith(fakeUuid, SUBMISSION_STATUS.RETURNED_TO_LG);
+    expect(mockAppSubStatusService.setStatusDate).toHaveBeenCalledWith(
       fakeUuid,
       SUBMISSION_STATUS.SUBMITTED_TO_ALC,
       null,
     );
-    expect(mockAppSubStatusService.setStatusDate).toBeCalledWith(
+    expect(mockAppSubStatusService.setStatusDate).toHaveBeenCalledWith(
       fakeUuid,
       SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG,
       null,
     );
-    expect(mockAppService.updateByFileNumber).toBeCalledWith(fakeFileNumber, {
+    expect(mockAppService.updateByFileNumber).toHaveBeenCalledWith(fakeFileNumber, {
       dateSubmittedToAlc: null,
     });
-    expect(
-      mockStatusEmailService.getApplicationEmailData,
-    ).toHaveBeenCalledTimes(1);
-    expect(
-      mockStatusEmailService.sendApplicationStatusEmail,
-    ).toHaveBeenCalledTimes(1);
+    expect(mockStatusEmailService.getApplicationEmailData).toHaveBeenCalledTimes(1);
+    expect(mockStatusEmailService.sendApplicationStatusEmail).toHaveBeenCalledTimes(1);
   });
 });

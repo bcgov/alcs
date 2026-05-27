@@ -10,7 +10,7 @@
             [matDatepicker]="datePicker"
             name="date-submitted"
             formControlName="date"
-            />
+          />
           <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
           <mat-datepicker #datePicker type="date"></mat-datepicker>
         </mat-form-field>
@@ -27,7 +27,6 @@
       } @else {
         <div>{{ entry?.date | date: 'yyyy-MMM-dd' }}</div>
       }
-
     </div>
 
     <div class="main">
@@ -37,7 +36,7 @@
           class="edit-button"
           [disabled]="!entry?.uuid || editDisabled"
           (click)="edit.emit(entry?.uuid!)"
-          >
+        >
           <mat-icon>edit</mat-icon>
         </button>
       }
@@ -57,7 +56,6 @@
         <strong>{{ entry?.author?.prettyName }}</strong>
       }
 
-
       @if (entry?.isDraft) {
         <div class="description-wrapper">
           <mat-form-field appearance="outline">
@@ -67,9 +65,7 @@
           @if (showErrors && description.errors) {
             <div>
               @if (description.errors['required']) {
-                <app-error-message
-                  message="This field is required"
-                ></app-error-message>
+                <app-error-message message="This field is required"></app-error-message>
               }
             </div>
           }
@@ -78,11 +74,8 @@
         <div class="description-view">{{ entry?.description }}</div>
       }
 
-
       @if (entry?.isDraft) {
-        <div class="c-and-e-action-list">
-          <strong>C&E Action:</strong> <span class="no-data"> No Data</span>
-        </div>
+        <div class="c-and-e-action-list"><strong>C&E Action:</strong> <span class="no-data"> No Data</span></div>
       }
 
       @if (entry?.isDraft) {
@@ -97,7 +90,7 @@
             [disabled]="!entry?.uuid"
             (click)="addCorrespondence.emit(entry?.uuid!)"
             class="add-correspondence-button"
-            >
+          >
             + Correspondence
           </button>
         </div>
@@ -114,7 +107,7 @@
             type="button"
             [disabled]="!entry?.uuid"
             (click)="delete.emit(entry?.uuid!)"
-            >
+          >
             Delete
           </button>
           <button
@@ -123,7 +116,7 @@
             type="button"
             [disabled]="!entry?.uuid"
             (click)="onCompleteButtonClick()"
-            >
+          >
             Complete
           </button>
         </div>

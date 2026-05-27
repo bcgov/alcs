@@ -51,9 +51,7 @@ describe('GenerateSubmissionDocumentService', () => {
     mockApplicationDocumentService = createMock();
     mockTransfereeService = createMock();
 
-    mockApplicationLocalGovernmentService.getByUuid.mockResolvedValue(
-      new LocalGovernment(),
-    );
+    mockApplicationLocalGovernmentService.getByUuid.mockResolvedValue(new LocalGovernment());
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -92,9 +90,7 @@ describe('GenerateSubmissionDocumentService', () => {
       submissionUuid: 'fake',
     });
 
-    service = module.get<GenerateSubmissionDocumentService>(
-      GenerateSubmissionDocumentService,
-    );
+    service = module.get<GenerateSubmissionDocumentService>(GenerateSubmissionDocumentService);
   });
 
   it('should be defined', () => {
@@ -123,8 +119,8 @@ describe('GenerateSubmissionDocumentService', () => {
 
     const res = await service.generate('fake', userEntity);
 
-    expect(mockCdogsService.generateDocument).toBeCalledTimes(1);
-    expect(mockApplicationLocalGovernmentService.getByUuid).toBeCalledTimes(1);
+    expect(mockCdogsService.generateDocument).toHaveBeenCalledTimes(1);
+    expect(mockApplicationLocalGovernmentService.getByUuid).toHaveBeenCalledTimes(1);
     expect(res).toBeDefined();
   });
 
@@ -150,8 +146,8 @@ describe('GenerateSubmissionDocumentService', () => {
 
     const res = await service.generate('fake', userEntity);
 
-    expect(mockCdogsService.generateDocument).toBeCalledTimes(1);
-    expect(mockApplicationLocalGovernmentService.getByUuid).toBeCalledTimes(1);
+    expect(mockCdogsService.generateDocument).toHaveBeenCalledTimes(1);
+    expect(mockApplicationLocalGovernmentService.getByUuid).toHaveBeenCalledTimes(1);
     expect(res).toBeDefined();
   });
 
@@ -178,7 +174,7 @@ describe('GenerateSubmissionDocumentService', () => {
     const res = await service.generate('fake', userEntity);
 
     expect(res).toBeUndefined();
-    expect(mockCdogsService.generateDocument).toBeCalledTimes(0);
+    expect(mockCdogsService.generateDocument).toHaveBeenCalledTimes(0);
   });
 
   it('should clear visibility for existing submissions on update', async () => {
@@ -212,23 +208,15 @@ describe('GenerateSubmissionDocumentService', () => {
     const userEntity = new User({
       name: user.user.entity,
     });
-    mockApplicationDocumentService.update.mockResolvedValue(
-      new ApplicationDocument(),
-    );
-    mockApplicationDocumentService.attachDocumentAsBuffer.mockResolvedValue(
-      new ApplicationDocument(),
-    );
+    mockApplicationDocumentService.update.mockResolvedValue(new ApplicationDocument());
+    mockApplicationDocumentService.attachDocumentAsBuffer.mockResolvedValue(new ApplicationDocument());
 
     await service.generateUpdate('fake', userEntity);
 
-    expect(mockCdogsService.generateDocument).toBeCalledTimes(1);
+    expect(mockCdogsService.generateDocument).toHaveBeenCalledTimes(1);
     expect(mockApplicationDocumentService.update).toHaveBeenCalledTimes(1);
-    expect(
-      mockApplicationDocumentService.update.mock.calls[0][0].visibilityFlags,
-    ).toEqual([]);
-    expect(mockApplicationLocalGovernmentService.getByUuid).toBeCalledTimes(1);
-    expect(
-      mockApplicationDocumentService.attachDocumentAsBuffer,
-    ).toHaveBeenCalledTimes(1);
+    expect(mockApplicationDocumentService.update.mock.calls[0][0].visibilityFlags).toEqual([]);
+    expect(mockApplicationLocalGovernmentService.getByUuid).toHaveBeenCalledTimes(1);
+    expect(mockApplicationDocumentService.attachDocumentAsBuffer).toHaveBeenCalledTimes(1);
   });
 });

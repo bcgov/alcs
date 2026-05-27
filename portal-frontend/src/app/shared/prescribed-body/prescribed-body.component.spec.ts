@@ -14,7 +14,6 @@ describe('PrescribedBodyComponent', () => {
 
   beforeEach(async () => {
     mockAuthService = createMock();
-    mockAuthService.$currentProfile = new BehaviorSubject<UserDto | undefined>(undefined);
 
     await TestBed.configureTestingModule({
       declarations: [PrescribedBodyComponent],

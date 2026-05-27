@@ -10,7 +10,7 @@
         placeholder="Type number of lots"
         [formControl]="count"
         (change)="onChangeLotCount($event)"
-        required
+        [required]="true"
       />
       <span matTextSuffix>lots</span>
     </mat-form-field>

@@ -46,7 +46,7 @@
           [formControl]="submissionDateControl"
           name="date"
           id="date"
-          required
+          [required]="true"
         />
         <mat-datepicker-toggle matSuffix [for]="submissionDate"></mat-datepicker-toggle>
         <mat-datepicker #submissionDate type="date"> </mat-datepicker>
@@ -54,7 +54,7 @@
 
       <mat-form-field appearance="outline">
         <mat-label>Document Name</mat-label>
-        <input matInput placeholder="Document Name*" [formControl]="documentNameControl" required />
+        <input matInput placeholder="Document Name*" [formControl]="documentNameControl" [required]="true" />
       </mat-form-field>
     </div>
     <div class="two-item-row">
@@ -82,7 +82,7 @@
     </div>
     <mat-form-field class="description" appearance="outline">
       <mat-label>Description</mat-label>
-      <input matInput [formControl]="descriptionControl" required />
+      <input matInput [formControl]="descriptionControl" [required]="true" />
     </mat-form-field>
   </mat-dialog-content>
   <mat-dialog-actions align="end">

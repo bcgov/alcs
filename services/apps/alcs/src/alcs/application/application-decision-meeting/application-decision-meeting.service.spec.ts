@@ -99,7 +99,7 @@ describe('ApplicationDecisionMeetingService', () => {
 
     await service.delete(mockMeeting.uuid);
 
-    expect(mockAppDecisionMeetingRepository.softRemove).toBeCalledTimes(1);
+    expect(mockAppDecisionMeetingRepository.softRemove).toHaveBeenCalledTimes(1);
   });
 
   it('should create meeting and update submission status', async () => {
@@ -111,12 +111,14 @@ describe('ApplicationDecisionMeetingService', () => {
 
     await service.createOrUpdate(meetingToCreate);
 
-    expect(mockAppDecisionMeetingRepository.findOne).toBeCalledTimes(0);
-    expect(mockAppDecisionMeetingRepository.save).toBeCalledTimes(1);
-    expect(mockApplicationSubmissionStatusService.getStatusesByFileNumber).toBeCalledTimes(1);
-    expect(mockApplicationSubmissionStatusService.getStatusesByFileNumber).toBeCalledWith(mockApplication.fileNumber);
-    expect(mockApplicationSubmissionStatusService.setStatusDate).toBeCalledTimes(1);
-    expect(mockApplicationSubmissionStatusService.setStatusDate).toBeCalledWith(
+    expect(mockAppDecisionMeetingRepository.findOne).toHaveBeenCalledTimes(0);
+    expect(mockAppDecisionMeetingRepository.save).toHaveBeenCalledTimes(1);
+    expect(mockApplicationSubmissionStatusService.getStatusesByFileNumber).toHaveBeenCalledTimes(1);
+    expect(mockApplicationSubmissionStatusService.getStatusesByFileNumber).toHaveBeenCalledWith(
+      mockApplication.fileNumber,
+    );
+    expect(mockApplicationSubmissionStatusService.setStatusDate).toHaveBeenCalledTimes(1);
+    expect(mockApplicationSubmissionStatusService.setStatusDate).toHaveBeenCalledWith(
       mockSubmissionStatus.submissionUuid,
       SUBMISSION_STATUS.IN_REVIEW_BY_ALC,
       mockMeeting.date,
@@ -133,15 +135,17 @@ describe('ApplicationDecisionMeetingService', () => {
 
     await service.createOrUpdate(meetingToUpdate);
 
-    expect(mockAppDecisionMeetingRepository.findOne).toBeCalledTimes(1);
-    expect(mockAppDecisionMeetingRepository.findOne).toBeCalledWith({
+    expect(mockAppDecisionMeetingRepository.findOne).toHaveBeenCalledTimes(1);
+    expect(mockAppDecisionMeetingRepository.findOne).toHaveBeenCalledWith({
       where: { uuid: meetingToUpdate.uuid },
     });
-    expect(mockAppDecisionMeetingRepository.save).toBeCalledTimes(1);
-    expect(mockApplicationSubmissionStatusService.getStatusesByFileNumber).toBeCalledTimes(1);
-    expect(mockApplicationSubmissionStatusService.getStatusesByFileNumber).toBeCalledWith(mockApplication.fileNumber);
-    expect(mockApplicationSubmissionStatusService.setStatusDate).toBeCalledTimes(1);
-    expect(mockApplicationSubmissionStatusService.setStatusDate).toBeCalledWith(
+    expect(mockAppDecisionMeetingRepository.save).toHaveBeenCalledTimes(1);
+    expect(mockApplicationSubmissionStatusService.getStatusesByFileNumber).toHaveBeenCalledTimes(1);
+    expect(mockApplicationSubmissionStatusService.getStatusesByFileNumber).toHaveBeenCalledWith(
+      mockApplication.fileNumber,
+    );
+    expect(mockApplicationSubmissionStatusService.setStatusDate).toHaveBeenCalledTimes(1);
+    expect(mockApplicationSubmissionStatusService.setStatusDate).toHaveBeenCalledWith(
       mockSubmissionStatus.submissionUuid,
       SUBMISSION_STATUS.IN_REVIEW_BY_ALC,
       mockMeeting.date,
@@ -154,7 +158,7 @@ describe('ApplicationDecisionMeetingService', () => {
       uuid: 'non-existing uuid',
     } as ApplicationDecisionMeeting;
 
-    expect(mockAppDecisionMeetingRepository.save).toBeCalledTimes(0);
+    expect(mockAppDecisionMeetingRepository.save).toHaveBeenCalledTimes(0);
     await expect(service.createOrUpdate(meetingToUpdate)).rejects.toMatchObject(
       new ServiceNotFoundException(`Decision meeting not found ${meetingToUpdate.uuid}`),
     );

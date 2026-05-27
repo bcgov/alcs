@@ -50,7 +50,7 @@ describe('ApplicationDecisionMakerService', () => {
       label: '',
     });
 
-    expect(mockRepository.save).toBeCalledTimes(1);
+    expect(mockRepository.save).toHaveBeenCalledTimes(1);
     expect(result).toBeDefined();
   });
 
@@ -73,9 +73,9 @@ describe('ApplicationDecisionMakerService', () => {
       label: '',
     });
 
-    expect(mockRepository.save).toBeCalledTimes(1);
-    expect(mockRepository.findOneOrFail).toBeCalledTimes(1);
-    expect(mockRepository.findOneOrFail).toBeCalledWith({
+    expect(mockRepository.save).toHaveBeenCalledTimes(1);
+    expect(mockRepository.findOneOrFail).toHaveBeenCalledTimes(1);
+    expect(mockRepository.findOneOrFail).toHaveBeenCalledWith({
       where: { uuid: decisionMakerCode.code },
     });
     expect(result).toBeDefined();
@@ -86,7 +86,7 @@ describe('ApplicationDecisionMakerService', () => {
 
     const result = await service.fetch();
 
-    expect(mockRepository.find).toBeCalledTimes(1);
+    expect(mockRepository.find).toHaveBeenCalledTimes(1);
     expect(result).toBeDefined();
   });
 });

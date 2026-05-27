@@ -13,7 +13,7 @@
           [(ngModel)]="model.day"
           name="date"
           id="date"
-          required
+          [required]="true"
         />
         <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
         <mat-datepicker #date type="date"> </mat-datepicker>
@@ -23,7 +23,7 @@
     <div>
       <mat-form-field class="holiday-name-input" appearance="outline">
         <mat-label>Name</mat-label>
-        <input matInput id="name" [(ngModel)]="model.name" name="name" required />
+        <input matInput id="name" [(ngModel)]="model.name" name="name" [required]="true" />
       </mat-form-field>
     </div>
   </form>

@@ -3,10 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { classes } from 'automapper-classes';
 import { AutomapperModule } from 'automapper-nestjs';
 import { ClsService } from 'nestjs-cls';
-import {
-  initMockUserDto,
-  initUserMockEntity,
-} from '../../test/mocks/mockEntities';
+import { initMockUserDto, initUserMockEntity } from '../../test/mocks/mockEntities';
 import { mockKeyCloakProviders } from '../../test/mocks/mockTypes';
 import { LocalGovernment } from '../alcs/local-government/local-government.entity';
 import { UserProfile } from '../common/automapper/user.automapper.profile';
@@ -116,7 +113,7 @@ describe('UserController', () => {
 
     await controller.update(mockUserDto.uuid, mockUserDto, request);
 
-    expect(mockUserService.update).toBeCalledTimes(1);
+    expect(mockUserService.update).toHaveBeenCalledTimes(1);
   });
 
   it('should fail on user update if user not found', async () => {
@@ -124,9 +121,7 @@ describe('UserController', () => {
     const mockUserDto = initMockUserDto();
     request.user.entity.uuid = mockUser.uuid = mockUserDto.uuid;
 
-    await expect(
-      controller.update(mockUserDto.uuid, mockUserDto, request),
-    ).rejects.toMatchObject(
+    await expect(controller.update(mockUserDto.uuid, mockUserDto, request)).rejects.toMatchObject(
       new Error(`User with uuid not found ${mockUserDto.uuid}`),
     );
   });
@@ -136,9 +131,7 @@ describe('UserController', () => {
     mockUserService.getByUuid.mockResolvedValueOnce(mockUser as User);
     mockUserService.update.mockResolvedValueOnce({} as any);
 
-    await expect(
-      controller.update(mockUserDto.uuid, mockUserDto, request),
-    ).rejects.toMatchObject(
+    await expect(controller.update(mockUserDto.uuid, mockUserDto, request)).rejects.toMatchObject(
       new Error('You can update only your user details.'),
     );
   });

@@ -29,15 +29,15 @@ import { v4 } from 'uuid';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
-    selector: 'app-pofo-proposal',
-    templateUrl: './pofo-proposal.component.html',
-    styleUrls: ['./pofo-proposal.component.scss'],
-    standalone: false
+  selector: 'app-pofo-proposal',
+  templateUrl: './pofo-proposal.component.html',
+  styleUrls: ['./pofo-proposal.component.scss'],
+  standalone: false,
 })
 export class PofoProposalComponent extends FilesStepComponent implements OnInit, OnDestroy {
   currentStep = EditApplicationSteps.Proposal;
 
-  @HostListener('window:resize', ['$event'])
+  @HostListener('window:resize', [])
   onWindowResize() {
     this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
   }

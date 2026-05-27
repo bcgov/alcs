@@ -8,7 +8,7 @@
         <mat-label>Code</mat-label>
         <input
           [disabled]="isEdit"
-          required
+          [required]="true"
           maxlength="4"
           minlength="4"
           matInput
@@ -16,7 +16,7 @@
           [(ngModel)]="code"
           #codeModel="ngModel"
           name="code"
-          />
+        />
       </mat-form-field>
     </div>
     @if (isCodeExisiting(codeModel) && !isEdit) {
@@ -27,7 +27,7 @@
     <div>
       <mat-form-field class="label" appearance="outline">
         <mat-label>Label</mat-label>
-        <input required matInput id="label" [(ngModel)]="label" name="label" />
+        <input [required]="true" matInput id="label" [(ngModel)]="label" name="label" />
       </mat-form-field>
       <mat-hint>Note: The change will be reflected on all boards</mat-hint>
     </div>
@@ -35,7 +35,7 @@
     <div>
       <mat-form-field class="description" appearance="outline">
         <mat-label>Description</mat-label>
-        <input required matInput id="description" [(ngModel)]="description" name="description" />
+        <input [required]="true" matInput id="description" [(ngModel)]="description" name="description" />
       </mat-form-field>
     </div>
   </form>
@@ -53,7 +53,7 @@
         color="primary"
         type="submit"
         [disabled]="!form.form.valid"
-        >
+      >
         Save
       </button>
     </div>

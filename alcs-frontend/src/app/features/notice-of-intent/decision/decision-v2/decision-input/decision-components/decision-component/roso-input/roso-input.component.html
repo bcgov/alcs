@@ -7,18 +7,13 @@
       thousandSeparator=","
       separatorLimit="9999999999"
       formControlName="alrArea"
-      required
+      [required]="true"
     />
   </mat-form-field>
 
   <mat-form-field appearance="outline" class="row">
     <mat-label>Type of soil approved to be removed</mat-label>
-    <textarea
-      class="soil-text-area"
-      formControlName="soilTypeRemoved"
-      maxlength="4000"
-      matInput
-    ></textarea>
+    <textarea class="soil-text-area" formControlName="soilTypeRemoved" maxlength="4000" matInput></textarea>
   </mat-form-field>
 
   <div class="grid-2">
