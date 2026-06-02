@@ -5,7 +5,7 @@
 <mat-dialog-content class="content">
   <mat-form-field appearance="outline" class="reason-flagged">
     <mat-label>Flagged for condition follow-up because:</mat-label>
-    <textarea cdkTextareaAutosize required matInput [(ngModel)]="data.reasonFlagged"></textarea>
+    <textarea cdkTextareaAutosize [required]="true" matInput [(ngModel)]="data.reasonFlagged"></textarea>
   </mat-form-field>
 
   <mat-form-field appearance="outline" class="follow-up-at">

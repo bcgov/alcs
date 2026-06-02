@@ -77,20 +77,8 @@ describe('AuthenticationService', () => {
 
   it('should fetch logout URL and clear tokens on logout', async () => {
     const fakeUrl = 'logout-url';
-    httpClient.get.mockReturnValue(
-      of({
-        url: fakeUrl,
-      }),
-    );
-
-    window = Object.create(window);
-    const url = 'http://alcs.fakewebsite';
-    Object.defineProperty(window, 'location', {
-      value: {
-        href: url,
-      },
-      writable: true,
-    });
+    const navigateToSpy = jest.spyOn(service, 'navigateTo').mockImplementation(async () => {});
+    jest.spyOn(service, 'getLogoutUrl').mockResolvedValue({ url: fakeUrl });
 
     await service.setTokens('token', 'refreshToken');
     expect(localStorage.getItem('jwt_token')).toEqual('token');
@@ -99,21 +87,12 @@ describe('AuthenticationService', () => {
     await service.logout();
     expect(localStorage.getItem('jwt_token')).toBeNull();
     expect(localStorage.getItem('refresh_token')).toBeNull();
-    expect(window.location.href).toEqual(fakeUrl);
+    expect(navigateToSpy).toHaveBeenCalledWith(fakeUrl);
   });
 
   it('should use the error URL to redirect if token is not valid on init', async () => {
     const fakeLoginUrl = 'login-url';
-
-    window = Object.create(window);
-    const url = 'http://alcs.fakewebsite';
-    Object.defineProperty(window, 'location', {
-      value: {
-        href: url,
-      },
-      writable: true,
-    });
-
+    const navigateToSpy = jest.spyOn(service, 'navigateTo').mockImplementation(async () => {});
     httpClient.get.mockReturnValue(
       throwError(
         () =>
@@ -127,6 +106,6 @@ describe('AuthenticationService', () => {
     await service.getToken();
 
     expect(httpClient.get).toHaveBeenCalledTimes(1);
-    expect(window.location.href).toEqual(fakeLoginUrl);
+    expect(navigateToSpy).toHaveBeenCalledWith(fakeLoginUrl);
   });
 });

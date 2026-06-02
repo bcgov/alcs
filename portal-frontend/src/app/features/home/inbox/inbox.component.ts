@@ -37,10 +37,10 @@ const TAB_ORDER: Record<string, number> = {
 };
 
 @Component({
-    selector: 'app-inbox',
-    templateUrl: './inbox.component.html',
-    styleUrls: ['./inbox.component.scss'],
-    standalone: false
+  selector: 'app-inbox',
+  templateUrl: './inbox.component.html',
+  styleUrls: ['./inbox.component.scss'],
+  standalone: false,
 })
 export class InboxComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
@@ -110,7 +110,7 @@ export class InboxComponent implements OnInit, OnDestroy {
   allStatuses: ApplicationStatusDto[] = [];
   profile: UserDto | undefined;
 
-  @HostListener('window:resize', ['$event'])
+  @HostListener('window:resize', [])
   onWindowResize() {
     const isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
 

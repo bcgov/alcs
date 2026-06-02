@@ -11,10 +11,10 @@ import { downloadFile } from '../../../../shared/utils/file';
 import { ToastService } from '../../../../services/toast/toast.service';
 
 @Component({
-    selector: 'app-cove-details',
-    templateUrl: './cove-details.component.html',
-    styleUrls: ['./cove-details.component.scss'],
-    standalone: false
+  selector: 'app-cove-details',
+  templateUrl: './cove-details.component.html',
+  styleUrls: ['./cove-details.component.scss'],
+  standalone: false,
 })
 export class CoveDetailsComponent {
   @Input() showErrors = true;
@@ -75,7 +75,7 @@ export class CoveDetailsComponent {
     }
   }
 
-  @HostListener('window:resize', ['$event'])
+  @HostListener('window:resize', [])
   onWindowResize() {
     this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
   }

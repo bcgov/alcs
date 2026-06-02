@@ -3,12 +3,19 @@
 </div>
 <div mat-dialog-content class="dialog">
   <form (ngSubmit)="onSubmit()" #form="ngForm">
-
     <div class="full-width">
       <div>
         <mat-form-field class="dialog-field" appearance="outline">
           <mat-label>Name</mat-label>
-          <input required matInput id="name" [(ngModel)]="name" name="name" (ngModelChange)="onChange()" [formControl]="nameControl" />
+          <input
+            [required]="true"
+            matInput
+            id="name"
+            [(ngModel)]="name"
+            name="name"
+            (ngModelChange)="onChange()"
+            [formControl]="nameControl"
+          />
         </mat-form-field>
       </div>
       <div class="dialog-field">
@@ -23,7 +30,7 @@
             bindValue="uuid"
             [clearable]="true"
             [(ngModel)]="categoryId"
-            >
+          >
             <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
               <div [ngOptionHighlight]="search">{{ item.name }}</div>
             </ng-template>
@@ -32,7 +39,7 @@
       </div>
       <div class="dialog-field">
         <mat-label>Status *</mat-label>
-        <mat-button-toggle-group required id="isActive" [(ngModel)]="isActive" name="isActive">
+        <mat-button-toggle-group [required]="true" id="isActive" [(ngModel)]="isActive" name="isActive">
           <mat-button-toggle value="true">Active</mat-button-toggle>
           <mat-button-toggle value="false">Inactive</mat-button-toggle>
         </mat-button-toggle-group>
@@ -45,7 +52,6 @@
         }
       </div>
     </div>
-
   </form>
 
   <mat-dialog-actions align="end">
@@ -58,7 +64,7 @@
         color="primary"
         type="submit"
         [disabled]="!form.form.valid"
-        >
+      >
         Save
       </button>
     </div>

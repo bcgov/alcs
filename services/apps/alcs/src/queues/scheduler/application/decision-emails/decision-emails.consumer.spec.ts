@@ -47,9 +47,7 @@ describe('ApplicationDecisionEmailConsumer', () => {
       ],
     }).compile();
 
-    consumer = module.get<ApplicationDecisionEmailConsumer>(
-      ApplicationDecisionEmailConsumer,
-    );
+    consumer = module.get<ApplicationDecisionEmailConsumer>(ApplicationDecisionEmailConsumer);
   });
 
   afterAll(() => {
@@ -79,12 +77,8 @@ describe('ApplicationDecisionEmailConsumer', () => {
         }),
       }),
     ]);
-    mockApplicationDecisionService.update.mockResolvedValue(
-      new ApplicationDecision(),
-    );
-    mockStatusEmailService.getApplicationDecisionDocuments.mockResolvedValue(
-      mockDocuments,
-    );
+    mockApplicationDecisionService.update.mockResolvedValue(new ApplicationDecision());
+    mockStatusEmailService.getApplicationDecisionDocuments.mockResolvedValue(mockDocuments);
     mockApplicationSubmissionStatusService.getCurrentStatusByFileNumber.mockResolvedValue(
       new ApplicationSubmissionToSubmissionStatus({
         submission: mockSubmission,
@@ -100,22 +94,12 @@ describe('ApplicationDecisionEmailConsumer', () => {
 
     await consumer.process();
 
-    expect(
-      mockApplicationDecisionService.getDecisionsPendingEmail,
-    ).toHaveBeenCalledTimes(1);
+    expect(mockApplicationDecisionService.getDecisionsPendingEmail).toHaveBeenCalledTimes(1);
 
-    expect(
-      mockStatusEmailService.getApplicationEmailData,
-    ).toHaveBeenCalledTimes(1);
-    expect(mockStatusEmailService.getApplicationEmailData).toHaveBeenCalledWith(
-      'fake',
-    );
-    expect(
-      mockStatusEmailService.sendApplicationStatusEmail,
-    ).toHaveBeenCalledTimes(1);
-    expect(
-      mockStatusEmailService.sendApplicationStatusEmail,
-    ).toHaveBeenCalledWith({
+    expect(mockStatusEmailService.getApplicationEmailData).toHaveBeenCalledTimes(1);
+    expect(mockStatusEmailService.getApplicationEmailData).toHaveBeenCalledWith('fake');
+    expect(mockStatusEmailService.sendApplicationStatusEmail).toHaveBeenCalledTimes(1);
+    expect(mockStatusEmailService.sendApplicationStatusEmail).toHaveBeenCalledWith({
       applicationSubmission: mockSubmission,
       government: mockLocalGovernment,
       parentType: PARENT_TYPE.APPLICATION,
@@ -154,12 +138,8 @@ describe('ApplicationDecisionEmailConsumer', () => {
         }),
       }),
     ]);
-    mockApplicationDecisionService.update.mockResolvedValue(
-      new ApplicationDecision(),
-    );
-    mockStatusEmailService.getApplicationDecisionDocuments.mockResolvedValue(
-      mockDocuments,
-    );
+    mockApplicationDecisionService.update.mockResolvedValue(new ApplicationDecision());
+    mockStatusEmailService.getApplicationDecisionDocuments.mockResolvedValue(mockDocuments);
     mockApplicationSubmissionStatusService.getCurrentStatusByFileNumber.mockResolvedValue(
       new ApplicationSubmissionToSubmissionStatus({
         submission: mockSubmission,
@@ -176,18 +156,10 @@ describe('ApplicationDecisionEmailConsumer', () => {
 
     await consumer.process();
 
-    expect(
-      mockApplicationSubmissionStatusService.saveSubmissionToSubmissionStatus,
-    ).toBeCalledTimes(0);
+    expect(mockApplicationSubmissionStatusService.saveSubmissionToSubmissionStatus).toHaveBeenCalledTimes(0);
 
-    expect(mockStatusEmailService.getApplicationEmailData).toHaveBeenCalledWith(
-      'fake',
-    );
-    expect(
-      mockStatusEmailService.getApplicationEmailData,
-    ).toHaveBeenCalledTimes(1);
-    expect(
-      mockStatusEmailService.sendApplicationStatusEmail,
-    ).toHaveBeenCalledTimes(0);
+    expect(mockStatusEmailService.getApplicationEmailData).toHaveBeenCalledWith('fake');
+    expect(mockStatusEmailService.getApplicationEmailData).toHaveBeenCalledTimes(1);
+    expect(mockStatusEmailService.sendApplicationStatusEmail).toHaveBeenCalledTimes(0);
   });
 });

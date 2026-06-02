@@ -72,6 +72,14 @@ div.board-item {
   }
 }
 
+.board-item,
+.avatar-menu-items {
+  button {
+    font-weight: normal !important;
+    font-size: 16px !important;
+  }
+}
+
 .board-item:hover {
   background-color: colors.$secondary-color-light;
 

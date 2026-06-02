@@ -43,6 +43,6 @@ describe('DocumentController', () => {
 
     await controller.getUploadUrl('mock', DOCUMENT_TYPE.CERTIFICATE_OF_TITLE);
 
-    expect(mockDocumentService.getUploadUrl).toBeCalledTimes(1);
+    expect(mockDocumentService.getUploadUrl).toHaveBeenCalledTimes(1);
   });
 });

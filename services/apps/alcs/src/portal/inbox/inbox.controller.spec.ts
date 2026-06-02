@@ -152,8 +152,8 @@ describe('InboxController', () => {
 
     const result = await controller.search(mockSearchRequestDto, mockRequest);
 
-    expect(mockAppPublicSearchService.searchApplications).toBeCalledTimes(1);
-    expect(mockAppPublicSearchService.searchApplications).toBeCalledWith(
+    expect(mockAppPublicSearchService.searchApplications).toHaveBeenCalledTimes(1);
+    expect(mockAppPublicSearchService.searchApplications).toHaveBeenCalledWith(
       mockSearchRequestDto,
       mockUserId,
       null,
@@ -162,8 +162,8 @@ describe('InboxController', () => {
     expect(result.applications).toBeDefined();
     expect(result.totalApplications).toBe(0);
 
-    expect(mockNOIPublicSearchService.searchNoticeOfIntents).toBeCalledTimes(1);
-    expect(mockNOIPublicSearchService.searchNoticeOfIntents).toBeCalledWith(
+    expect(mockNOIPublicSearchService.searchNoticeOfIntents).toHaveBeenCalledTimes(1);
+    expect(mockNOIPublicSearchService.searchNoticeOfIntents).toHaveBeenCalledWith(
       mockSearchRequestDto,
       mockUserId,
       null,
@@ -174,13 +174,10 @@ describe('InboxController', () => {
   });
 
   it('should call applications advanced search to retrieve Applications', async () => {
-    const result = await controller.searchApplications(
-      mockSearchRequest,
-      mockRequest,
-    );
+    const result = await controller.searchApplications(mockSearchRequest, mockRequest);
 
-    expect(mockAppPublicSearchService.searchApplications).toBeCalledTimes(1);
-    expect(mockAppPublicSearchService.searchApplications).toBeCalledWith(
+    expect(mockAppPublicSearchService.searchApplications).toHaveBeenCalledTimes(1);
+    expect(mockAppPublicSearchService.searchApplications).toHaveBeenCalledWith(
       mockSearchRequest,
       mockUserId,
       null,
@@ -191,13 +188,10 @@ describe('InboxController', () => {
   });
 
   it('should call NOI advanced search to retrieve NOIs', async () => {
-    const result = await controller.searchNoticeOfIntents(
-      mockSearchRequest,
-      mockRequest,
-    );
+    const result = await controller.searchNoticeOfIntents(mockSearchRequest, mockRequest);
 
-    expect(mockNOIPublicSearchService.searchNoticeOfIntents).toBeCalledTimes(1);
-    expect(mockNOIPublicSearchService.searchNoticeOfIntents).toBeCalledWith(
+    expect(mockNOIPublicSearchService.searchNoticeOfIntents).toHaveBeenCalledTimes(1);
+    expect(mockNOIPublicSearchService.searchNoticeOfIntents).toHaveBeenCalledWith(
       mockSearchRequest,
       mockUserId,
       null,
@@ -215,8 +209,8 @@ describe('InboxController', () => {
 
     const result = await controller.search(mockSearchRequestDto, mockRequest);
 
-    expect(mockAppPublicSearchService.searchApplications).toBeCalledTimes(1);
-    expect(mockAppPublicSearchService.searchApplications).toBeCalledWith(
+    expect(mockAppPublicSearchService.searchApplications).toHaveBeenCalledTimes(1);
+    expect(mockAppPublicSearchService.searchApplications).toHaveBeenCalledWith(
       mockSearchRequestDto,
       mockUserId,
       null,
@@ -234,8 +228,8 @@ describe('InboxController', () => {
 
     const result = await controller.search(mockSearchRequestDto, mockRequest);
 
-    expect(mockNOIPublicSearchService.searchNoticeOfIntents).toBeCalledTimes(1);
-    expect(mockNOIPublicSearchService.searchNoticeOfIntents).toBeCalledWith(
+    expect(mockNOIPublicSearchService.searchNoticeOfIntents).toHaveBeenCalledTimes(1);
+    expect(mockNOIPublicSearchService.searchNoticeOfIntents).toHaveBeenCalledWith(
       mockSearchRequestDto,
       mockUserId,
       null,
@@ -253,8 +247,8 @@ describe('InboxController', () => {
 
     const result = await controller.search(mockSearchRequestDto, mockRequest);
 
-    expect(mockAppPublicSearchService.searchApplications).toBeCalledTimes(1);
-    expect(mockAppPublicSearchService.searchApplications).toBeCalledWith(
+    expect(mockAppPublicSearchService.searchApplications).toHaveBeenCalledTimes(1);
+    expect(mockAppPublicSearchService.searchApplications).toHaveBeenCalledWith(
       mockSearchRequestDto,
       mockUserId,
       null,
@@ -263,7 +257,7 @@ describe('InboxController', () => {
     expect(result.applications).toBeDefined();
     expect(result.totalApplications).toBe(0);
 
-    expect(mockNOIPublicSearchService.searchNoticeOfIntents).toBeCalledTimes(0);
+    expect(mockNOIPublicSearchService.searchNoticeOfIntents).toHaveBeenCalledTimes(0);
     expect(result.noticeOfIntents).toBeDefined();
     expect(result.totalNoticeOfIntents).toBe(0);
   });

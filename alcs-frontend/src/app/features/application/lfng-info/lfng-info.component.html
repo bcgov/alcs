@@ -3,14 +3,9 @@
   <div
     matTooltip="Only enabled when Portal status is 'Submitted to ALC' or 'L/FNG Refused to Forward'."
     [matTooltipDisabled]="canReturnToGovernment"
-    >
+  >
     @if (hasGovernmentReview) {
-      <button
-        [disabled]="!canReturnToGovernment"
-        mat-stroked-button
-        color="primary"
-        (click)="returnToLfng()"
-        >
+      <button [disabled]="!canReturnToGovernment" mat-stroked-button color="primary" (click)="returnToLfng()">
         Return to L/FNG
       </button>
     }
@@ -18,14 +13,10 @@
 </div>
 <section>
   @if (!requiresReview) {
-    <div class="warning">
-      <mat-icon>info</mat-icon>Application not subject to Local/First Nation Government Review.
-    </div>
+    <div class="warning"><mat-icon>info</mat-icon>Application not subject to Local/First Nation Government Review.</div>
   }
   @if (!applicationReview && requiresReview) {
-    <div class="warning">
-      <mat-icon>info</mat-icon>Pending Local/First Nation Government review.
-    </div>
+    <div class="warning"><mat-icon>info</mat-icon>Pending Local/First Nation Government review.</div>
   }
   @if (submission?.returnedToLfngComment) {
     <div class="comment-container">
@@ -184,9 +175,12 @@
           </div>
           <div>
             <div class="subheading2">Minimum Lot Size (hectares)</div>
-            <div>{{ applicationReview.zoningMinimumLotSize }}@if (applicationReview.zoningMinimumLotSize) {
-              <span> ha</span>
-            }</div>
+            <div>
+              {{ applicationReview.zoningMinimumLotSize }}
+              @if (applicationReview.zoningMinimumLotSize) {
+                <span> ha</span>
+              }
+            </div>
             @if (!applicationReview.zoningMinimumLotSize) {
               <app-no-data></app-no-data>
             }
@@ -210,10 +204,8 @@
       @if (
         !isFirstNationGovernment &&
         (applicationReview.isOCPDesignation === null || applicationReview.isSubjectToZoning === null)
-        ) {
-        <div
-          class="full-row"
-          >
+      ) {
+        <div class="full-row">
           Please complete both Step 2 Plans & Bylaws: OCP and Step 3 Plans & Bylaws: Zoning to continue with this step.
         </div>
       }
@@ -221,10 +213,8 @@
         !isFirstNationGovernment &&
         applicationReview.isOCPDesignation === false &&
         applicationReview.isSubjectToZoning === false
-        ) {
-        <div
-          class="full-row"
-          >
+      ) {
+        <div class="full-row">
           By indicating that the parcel(s) is not subject to Local Government OCP or Zoning,
           <strong>no authorizing resolution is required</strong> as per S. 25 (3) or S. 29 (4) of the <em>ALC Act</em>.
           The only option available is to forward this application on to the ALC.
@@ -248,17 +238,15 @@
     @if (!hasCompletedStepsBeforeDocuments) {
       <div class="review-table">
         <div class="full-row">
-          Please complete Step 2 Plans & Bylaws: OCP, Step 3 Plans & Bylaws: Zoning and Step 4 Resolution to continue with
-          this step.
+          Please complete Step 2 Plans & Bylaws: OCP, Step 3 Plans & Bylaws: Zoning and Step 4 Resolution to continue
+          with this step.
         </div>
       </div>
     }
     @if (hasCompletedStepsBeforeDocuments) {
       <div class="review-table">
         @if (isFirstNationGovernment || applicationReview.isOCPDesignation || applicationReview.isSubjectToZoning) {
-          <div
-            class="full-row"
-            >
+          <div class="full-row">
             <div class="subheading2">Resolution Document</div>
             <div>
               @if (resolutionDocument) {
@@ -275,16 +263,16 @@
         @if (
           (applicationReview.isOCPDesignation || applicationReview.isSubjectToZoning) &&
           (applicationReview.isAuthorized || staffReports.length > 0)
-          ) {
-          <div
-            class="full-row"
-            >
+        ) {
+          <div class="full-row">
             <div class="subheading2">Staff Report</div>
             @if (staffReports.length > 0) {
               <div>
                 @for (staffReport of staffReports; track staffReport) {
                   <div>
-                    <a routerLink="/document/{{ staffReport.documentUuid }}" target="_blank">{{ staffReport.fileName }}</a>
+                    <a routerLink="/document/{{ staffReport.documentUuid }}" target="_blank">{{
+                      staffReport.fileName
+                    }}</a>
                   </div>
                 }
               </div>

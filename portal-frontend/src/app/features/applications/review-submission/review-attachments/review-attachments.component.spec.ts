@@ -21,9 +21,6 @@ describe('ReviewAttachmentsComponent', () => {
   beforeEach(async () => {
     mockAppReviewService = createMock();
     mockAppDocumentService = createMock();
-    mockAppReviewService.$applicationReview = new BehaviorSubject<ApplicationSubmissionReviewDto | undefined>(
-      undefined
-    );
 
     await TestBed.configureTestingModule({
       declarations: [ReviewAttachmentsComponent],

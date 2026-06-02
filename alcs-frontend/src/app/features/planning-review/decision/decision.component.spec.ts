@@ -5,11 +5,8 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
-import { BehaviorSubject } from 'rxjs';
-import { PlanningReviewDecisionDto } from '../../../services/planning-review/planning-review-decision/planning-review-decision.dto';
 import { PlanningReviewDecisionService } from '../../../services/planning-review/planning-review-decision/planning-review-decision.service';
 import { PlanningReviewDetailService } from '../../../services/planning-review/planning-review-detail.service';
-import { PlanningReviewDetailedDto } from '../../../services/planning-review/planning-review.dto';
 import { ToastService } from '../../../services/toast/toast.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 
@@ -23,11 +20,7 @@ describe('DecisionComponent', () => {
 
   beforeEach(async () => {
     mockPRDecisionService = createMock();
-    mockPRDecisionService.$decision = new BehaviorSubject<PlanningReviewDecisionDto | undefined>(undefined);
-    mockPRDecisionService.$decisions = new BehaviorSubject<PlanningReviewDecisionDto[]>([]);
-
     mockPRDetailService = createMock();
-    mockPRDetailService.$planningReview = new BehaviorSubject<PlanningReviewDetailedDto | undefined>(undefined);
 
     await TestBed.configureTestingModule({
       imports: [MatSnackBarModule, MatMenuModule],

@@ -43,10 +43,10 @@ interface ApplicationParcelExtended extends Omit<ApplicationParcelUpdateDto, 'ow
 }
 
 @Component({
-    selector: 'app-parcel',
-    templateUrl: './parcel.component.html',
-    styleUrls: ['./parcel.component.scss'],
-    standalone: false
+  selector: 'app-parcel',
+  templateUrl: './parcel.component.html',
+  styleUrls: ['./parcel.component.scss'],
+  standalone: false,
 })
 export class ParcelComponent {
   $destroy = new Subject<void>();
@@ -188,16 +188,16 @@ export class ParcelComponent {
   async onEditParcelClick(uuid: string) {
     if (this.draftMode) {
       await this.router.navigateByUrl(
-        `alcs/application/${this.fileId}/edit/${this.navigationStepInd}?parcelUuid=${uuid}&errors=t`
+        `alcs/application/${this.fileId}/edit/${this.navigationStepInd}?parcelUuid=${uuid}&errors=t`,
       );
     } else {
       await this.router.navigateByUrl(
-        `application/${this.fileId}/edit/${this.navigationStepInd}?parcelUuid=${uuid}&errors=t`
+        `application/${this.fileId}/edit/${this.navigationStepInd}?parcelUuid=${uuid}&errors=t`,
       );
     }
   }
 
-  @HostListener('window:resize', ['$event'])
+  @HostListener('window:resize', [])
   onWindowResize() {
     this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
   }

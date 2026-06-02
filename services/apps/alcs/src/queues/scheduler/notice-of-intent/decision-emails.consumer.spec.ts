@@ -46,9 +46,7 @@ describe('NoticeOfIntentDecisionEmailsConsumer', () => {
       ],
     }).compile();
 
-    consumer = module.get<NoticeOfIntentDecisionEmailsConsumer>(
-      NoticeOfIntentDecisionEmailsConsumer,
-    );
+    consumer = module.get<NoticeOfIntentDecisionEmailsConsumer>(NoticeOfIntentDecisionEmailsConsumer);
   });
 
   afterAll(() => {
@@ -71,12 +69,8 @@ describe('NoticeOfIntentDecisionEmailsConsumer', () => {
         noticeOfIntent: new NoticeOfIntent({ fileNumber: 'fake' }),
       }),
     ]);
-    mockNOIDecisionService.update.mockResolvedValue(
-      new NoticeOfIntentDecision(),
-    );
-    mockStatusEmailService.getNoticeOfIntentDecisionDocuments.mockResolvedValue(
-      mockDocuments,
-    );
+    mockNOIDecisionService.update.mockResolvedValue(new NoticeOfIntentDecision());
+    mockStatusEmailService.getNoticeOfIntentDecisionDocuments.mockResolvedValue(mockDocuments);
     mockNOISubmissionService.get.mockResolvedValue(mockSubmission);
 
     mockStatusEmailService.getNoticeOfIntentEmailData.mockResolvedValue({
@@ -88,21 +82,11 @@ describe('NoticeOfIntentDecisionEmailsConsumer', () => {
     await consumer.process();
 
     expect(mockNOISubmissionService.get).toHaveBeenCalledTimes(1);
-    expect(
-      mockNOIDecisionService.getDecisionsPendingEmail,
-    ).toHaveBeenCalledTimes(1);
-    expect(
-      mockStatusEmailService.getNoticeOfIntentDecisionDocuments,
-    ).toBeCalledTimes(1);
-    expect(
-      mockStatusEmailService.getNoticeOfIntentEmailData,
-    ).toHaveBeenCalledWith(mockSubmission);
-    expect(
-      mockStatusEmailService.sendNoticeOfIntentStatusEmail,
-    ).toBeCalledTimes(1);
-    expect(
-      mockStatusEmailService.sendNoticeOfIntentStatusEmail,
-    ).toHaveBeenCalledWith({
+    expect(mockNOIDecisionService.getDecisionsPendingEmail).toHaveBeenCalledTimes(1);
+    expect(mockStatusEmailService.getNoticeOfIntentDecisionDocuments).toHaveBeenCalledTimes(1);
+    expect(mockStatusEmailService.getNoticeOfIntentEmailData).toHaveBeenCalledWith(mockSubmission);
+    expect(mockStatusEmailService.sendNoticeOfIntentStatusEmail).toHaveBeenCalledTimes(1);
+    expect(mockStatusEmailService.sendNoticeOfIntentStatusEmail).toHaveBeenCalledWith({
       noticeOfIntentSubmission: mockSubmission,
       government: mockLocalGovernment,
       parentType: PARENT_TYPE.NOTICE_OF_INTENT,
@@ -132,9 +116,7 @@ describe('NoticeOfIntentDecisionEmailsConsumer', () => {
         noticeOfIntent: new NoticeOfIntent(),
       }),
     ]);
-    mockStatusEmailService.getNoticeOfIntentDecisionDocuments.mockResolvedValue(
-      mockDocuments,
-    );
+    mockStatusEmailService.getNoticeOfIntentDecisionDocuments.mockResolvedValue(mockDocuments);
     mockNOISubmissionService.get.mockResolvedValue(mockSubmission);
 
     mockStatusEmailService.getNoticeOfIntentEmailData.mockResolvedValue({
@@ -146,17 +128,9 @@ describe('NoticeOfIntentDecisionEmailsConsumer', () => {
     await consumer.process();
 
     expect(mockNOISubmissionService.get).toHaveBeenCalledTimes(1);
-    expect(
-      mockNOIDecisionService.getDecisionsPendingEmail,
-    ).toHaveBeenCalledTimes(1);
-    expect(
-      mockStatusEmailService.getNoticeOfIntentDecisionDocuments,
-    ).toHaveBeenCalledTimes(1);
-    expect(
-      mockStatusEmailService.getNoticeOfIntentEmailData,
-    ).toHaveBeenCalledWith(mockSubmission);
-    expect(
-      mockStatusEmailService.sendNoticeOfIntentStatusEmail,
-    ).toHaveBeenCalledTimes(0);
+    expect(mockNOIDecisionService.getDecisionsPendingEmail).toHaveBeenCalledTimes(1);
+    expect(mockStatusEmailService.getNoticeOfIntentDecisionDocuments).toHaveBeenCalledTimes(1);
+    expect(mockStatusEmailService.getNoticeOfIntentEmailData).toHaveBeenCalledWith(mockSubmission);
+    expect(mockStatusEmailService.sendNoticeOfIntentStatusEmail).toHaveBeenCalledTimes(0);
   });
 });

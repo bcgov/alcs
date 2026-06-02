@@ -12,7 +12,7 @@
           [matDatepicker]="startDatePicker"
           [(ngModel)]="startDate"
           name="startDate"
-          required
+          [required]="true"
         />
         <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
         <mat-datepicker #startDatePicker type="date"> </mat-datepicker>

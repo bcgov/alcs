@@ -96,9 +96,7 @@ describe('UserService', () => {
     });
 
     it('should reject if user already exists', async () => {
-      await expect(service.create(mockUser)).rejects.toMatchObject(
-        new Error(`User already exists in the system`),
-      );
+      await expect(service.create(mockUser)).rejects.toMatchObject(new Error(`User already exists in the system`));
     });
   });
 
@@ -153,7 +151,7 @@ describe('UserService', () => {
 
     await service.sendNewUserRequestEmail(userIdentifier, email);
 
-    expect(emailServiceMock.sendEmail).toBeCalledWith({
+    expect(emailServiceMock.sendEmail).toHaveBeenCalledWith({
       to: config.get('EMAIL.DEFAULT_ADMINS'),
       body,
       subject,

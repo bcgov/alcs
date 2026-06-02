@@ -50,7 +50,7 @@ describe('HolidayService', () => {
       day: 1,
     });
 
-    expect(mockRepository.save).toBeCalledTimes(1);
+    expect(mockRepository.save).toHaveBeenCalledTimes(1);
     expect(result).toBeDefined();
   });
 
@@ -63,9 +63,9 @@ describe('HolidayService', () => {
       day: 1,
     });
 
-    expect(mockRepository.save).toBeCalledTimes(1);
-    expect(mockRepository.findOneOrFail).toBeCalledTimes(1);
-    expect(mockRepository.findOneOrFail).toBeCalledWith({
+    expect(mockRepository.save).toHaveBeenCalledTimes(1);
+    expect(mockRepository.findOneOrFail).toHaveBeenCalledTimes(1);
+    expect(mockRepository.findOneOrFail).toHaveBeenCalledWith({
       where: { uuid: holiday.uuid },
     });
     expect(result).toBeDefined();
@@ -82,9 +82,9 @@ describe('HolidayService', () => {
       }),
     ).rejects.toMatchObject(new Error('mock error'));
 
-    expect(mockRepository.save).toBeCalledTimes(0);
-    expect(mockRepository.findOneOrFail).toBeCalledTimes(1);
-    expect(mockRepository.findOneOrFail).toBeCalledWith({
+    expect(mockRepository.save).toHaveBeenCalledTimes(0);
+    expect(mockRepository.findOneOrFail).toHaveBeenCalledTimes(1);
+    expect(mockRepository.findOneOrFail).toHaveBeenCalledWith({
       where: { uuid: 'fake' },
     });
   });
@@ -95,9 +95,9 @@ describe('HolidayService', () => {
 
     const result = await service.delete(holiday.uuid);
 
-    expect(mockRepository.remove).toBeCalledTimes(1);
-    expect(mockRepository.findOneOrFail).toBeCalledTimes(1);
-    expect(mockRepository.findOneOrFail).toBeCalledWith({
+    expect(mockRepository.remove).toHaveBeenCalledTimes(1);
+    expect(mockRepository.findOneOrFail).toHaveBeenCalledTimes(1);
+    expect(mockRepository.findOneOrFail).toHaveBeenCalledWith({
       where: { uuid: holiday.uuid },
     });
     expect(result).toBeDefined();
@@ -107,13 +107,11 @@ describe('HolidayService', () => {
     mockRepository.save.mockResolvedValue({} as HolidayEntity);
     mockRepository.findOneOrFail.mockRejectedValue(new Error('mock error'));
 
-    await expect(service.delete('fake')).rejects.toMatchObject(
-      new Error('mock error'),
-    );
+    await expect(service.delete('fake')).rejects.toMatchObject(new Error('mock error'));
 
-    expect(mockRepository.remove).toBeCalledTimes(0);
-    expect(mockRepository.findOneOrFail).toBeCalledTimes(1);
-    expect(mockRepository.findOneOrFail).toBeCalledWith({
+    expect(mockRepository.remove).toHaveBeenCalledTimes(0);
+    expect(mockRepository.findOneOrFail).toHaveBeenCalledTimes(1);
+    expect(mockRepository.findOneOrFail).toHaveBeenCalledWith({
       where: { uuid: 'fake' },
     });
   });
@@ -123,9 +121,9 @@ describe('HolidayService', () => {
 
     const result = await service.fetch(0, 1);
 
-    expect(mockRepository.findAndCount).toBeCalledTimes(1);
+    expect(mockRepository.findAndCount).toHaveBeenCalledTimes(1);
 
-    expect(mockRepository.findAndCount).toBeCalledWith({
+    expect(mockRepository.findAndCount).toHaveBeenCalledWith({
       where: undefined,
       order: { day: 'DESC' },
       take: 1,
@@ -141,15 +139,11 @@ describe('HolidayService', () => {
 
     expect(result.length).toEqual(1);
     expect(result[0]).toEqual('2020');
-    expect(mockRepository.query).toBeCalledTimes(1);
+    expect(mockRepository.query).toHaveBeenCalledTimes(1);
   });
 
   it('should calculate business days of a given date without holidays', () => {
-    const res = service.calculateBusinessDays(
-      new Date('2024-09-09'),
-      new Date('2024-09-16'),
-      [],
-    );
+    const res = service.calculateBusinessDays(new Date('2024-09-09'), new Date('2024-09-16'), []);
     expect(res).toEqual(6);
   });
 
@@ -157,11 +151,7 @@ describe('HolidayService', () => {
     const holiday: HolidayEntity = new HolidayEntity({
       day: new Date('2024-09-09'),
     });
-    const res = service.calculateBusinessDays(
-      new Date('2024-09-09'),
-      new Date('2024-09-16'),
-      [holiday],
-    );
+    const res = service.calculateBusinessDays(new Date('2024-09-09'), new Date('2024-09-16'), [holiday]);
     expect(res).toEqual(5);
   });
 });

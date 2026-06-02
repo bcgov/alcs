@@ -32,9 +32,7 @@ describe('ApplicationGrpcController', () => {
       controllers: [ApplicationGrpcController],
     }).compile();
 
-    controller = module.get<ApplicationGrpcController>(
-      ApplicationGrpcController,
-    );
+    controller = module.get<ApplicationGrpcController>(ApplicationGrpcController);
   });
 
   it('should be defined', () => {
@@ -49,6 +47,6 @@ describe('ApplicationGrpcController', () => {
     });
 
     expect(res).toEqual({ fileNumber });
-    expect(mockFileNumberService.generateNextFileNumber).toBeCalledTimes(1);
+    expect(mockFileNumberService.generateNextFileNumber).toHaveBeenCalledTimes(1);
   });
 });

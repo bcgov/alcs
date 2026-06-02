@@ -27,10 +27,10 @@ export type FormExisingResidence = { id?: number; floorArea: number; description
 export type FormProposedResidence = { id?: number; floorArea: number; description: string; isExpanded?: boolean };
 
 @Component({
-    selector: 'app-naru-proposal',
-    templateUrl: './naru-proposal.component.html',
-    styleUrls: ['./naru-proposal.component.scss'],
-    standalone: false
+  selector: 'app-naru-proposal',
+  templateUrl: './naru-proposal.component.html',
+  styleUrls: ['./naru-proposal.component.scss'],
+  standalone: false,
 })
 export class NaruProposalComponent extends FilesStepComponent implements OnInit, OnDestroy {
   currentStep = EditApplicationSteps.Proposal;
@@ -475,7 +475,7 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
     }
   }
 
-  @HostListener('window:resize', ['$event'])
+  @HostListener('window:resize', [])
   onWindowResize() {
     this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
   }

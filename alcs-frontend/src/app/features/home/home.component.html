@@ -1,6 +1,6 @@
 <div class="layout">
   <div class="welcome-title">
-    <h1>Welcome {{ userProfile?.prettyName }} to ALCS</h1>
+    <h1>Welcome {{ userDisplayName() }} to ALCS</h1>
   </div>
   <div class="actions">
     @if (hasCAndE) {

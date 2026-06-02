@@ -69,9 +69,7 @@ describe('NotificationParcelController', () => {
       ],
     }).compile();
 
-    controller = module.get<NotificationParcelController>(
-      NotificationParcelController,
-    );
+    controller = module.get<NotificationParcelController>(NotificationParcelController);
   });
 
   it('should be defined', () => {
@@ -84,18 +82,12 @@ describe('NotificationParcelController', () => {
     const parcels = await controller.fetchByFileId('mockFileID');
 
     expect(parcels).toBeDefined();
-    expect(
-      mockNotificationParcelService.fetchBySubmissionUuid,
-    ).toHaveBeenCalledTimes(1);
+    expect(mockNotificationParcelService.fetchBySubmissionUuid).toHaveBeenCalledTimes(1);
   });
 
   it('should call out to service when creating parcels', async () => {
-    mockNotificationSubmissionsService.getByUuid.mockResolvedValue(
-      mockSubmission,
-    );
-    mockNotificationParcelService.create.mockResolvedValue(
-      {} as NotificationParcel,
-    );
+    mockNotificationSubmissionsService.getByUuid.mockResolvedValue(mockSubmission);
+    mockNotificationParcelService.create.mockResolvedValue({} as NotificationParcel);
 
     const parcel = await controller.create(
       {
@@ -108,8 +100,8 @@ describe('NotificationParcelController', () => {
       },
     );
 
-    expect(mockNotificationSubmissionsService.getByUuid).toBeCalledTimes(1);
-    expect(mockNotificationParcelService.create).toBeCalledTimes(1);
+    expect(mockNotificationSubmissionsService.getByUuid).toHaveBeenCalledTimes(1);
+    expect(mockNotificationParcelService.create).toHaveBeenCalledTimes(1);
     expect(parcel).toBeDefined();
   });
 
@@ -126,9 +118,7 @@ describe('NotificationParcelController', () => {
       },
     ];
 
-    mockNotificationParcelService.update.mockResolvedValue([
-      {},
-    ] as NotificationParcel[]);
+    mockNotificationParcelService.update.mockResolvedValue([{}] as NotificationParcel[]);
 
     const parcel = await controller.update(mockUpdateDto, {
       user: {
@@ -136,7 +126,7 @@ describe('NotificationParcelController', () => {
       },
     });
 
-    expect(mockNotificationParcelService.update).toBeCalledTimes(1);
+    expect(mockNotificationParcelService.update).toHaveBeenCalledTimes(1);
     expect(parcel).toBeDefined();
   });
 
@@ -146,7 +136,7 @@ describe('NotificationParcelController', () => {
 
     const result = await controller.delete([fakeUuid]);
 
-    expect(mockNotificationParcelService.deleteMany).toBeCalledTimes(1);
+    expect(mockNotificationParcelService.deleteMany).toHaveBeenCalledTimes(1);
     expect(result).toBeDefined();
   });
 });

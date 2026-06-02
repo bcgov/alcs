@@ -23,11 +23,11 @@
     }
     <mat-menu class="move-board-menu" xPosition="before" #createMenu="matMenu">
       @for (decision of decisions; track decision) {
-        <button mat-menu-item (click)="onCreate(decision.uuid)">
+        <button class="draft-menu-item" mat-menu-item (click)="onCreate(decision.uuid)">
           Duplicate Res #{{ decision.resolutionNumber }}/{{ decision.resolutionYear }}
         </button>
       }
-      <button mat-menu-item (click)="onCreate()">Blank Decision</button>
+      <button class="draft-menu-item" mat-menu-item (click)="onCreate()">Blank Decision</button>
     </mat-menu>
   </div>
 </div>

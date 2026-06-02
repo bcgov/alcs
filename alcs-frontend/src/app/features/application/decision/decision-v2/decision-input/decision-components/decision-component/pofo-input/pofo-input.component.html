@@ -1,5 +1,4 @@
 <form [formGroup]="form" class="pofo-component-form">
-
   <mat-form-field appearance="outline" class="row">
     <mat-label>ALR Area Impacted (ha)</mat-label>
     <input
@@ -9,7 +8,7 @@
       thousandSeparator=","
       separatorLimit="9999999999"
       formControlName="alrArea"
-      required
+      [required]="true"
     />
   </mat-form-field>
 

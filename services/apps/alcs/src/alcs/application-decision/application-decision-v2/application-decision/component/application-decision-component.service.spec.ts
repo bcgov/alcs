@@ -48,8 +48,8 @@ describe('ApplicationDecisionComponentService', () => {
 
     const result = await service.getOneOrFail('fake');
 
-    expect(mockApplicationDecisionComponentRepository.findOneOrFail).toBeCalledTimes(1);
-    expect(mockApplicationDecisionComponentRepository.findOneOrFail).toBeCalledWith({
+    expect(mockApplicationDecisionComponentRepository.findOneOrFail).toHaveBeenCalledTimes(1);
+    expect(mockApplicationDecisionComponentRepository.findOneOrFail).toHaveBeenCalledWith({
       where: { uuid: 'fake' },
       relations: {
         lots: true,
@@ -92,7 +92,7 @@ describe('ApplicationDecisionComponentService', () => {
 
     expect(() => {
       return service.validate(mockComponentsDto);
-    }).toThrowError(ServiceValidationException);
+    }).toThrow(ServiceValidationException);
   });
 
   it('does not throw if there are no duplicate components', () => {
@@ -116,7 +116,7 @@ describe('ApplicationDecisionComponentService', () => {
 
     expect(() => {
       return service.validate(mockComponentsDto);
-    }).not.toThrowError(ServiceValidationException);
+    }).not.toThrow(ServiceValidationException);
   });
 
   it('should create new components when given a DTO without a UUID', async () => {
@@ -128,7 +128,7 @@ describe('ApplicationDecisionComponentService', () => {
 
     expect(result).toBeDefined();
     expect(result.length).toBe(2);
-    expect(mockApplicationDecisionComponentRepository.findOneOrFail).toBeCalledTimes(0);
+    expect(mockApplicationDecisionComponentRepository.findOneOrFail).toHaveBeenCalledTimes(0);
   });
 
   it('should update existing components when given a DTO with a UUID', async () => {
@@ -150,8 +150,8 @@ describe('ApplicationDecisionComponentService', () => {
 
     expect(result).toBeDefined();
     expect(result.length).toBe(1);
-    expect(mockApplicationDecisionComponentRepository.findOneOrFail).toBeCalledTimes(1);
-    expect(mockApplicationDecisionComponentRepository.findOneOrFail).toBeCalledWith({
+    expect(mockApplicationDecisionComponentRepository.findOneOrFail).toHaveBeenCalledTimes(1);
+    expect(mockApplicationDecisionComponentRepository.findOneOrFail).toHaveBeenCalledWith({
       where: { uuid: 'fake' },
       relations: {
         lots: true,
@@ -211,8 +211,8 @@ describe('ApplicationDecisionComponentService', () => {
     const result = await service.createOrUpdate(updateDtos, true);
 
     expect(result).toBeDefined();
-    expect(mockApplicationDecisionComponentRepository.findOneOrFail).toBeCalledTimes(0);
-    expect(mockApplicationDecisionComponentRepository.save).toBeCalledTimes(1);
+    expect(mockApplicationDecisionComponentRepository.findOneOrFail).toHaveBeenCalledTimes(0);
+    expect(mockApplicationDecisionComponentRepository.save).toHaveBeenCalledTimes(1);
   });
 
   it('should not persist entity if persist flag is false', async () => {
@@ -224,8 +224,8 @@ describe('ApplicationDecisionComponentService', () => {
     const result = await service.createOrUpdate(updateDtos, false);
 
     expect(result).toBeDefined();
-    expect(mockApplicationDecisionComponentRepository.findOneOrFail).toBeCalledTimes(0);
-    expect(mockApplicationDecisionComponentRepository.save).toBeCalledTimes(0);
+    expect(mockApplicationDecisionComponentRepository.findOneOrFail).toHaveBeenCalledTimes(0);
+    expect(mockApplicationDecisionComponentRepository.save).toHaveBeenCalledTimes(0);
   });
 
   it('should update existing components NFU specific fields when given a DTO with a UUID of NFUP type', async () => {
@@ -249,8 +249,8 @@ describe('ApplicationDecisionComponentService', () => {
 
     expect(result).toBeDefined();
     expect(result.length).toBe(1);
-    expect(mockApplicationDecisionComponentRepository.findOneOrFail).toBeCalledTimes(1);
-    expect(mockApplicationDecisionComponentRepository.findOneOrFail).toBeCalledWith({
+    expect(mockApplicationDecisionComponentRepository.findOneOrFail).toHaveBeenCalledTimes(1);
+    expect(mockApplicationDecisionComponentRepository.findOneOrFail).toHaveBeenCalledWith({
       where: { uuid: 'fake' },
       relations: {
         lots: true,
@@ -311,8 +311,8 @@ describe('ApplicationDecisionComponentService', () => {
     const result = await service.createOrUpdate(updateDtos);
 
     expect(result).toBeDefined();
-    expect(mockApplicationDecisionComponentRepository.findOneOrFail).toBeCalledTimes(1);
-    expect(mockApplicationDecisionComponentLotService.softRemove).toBeCalledTimes(1);
-    expect(mockApplicationDecisionComponentRepository.save).toBeCalledTimes(1);
+    expect(mockApplicationDecisionComponentRepository.findOneOrFail).toHaveBeenCalledTimes(1);
+    expect(mockApplicationDecisionComponentLotService.softRemove).toHaveBeenCalledTimes(1);
+    expect(mockApplicationDecisionComponentRepository.save).toHaveBeenCalledTimes(1);
   });
 });

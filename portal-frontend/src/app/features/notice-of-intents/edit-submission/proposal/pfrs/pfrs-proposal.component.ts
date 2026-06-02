@@ -19,15 +19,15 @@ import { FilesStepComponent } from '../../files-step.partial';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
-    selector: 'app-pfrs-proposal',
-    templateUrl: './pfrs-proposal.component.html',
-    styleUrls: ['./pfrs-proposal.component.scss'],
-    standalone: false
+  selector: 'app-pfrs-proposal',
+  templateUrl: './pfrs-proposal.component.html',
+  styleUrls: ['./pfrs-proposal.component.scss'],
+  standalone: false,
 })
 export class PfrsProposalComponent extends FilesStepComponent implements OnInit, OnDestroy {
   currentStep = EditNoiSteps.Proposal;
 
-  @HostListener('window:resize', ['$event'])
+  @HostListener('window:resize', [])
   onWindowResize() {
     this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
   }

@@ -1,15 +1,13 @@
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
-import { BehaviorSubject } from 'rxjs';
 import { CardSubtaskService } from '../../../services/card/card-subtask/card-subtask.service';
-import { AssigneeDto, UserDto } from '../../../services/user/user.dto';
 import { UserService } from '../../../services/user/user.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { SubtasksComponent } from './subtasks.component';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('SubtasksComponent', () => {
   let component: SubtasksComponent;
@@ -18,28 +16,27 @@ describe('SubtasksComponent', () => {
 
   beforeEach(async () => {
     mockUserService = createMock();
-    mockUserService.$assignableUsers = new BehaviorSubject<AssigneeDto[]>([]);
 
     await TestBed.configureTestingModule({
-    declarations: [SubtasksComponent],
-    imports: [MatSnackBarModule, MatMenuModule],
-    providers: [
+      declarations: [SubtasksComponent],
+      imports: [MatSnackBarModule, MatMenuModule],
+      providers: [
         {
-            provide: CardSubtaskService,
-            useValue: {},
+          provide: CardSubtaskService,
+          useValue: {},
         },
         {
-            provide: ConfirmationDialogService,
-            useValue: {},
+          provide: ConfirmationDialogService,
+          useValue: {},
         },
         {
-            provide: UserService,
-            useValue: mockUserService,
+          provide: UserService,
+          useValue: mockUserService,
         },
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
-    ]
-}).compileComponents();
+      ],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(SubtasksComponent);
     component = fixture.componentInstance;

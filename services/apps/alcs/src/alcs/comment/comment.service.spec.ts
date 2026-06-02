@@ -3,10 +3,7 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import {
-  initCardMockEntity,
-  initCommentMock,
-} from '../../../test/mocks/mockEntities';
+import { initCardMockEntity, initCommentMock } from '../../../test/mocks/mockEntities';
 import { Card } from '../card/card.entity';
 import { CardService } from '../card/card.service';
 import { MessageService } from '../message/message.service';
@@ -95,20 +92,14 @@ describe('CommentService', () => {
     mockCommentRepository.save.mockResolvedValue({} as Comment);
     mockNotificationService.createForCard.mockResolvedValue();
 
-    await service.create(
-      'file-number',
-      'new-comment',
-      fakeUser as User,
-      '',
-      comment.mentions,
-    );
+    await service.create('file-number', 'new-comment', fakeUser as User, '', comment.mentions);
 
     expect(mockCommentRepository.save).toHaveBeenCalledTimes(1);
     const savedData = mockCommentRepository.save.mock.calls[0][0];
     expect(savedData.author).toEqual(fakeUser);
     expect(savedData.card).toEqual(fakeComment.card);
     expect(savedData.body).toEqual('new-comment');
-    expect(mockCommentMentionService.updateMentions).toBeCalledTimes(1);
+    expect(mockCommentMentionService.updateMentions).toHaveBeenCalledTimes(1);
     expect(mockNotificationService.createForCard).toHaveBeenCalledTimes(1);
   });
 
@@ -135,16 +126,14 @@ describe('CommentService', () => {
     const savedData = mockCommentRepository.save.mock.calls[0][0];
     expect(savedData.body).toEqual('new-body');
     expect(savedData.edited).toBeTruthy();
-    expect(mockCommentMentionService.updateMentions).toBeCalledTimes(1);
+    expect(mockCommentMentionService.updateMentions).toHaveBeenCalledTimes(1);
     expect(mockNotificationService.createForCard).toHaveBeenCalledTimes(1);
   });
 
   it('throw an exception when updating a comment body with empty string', async () => {
     mockCommentRepository.findOne.mockResolvedValue(comment);
 
-    await expect(
-      service.update('comment-uuid', '', '', comment.mentions),
-    ).rejects.toMatchObject(
+    await expect(service.update('comment-uuid', '', '', comment.mentions)).rejects.toMatchObject(
       new ServiceValidationException('Comment body must be filled.'),
     );
   });

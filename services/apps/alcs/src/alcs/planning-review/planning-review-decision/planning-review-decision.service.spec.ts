@@ -1,7 +1,4 @@
-import {
-  ServiceNotFoundException,
-  ServiceValidationException,
-} from '@app/common/exceptions/base.exception';
+import { ServiceNotFoundException, ServiceValidationException } from '@app/common/exceptions/base.exception';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
@@ -14,22 +11,15 @@ import { PlanningReview } from '../planning-review.entity';
 import { PlanningReviewService } from '../planning-review.service';
 import { PlanningReviewDecisionDocument } from './planning-review-decision-document/planning-review-decision-document.entity';
 import { PlanningReviewDecisionOutcomeCode } from './planning-review-decision-outcome.entity';
-import {
-  CreatePlanningReviewDecisionDto,
-  UpdatePlanningReviewDecisionDto,
-} from './planning-review-decision.dto';
+import { CreatePlanningReviewDecisionDto, UpdatePlanningReviewDecisionDto } from './planning-review-decision.dto';
 import { PlanningReviewDecision } from './planning-review-decision.entity';
 import { PlanningReviewDecisionService } from './planning-review-decision.service';
 
 describe('PlanningReviewDecisionService', () => {
   let service: PlanningReviewDecisionService;
   let mockDecisionRepository: DeepMocked<Repository<PlanningReviewDecision>>;
-  let mockDecisionDocumentRepository: DeepMocked<
-    Repository<PlanningReviewDecisionDocument>
-  >;
-  let mockDecisionOutcomeRepository: DeepMocked<
-    Repository<PlanningReviewDecisionOutcomeCode>
-  >;
+  let mockDecisionDocumentRepository: DeepMocked<Repository<PlanningReviewDecisionDocument>>;
+  let mockDecisionOutcomeRepository: DeepMocked<Repository<PlanningReviewDecisionOutcomeCode>>;
   let mockDocumentService: DeepMocked<DocumentService>;
   let mockPlanningReviewService: DeepMocked<PlanningReviewService>;
   const mockFileNumber = '125';
@@ -74,9 +64,7 @@ describe('PlanningReviewDecisionService', () => {
       ],
     }).compile();
 
-    service = module.get<PlanningReviewDecisionService>(
-      PlanningReviewDecisionService,
-    );
+    service = module.get<PlanningReviewDecisionService>(PlanningReviewDecisionService);
 
     mockPlanningReview = new PlanningReview({
       uuid: v4(),
@@ -94,9 +82,7 @@ describe('PlanningReviewDecisionService', () => {
 
     mockDecisionDocumentRepository.find.mockResolvedValue([]);
 
-    mockPlanningReviewService.getByFileNumber.mockResolvedValue(
-      mockPlanningReview,
-    );
+    mockPlanningReviewService.getByFileNumber.mockResolvedValue(mockPlanningReview);
     mockPlanningReviewService.update.mockResolvedValue({} as any);
 
     mockDecisionOutcomeRepository.find.mockResolvedValue([]);
@@ -109,9 +95,7 @@ describe('PlanningReviewDecisionService', () => {
     });
 
     it('should get decisions by file number', async () => {
-      const result = await service.getByFileNumber(
-        mockPlanningReview.fileNumber,
-      );
+      const result = await service.getByFileNumber(mockPlanningReview.fileNumber);
 
       expect(result).toStrictEqual([mockDecision]);
     });
@@ -133,21 +117,16 @@ describe('PlanningReviewDecisionService', () => {
 
       await service.delete(mockDecision.uuid);
 
-      expect(mockDecisionRepository.softRemove).toBeCalledTimes(1);
+      expect(mockDecisionRepository.softRemove).toHaveBeenCalledTimes(1);
       expect(mockPlanningReviewService.update).toHaveBeenCalledTimes(1);
-      expect(mockPlanningReviewService.update).toHaveBeenCalledWith(
-        mockPlanningReview.fileNumber,
-        {
-          decisionDate: null,
-        },
-      );
+      expect(mockPlanningReviewService.update).toHaveBeenCalledWith(mockPlanningReview.fileNumber, {
+        decisionDate: null,
+      });
     });
 
     it('should create a decision', async () => {
       mockDecisionRepository.exists.mockResolvedValue(false);
-      mockPlanningReviewService.getByFileNumber.mockResolvedValue(
-        new PlanningReview(),
-      );
+      mockPlanningReviewService.getByFileNumber.mockResolvedValue(new PlanningReview());
 
       const decisionToCreate: CreatePlanningReviewDecisionDto = {
         planningReviewFileNumber: '',
@@ -155,7 +134,7 @@ describe('PlanningReviewDecisionService', () => {
 
       await service.create(decisionToCreate);
 
-      expect(mockDecisionRepository.save).toBeCalledTimes(1);
+      expect(mockDecisionRepository.save).toHaveBeenCalledTimes(1);
       expect(mockPlanningReviewService.update).toHaveBeenCalledTimes(0);
     });
 
@@ -172,12 +151,10 @@ describe('PlanningReviewDecisionService', () => {
       };
 
       await expect(service.create(decisionToCreate)).rejects.toMatchObject(
-        new ServiceValidationException(
-          'Draft decision already exists for this planning review.',
-        ),
+        new ServiceValidationException('Draft decision already exists for this planning review.'),
       );
 
-      expect(mockDecisionRepository.save).toBeCalledTimes(0);
+      expect(mockDecisionRepository.save).toHaveBeenCalledTimes(0);
       expect(mockPlanningReviewService.update).toHaveBeenCalledTimes(0);
     });
 
@@ -193,7 +170,7 @@ describe('PlanningReviewDecisionService', () => {
 
       await service.create(decisionToCreate);
 
-      expect(mockDecisionRepository.save).toBeCalledTimes(1);
+      expect(mockDecisionRepository.save).toHaveBeenCalledTimes(1);
       expect(mockPlanningReviewService.update).not.toHaveBeenCalled();
     });
 
@@ -216,15 +193,12 @@ describe('PlanningReviewDecisionService', () => {
 
       await service.update(mockDecision.uuid, decisionUpdate);
 
-      expect(mockDecisionRepository.findOne).toBeCalledTimes(2);
+      expect(mockDecisionRepository.findOne).toHaveBeenCalledTimes(2);
       expect(mockDecisionRepository.save).toHaveBeenCalledTimes(1);
       expect(mockPlanningReviewService.update).toHaveBeenCalledTimes(1);
-      expect(mockPlanningReviewService.update).toHaveBeenCalledWith(
-        mockPlanningReview.fileNumber,
-        {
-          decisionDate: decisionDate.getTime(),
-        },
-      );
+      expect(mockPlanningReviewService.update).toHaveBeenCalledWith(mockPlanningReview.fileNumber, {
+        decisionDate: decisionDate.getTime(),
+      });
     });
 
     it('should update decision and update the planning review date to null if it is draft decision', async () => {
@@ -237,15 +211,12 @@ describe('PlanningReviewDecisionService', () => {
 
       await service.update(mockDecision.uuid, decisionUpdate);
 
-      expect(mockDecisionRepository.findOne).toBeCalledTimes(2);
-      expect(mockDecisionRepository.save).toBeCalledTimes(1);
+      expect(mockDecisionRepository.findOne).toHaveBeenCalledTimes(2);
+      expect(mockDecisionRepository.save).toHaveBeenCalledTimes(1);
       expect(mockPlanningReviewService.update).toHaveBeenCalledTimes(1);
-      expect(mockPlanningReviewService.update).toHaveBeenCalledWith(
-        mockFileNumber,
-        {
-          decisionDate: null,
-        },
-      );
+      expect(mockPlanningReviewService.update).toHaveBeenCalledWith(mockFileNumber, {
+        decisionDate: null,
+      });
     });
 
     it('should not update the planning review dates when updating a draft decision', async () => {
@@ -255,10 +226,7 @@ describe('PlanningReviewDecisionService', () => {
       });
       secondDecision.isDraft = true;
       secondDecision.uuid = 'second-uuid';
-      mockDecisionRepository.find.mockResolvedValue([
-        secondDecision,
-        mockDecision,
-      ]);
+      mockDecisionRepository.find.mockResolvedValue([secondDecision, mockDecision]);
       mockDecisionRepository.findOne.mockResolvedValue(secondDecision);
 
       const decisionUpdate: UpdatePlanningReviewDecisionDto = {
@@ -268,8 +236,8 @@ describe('PlanningReviewDecisionService', () => {
 
       await service.update(mockDecision.uuid, decisionUpdate);
 
-      expect(mockDecisionRepository.findOne).toBeCalledTimes(2);
-      expect(mockDecisionRepository.save).toBeCalledTimes(1);
+      expect(mockDecisionRepository.findOne).toHaveBeenCalledTimes(2);
+      expect(mockDecisionRepository.save).toHaveBeenCalledTimes(1);
       expect(mockPlanningReviewService.update).not.toHaveBeenCalled();
     });
 
@@ -301,9 +269,7 @@ describe('PlanningReviewDecisionService', () => {
 
     it('should throw an exception when attaching a document to a non-existent decision', async () => {
       mockDecisionRepository.findOne.mockResolvedValue(null);
-      await expect(
-        service.attachDocument('uuid', {} as any, {} as any),
-      ).rejects.toMatchObject(
+      await expect(service.attachDocument('uuid', {} as any, {} as any)).rejects.toMatchObject(
         new ServiceNotFoundException(`Decision with UUID uuid not found`),
       );
       expect(mockDocumentService.create).not.toHaveBeenCalled();
@@ -313,17 +279,13 @@ describe('PlanningReviewDecisionService', () => {
       mockDecisionDocumentRepository.softRemove.mockResolvedValue({} as any);
 
       await service.deleteDocument('fake-uuid');
-      expect(mockDecisionDocumentRepository.softRemove).toHaveBeenCalledTimes(
-        1,
-      );
+      expect(mockDecisionDocumentRepository.softRemove).toHaveBeenCalledTimes(1);
     });
 
     it('should throw an exception when document not found for deletion', async () => {
       mockDecisionDocumentRepository.findOne.mockResolvedValue(null);
       await expect(service.deleteDocument('fake-uuid')).rejects.toMatchObject(
-        new ServiceNotFoundException(
-          `Failed to find document with uuid fake-uuid`,
-        ),
+        new ServiceNotFoundException(`Failed to find document with uuid fake-uuid`),
       );
       expect(mockDocumentService.softRemove).not.toHaveBeenCalled();
     });
@@ -348,9 +310,7 @@ describe('PlanningReviewDecisionService', () => {
     it('should throw an exception when document not found for download', async () => {
       mockDecisionDocumentRepository.findOne.mockResolvedValue(null);
       await expect(service.getDownloadUrl('fake-uuid')).rejects.toMatchObject(
-        new ServiceNotFoundException(
-          `Failed to find document with uuid fake-uuid`,
-        ),
+        new ServiceNotFoundException(`Failed to find document with uuid fake-uuid`),
       );
     });
   });

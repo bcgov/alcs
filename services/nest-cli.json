@@ -12,7 +12,6 @@
       },
       "**/*.proto"
     ],
-    "watchAssets": true,
     "webpack": true,
     "tsConfigPath": "apps/alcs/tsconfig.app.json"
   },

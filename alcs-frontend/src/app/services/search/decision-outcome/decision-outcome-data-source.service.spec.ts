@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
-import { AuthenticationService, ICurrentUser } from '../../authentication/authentication.service';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
+import { AuthenticationService, ICurrentUser } from '../../authentication/authentication.service';
 import { DecisionOutcomeDataSourceService, TreeNode } from './decision-outcome-data-source.service';
 
 describe('DecisionOutcomeDataSourceService', () => {
@@ -20,7 +20,6 @@ describe('DecisionOutcomeDataSourceService', () => {
         },
       ],
     });
-    mockAuthenticationService.$currentUser = currentUser;
     service = TestBed.inject(DecisionOutcomeDataSourceService);
   });
 

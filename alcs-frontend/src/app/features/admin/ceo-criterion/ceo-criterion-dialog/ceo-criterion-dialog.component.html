@@ -6,7 +6,7 @@
     <div>
       <mat-form-field class="number-input" appearance="outline">
         <mat-label>Number</mat-label>
-        <input required matInput id="number" mask="0*" [(ngModel)]="number" name="number" />
+        <input [required]="true" matInput id="number" mask="0*" [(ngModel)]="number" name="number" />
       </mat-form-field>
     </div>
 
@@ -15,7 +15,7 @@
         <mat-label>Code</mat-label>
         <input
           [disabled]="isEdit"
-          required
+          [required]="true"
           maxlength="4"
           minlength="4"
           matInput
@@ -23,11 +23,11 @@
           [(ngModel)]="code"
           #codeModel="ngModel"
           name="code"
-          />
+        />
       </mat-form-field>
       @if (isCodeExisting(codeModel) && !isEdit) {
         <div>
-          <app-error-message message="Code already in use or deteled, pick a different code."></app-error-message>
+          <app-error-message message="Code already in use or deleted, pick a different code."></app-error-message>
         </div>
       }
     </div>
@@ -35,14 +35,14 @@
     <div class="full-width">
       <mat-form-field class="label" appearance="outline">
         <mat-label>Label</mat-label>
-        <input required matInput id="label" [(ngModel)]="label" name="label" />
+        <input [required]="true" matInput id="label" [(ngModel)]="label" name="label" />
       </mat-form-field>
     </div>
 
     <div class="full-width">
       <mat-form-field class="description" appearance="outline">
         <mat-label>Description</mat-label>
-        <input required matInput id="description" [(ngModel)]="description" name="description" />
+        <input [required]="true" matInput id="description" [(ngModel)]="description" name="description" />
       </mat-form-field>
     </div>
   </form>
@@ -57,7 +57,7 @@
         color="primary"
         type="submit"
         [disabled]="!form.form.valid || (isCodeExisting(codeModel) && !isEdit)"
-        >
+      >
         Save
       </button>
     </div>

@@ -17,21 +17,29 @@
     </ng-container>
 
     <ng-container matColumnDef="address">
-      <th *matHeaderCellDef mat-header-cell>Civic Address@if (isEditing) {
-        <span>*</span>
-      }</th>
+      <th *matHeaderCellDef mat-header-cell>
+        Civic Address
+        @if (isEditing) {
+          <span>*</span>
+        }
+      </th>
       <td
         *matCellDef="let row; let i = index"
         [matTooltipDisabled]="isEditing"
         [matTooltip]="row.civicAddress"
         mat-cell
-        >
+      >
         @if (!isEditing) {
           <span>{{ row.civicAddress }}</span>
         }
         @if (isEditing) {
           <mat-form-field appearance="outline">
-            <input [(ngModel)]="parcels[i].civicAddress" [ngModelOptions]="{ standalone: true }" matInput required />
+            <input
+              [(ngModel)]="parcels[i].civicAddress"
+              [ngModelOptions]="{ standalone: true }"
+              matInput
+              [required]="true"
+            />
           </mat-form-field>
         }
       </td>
@@ -90,12 +98,7 @@
     </tr>
   </table>
   @if (isEditing) {
-    <button
-      (click)="onAddParcel()"
-      color="primary"
-      mat-stroked-button
-      style="margin-top: 36px !important"
-      >
+    <button (click)="onAddParcel()" color="primary" mat-stroked-button style="margin-top: 36px !important">
       + Add Another Parcel
     </button>
   }

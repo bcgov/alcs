@@ -4,13 +4,11 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
-import { BehaviorSubject } from 'rxjs';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
-import { ApplicationDto } from '../../../services/application/application.dto';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 
-import { InfoRequestsComponent } from './info-requests.component';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { InfoRequestsComponent } from './info-requests.component';
 
 describe('InfoRequestsComponent', () => {
   let component: InfoRequestsComponent;
@@ -19,27 +17,26 @@ describe('InfoRequestsComponent', () => {
 
   beforeEach(async () => {
     mockAppDetailService = createMock();
-    mockAppDetailService.$application = new BehaviorSubject<ApplicationDto | undefined>(undefined);
 
     await TestBed.configureTestingModule({
-    declarations: [InfoRequestsComponent],
-    schemas: [NO_ERRORS_SCHEMA],
-    imports: [MatSnackBarModule],
-    providers: [
+      declarations: [InfoRequestsComponent],
+      schemas: [NO_ERRORS_SCHEMA],
+      imports: [MatSnackBarModule],
+      providers: [
         {
-            provide: MatDialogRef,
-            useValue: {},
+          provide: MatDialogRef,
+          useValue: {},
         },
         {
-            provide: MatDialog,
-            useValue: {},
+          provide: MatDialog,
+          useValue: {},
         },
         { provide: ApplicationDetailService, useValue: mockAppDetailService },
         { provide: ConfirmationDialogService, useValue: {} },
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
-    ]
-}).compileComponents();
+      ],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(InfoRequestsComponent);
     component = fixture.componentInstance;

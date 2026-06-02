@@ -15,10 +15,10 @@ import { DocumentService } from '../../../services/document/document.service';
 import { ToastService } from '../../../services/toast/toast.service';
 
 @Component({
-    selector: 'app-noi-details',
-    templateUrl: './notice-of-intent-details.component.html',
-    styleUrls: ['./notice-of-intent-details.component.scss'],
-    standalone: false
+  selector: 'app-noi-details',
+  templateUrl: './notice-of-intent-details.component.html',
+  styleUrls: ['./notice-of-intent-details.component.scss'],
+  standalone: false,
 })
 export class NoticeOfIntentDetailsComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
@@ -56,7 +56,7 @@ export class NoticeOfIntentDetailsComponent implements OnInit, OnDestroy {
       this.noiSubmission = noiSubmission;
       if (noiSubmission) {
         this.primaryContact = noiSubmission.owners.find(
-          (owner) => owner.uuid === noiSubmission.primaryContactOwnerUuid
+          (owner) => owner.uuid === noiSubmission.primaryContactOwnerUuid,
         );
         this.populateLocalGovernment(noiSubmission.localGovernmentUuid);
         this.calculateAuthorizationLetterRequired(noiSubmission.uuid);
@@ -137,7 +137,7 @@ export class NoticeOfIntentDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  @HostListener('window:resize', ['$event'])
+  @HostListener('window:resize', [])
   onWindowResize() {
     this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
   }

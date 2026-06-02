@@ -9,10 +9,7 @@ import { NoticeOfIntentDocument } from '../../alcs/notice-of-intent/notice-of-in
 import { NoticeOfIntentDocumentService } from '../../alcs/notice-of-intent/notice-of-intent-document/notice-of-intent-document.service';
 import { NoticeOfIntentService } from '../../alcs/notice-of-intent/notice-of-intent.service';
 import { NoticeOfIntentProfile } from '../../common/automapper/notice-of-intent.automapper.profile';
-import {
-  DOCUMENT_TYPE,
-  DocumentCode,
-} from '../../document/document-code.entity';
+import { DOCUMENT_TYPE, DocumentCode } from '../../document/document-code.entity';
 import { DOCUMENT_SOURCE, DOCUMENT_SYSTEM } from '../../document/document.dto';
 import { Document } from '../../document/document.entity';
 import { DocumentService } from '../../document/document.service';
@@ -77,13 +74,9 @@ describe('NoticeOfIntentDocumentController', () => {
         ...mockKeyCloakProviders,
       ],
     }).compile();
-    controller = module.get<NoticeOfIntentDocumentController>(
-      NoticeOfIntentDocumentController,
-    );
+    controller = module.get<NoticeOfIntentDocumentController>(NoticeOfIntentDocumentController);
 
-    mockNoiSubmissionService.getByFileNumber.mockResolvedValue(
-      new NoticeOfIntentSubmission(),
-    );
+    mockNoiSubmissionService.getByFileNumber.mockResolvedValue(new NoticeOfIntentSubmission());
     mockNoticeOfIntentService.getUuid.mockResolvedValue('uuid');
   });
 
@@ -107,9 +100,7 @@ describe('NoticeOfIntentDocumentController', () => {
 
     await controller.update('file-number', mockRequest, []);
 
-    expect(noiDocumentService.updateDescriptionAndType).toHaveBeenCalledTimes(
-      1,
-    );
+    expect(noiDocumentService.updateDescriptionAndType).toHaveBeenCalledTimes(1);
   });
 
   it('should call through for open', async () => {
@@ -166,15 +157,11 @@ describe('NoticeOfIntentDocumentController', () => {
       }),
     );
 
-    const res = await controller.attachExternalDocument(
-      'fake-number',
-      docDto,
-      user,
-    );
+    const res = await controller.attachExternalDocument('fake-number', docDto, user);
 
-    expect(mockDocumentService.createDocumentRecord).toBeCalledTimes(1);
-    expect(noiDocumentService.attachExternalDocument).toBeCalledTimes(1);
-    expect(mockDocumentService.createDocumentRecord).toBeCalledWith({
+    expect(mockDocumentService.createDocumentRecord).toHaveBeenCalledTimes(1);
+    expect(noiDocumentService.attachExternalDocument).toHaveBeenCalledTimes(1);
+    expect(mockDocumentService.createDocumentRecord).toHaveBeenCalledWith({
       ...docDto,
       system: DOCUMENT_SYSTEM.PORTAL,
     });
@@ -213,28 +200,19 @@ describe('NoticeOfIntentDocumentController', () => {
       }),
     );
 
-    const res = await controller.attachExternalDocument(
-      'fake-number',
-      docDto,
-      user,
-    );
+    const res = await controller.attachExternalDocument('fake-number', docDto, user);
 
-    expect(mockDocumentService.createDocumentRecord).toBeCalledTimes(1);
-    expect(noiDocumentService.attachExternalDocument).toBeCalledTimes(1);
-    expect(noiDocumentService.attachExternalDocument).toBeCalledWith(
+    expect(mockDocumentService.createDocumentRecord).toHaveBeenCalledTimes(1);
+    expect(noiDocumentService.attachExternalDocument).toHaveBeenCalledTimes(1);
+    expect(noiDocumentService.attachExternalDocument).toHaveBeenCalledWith(
       undefined,
       {
         documentUuid: 'fake-uuid',
         type: DOCUMENT_TYPE.PROPOSAL_MAP,
       },
-      [
-        VISIBILITY_FLAG.APPLICANT,
-        VISIBILITY_FLAG.GOVERNMENT,
-        VISIBILITY_FLAG.COMMISSIONER,
-        VISIBILITY_FLAG.PUBLIC,
-      ],
+      [VISIBILITY_FLAG.APPLICANT, VISIBILITY_FLAG.GOVERNMENT, VISIBILITY_FLAG.COMMISSIONER, VISIBILITY_FLAG.PUBLIC],
     );
-    expect(mockDocumentService.createDocumentRecord).toBeCalledWith({
+    expect(mockDocumentService.createDocumentRecord).toHaveBeenCalledWith({
       ...docDto,
       system: DOCUMENT_SYSTEM.PORTAL,
     });

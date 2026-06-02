@@ -2,11 +2,8 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatMenuModule } from '@angular/material/menu';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
-import { BehaviorSubject } from 'rxjs';
 import { ApplicationDetailService } from '../../../../../../services/application/application-detail.service';
 import { ApplicationSubmissionService } from '../../../../../../services/application/application-submission/application-submission.service';
-import { ApplicationDto } from '../../../../../../services/application/application.dto';
-import { ApplicationDecisionDto } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ApplicationDecisionV2Service } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
 import { ToastService } from '../../../../../../services/toast/toast.service';
 import { ConfirmationDialogService } from '../../../../../../shared/confirmation-dialog/confirmation-dialog.service';
@@ -23,12 +20,8 @@ describe('DecisionComponentsComponent', () => {
 
   beforeEach(async () => {
     mockApplicationDecisionV2Service = createMock();
-    mockApplicationDecisionV2Service.$decision = new BehaviorSubject<ApplicationDecisionDto | undefined>(undefined);
-
     mockToastService = createMock();
     mockApplicationDetailService = createMock();
-    mockApplicationDetailService.$application = new BehaviorSubject<ApplicationDto | undefined>(undefined);
-
     mockApplicationSubmissionService = createMock();
 
     await TestBed.configureTestingModule({
