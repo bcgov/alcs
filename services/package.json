@@ -28,8 +28,8 @@
     "alcs:migration:run": "npm run alcs:typeorm migration:run"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.1064.0",
-    "@aws-sdk/s3-request-presigner": "^3.1064.0",
+    "@aws-sdk/client-s3": "^3.1065.0",
+    "@aws-sdk/s3-request-presigner": "^3.1065.0",
     "@fastify/cors": "^11.2.0",
     "@fastify/helmet": "^13.0.2",
     "@fastify/multipart": "^9.4.0",
@@ -79,7 +79,7 @@
   },
   "devDependencies": {
     "@golevelup/nestjs-testing": "^0.1.2",
-    "@nestjs/cli": "^11.0.22",
+    "@nestjs/cli": "^11.0.23",
     "@nestjs/schematics": "^11.1.0",
     "@nestjs/testing": "^11.1.26",
     "@types/config": "^3.3.4",
@@ -99,7 +99,7 @@
     "eslint-plugin-prettier": "^5.5.6",
     "jest": "^29.7.0",
     "memfs": "^4.57.6",
-    "prettier": "^3.8.3",
+    "prettier": "^3.8.4",
     "supertest": "^6.3.4",
     "ts-jest": "^29.4.11",
     "ts-loader": "^9.6.0",
