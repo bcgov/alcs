@@ -167,11 +167,15 @@ describe('ComplianceAndEnforcementChronologyComponent', () => {
     });
 
     it('should show error when file uuid is missing', async () => {
+      // Suppress error
+      const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
       component.file = undefined;
 
       await component.createDraftEntry();
 
       expect(mockToastService.showErrorToast).toHaveBeenCalledWith('Failed to create draft entry');
+
+      errorSpy.mockRestore();
     });
 
     it('should handle error when creating draft entry fails', async () => {
