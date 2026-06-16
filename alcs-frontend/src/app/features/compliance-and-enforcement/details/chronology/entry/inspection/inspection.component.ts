@@ -182,7 +182,7 @@ export class ComplianceAndEnforcementChronologyEntryInspectionComponent implemen
     }
   }
 
-  dateText() {
+  entryDateText() {
     const timestamp = this.entry()?.date;
 
     return timestamp ? moment(timestamp).format('YYYY-MM-DD') : 'No Date';

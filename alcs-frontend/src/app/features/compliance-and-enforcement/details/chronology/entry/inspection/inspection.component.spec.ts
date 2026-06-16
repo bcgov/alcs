@@ -147,21 +147,24 @@ describe('ComplianceAndEnforcementChronologyComponent', () => {
 
   describe('dateText', () => {
     it('should return formatted date when entry date exists', () => {
+      const dateString = '2021-01-01';
       mockChronologyService.entriesByUuid.mockReturnValue(
-        new Map([['entry-uuid', { date: 1609459200000 } as ComplianceAndEnforcementChronologyEntryDto]]),
+        new Map([
+          ['entry-uuid', { date: moment(dateString).toDate().getTime() } as ComplianceAndEnforcementChronologyEntryDto],
+        ]),
       );
       component.entryUuid = 'entry-uuid';
 
-      const txt = component.dateText();
+      const txt = component.entryDateText();
 
-      expect(txt).toBe('2020-12-31');
+      expect(txt).toBe(dateString);
     });
 
     it('should return No Date when missing', () => {
       mockChronologyService.entriesByUuid.mockReturnValue(new Map());
       component.entryUuid = 'missing';
 
-      expect(component.dateText()).toBe('No Date');
+      expect(component.entryDateText()).toBe('No Date');
     });
   });
 
