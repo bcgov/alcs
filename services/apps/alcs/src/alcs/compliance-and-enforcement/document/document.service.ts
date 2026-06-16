@@ -1,23 +1,24 @@
+import { MultipartFile } from '@fastify/multipart';
 import { Injectable } from '@nestjs/common';
-import { DeleteResult, In, Repository, FindOptionsWhere } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ComplianceAndEnforcementDocument, Section } from './document.entity';
-import { ComplianceAndEnforcementDocumentDto, UpdateComplianceAndEnforcementDocumentDto } from './document.dto';
-import { InjectMapper } from 'automapper-nestjs';
 import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
+import { DeleteResult, FindOptionsWhere, In, Repository } from 'typeorm';
 import {
   ServiceConflictException,
   ServiceNotFoundException,
 } from '../../../../../../libs/common/src/exceptions/base.exception';
-import { DocumentService } from '../../../document/document.service';
-import { User } from '../../../user/user.entity';
 import { DOCUMENT_TYPE, DocumentCode } from '../../../document/document-code.entity';
 import { CreateDocumentDto } from '../../../document/document.dto';
-import { MultipartFile } from '@fastify/multipart';
+import { DocumentService } from '../../../document/document.service';
+import { User } from '../../../user/user.entity';
+import { ComplianceAndEnforcementChronologyEntry } from '../chronology/chronology.entity';
+import { ComplianceAndEnforcementChronologyInspection } from '../chronology/inspection/inspection.entity';
 import { ComplianceAndEnforcement } from '../compliance-and-enforcement.entity';
 import { ComplianceAndEnforcementPropertyService } from '../property/property.service';
 import { ComplianceAndEnforcementResponsiblePartyService } from '../responsible-parties/responsible-parties.service';
-import { ComplianceAndEnforcementChronologyEntry } from '../chronology/chronology.entity';
+import { ComplianceAndEnforcementDocumentDto, UpdateComplianceAndEnforcementDocumentDto } from './document.dto';
+import { ComplianceAndEnforcementDocument, Section } from './document.entity';
 
 @Injectable()
 export class ComplianceAndEnforcementDocumentService {
@@ -31,6 +32,8 @@ export class ComplianceAndEnforcementDocumentService {
     private complianceAndEnforcementRepository: Repository<ComplianceAndEnforcement>,
     @InjectRepository(ComplianceAndEnforcementChronologyEntry)
     private chronologyEntryRepository: Repository<ComplianceAndEnforcementChronologyEntry>,
+    @InjectRepository(ComplianceAndEnforcementChronologyInspection)
+    private inspectionRepository: Repository<ComplianceAndEnforcementChronologyInspection>,
     @InjectRepository(DocumentCode)
     private documentCodeRepository: Repository<DocumentCode>,
     @InjectMapper() private mapper: Mapper,
@@ -40,6 +43,7 @@ export class ComplianceAndEnforcementDocumentService {
     fileNumber?: string,
     section?: Section,
     chronologyEntryUuid?: string,
+    inspectionUuid?: string,
   ): Promise<ComplianceAndEnforcementDocumentDto[]> {
     const criteria: FindOptionsWhere<ComplianceAndEnforcementDocument> = {};
 
@@ -53,6 +57,10 @@ export class ComplianceAndEnforcementDocumentService {
 
     if (chronologyEntryUuid !== undefined) {
       criteria.chronologyEntry = { uuid: chronologyEntryUuid } as any;
+    }
+
+    if (inspectionUuid !== undefined) {
+      criteria.inspection = { uuid: inspectionUuid } as any;
     }
 
     const entities = await this.repository.find({
@@ -106,11 +114,20 @@ export class ComplianceAndEnforcementDocumentService {
     }
 
     let chronologyEntry: ComplianceAndEnforcementChronologyEntry | null = null;
-    if (createDto.chronologyEntry) {
-      chronologyEntry = await this.chronologyEntryRepository.findOneBy({ uuid: createDto.chronologyEntry });
+    if (createDto.chronologyEntryUuid) {
+      chronologyEntry = await this.chronologyEntryRepository.findOneBy({ uuid: createDto.chronologyEntryUuid });
 
       if (!chronologyEntry) {
         throw new ServiceNotFoundException('Chronology entry not found.');
+      }
+    }
+
+    let inspection: ComplianceAndEnforcementChronologyInspection | null = null;
+    if (createDto.inspectionUuid) {
+      inspection = await this.inspectionRepository.findOneBy({ uuid: createDto.inspectionUuid });
+
+      if (!inspection) {
+        throw new ServiceNotFoundException('Chronology inspection not found.');
       }
     }
 
@@ -126,6 +143,7 @@ export class ComplianceAndEnforcementDocumentService {
       type,
       section: createDto.section,
       chronologyEntry, // Pass null if not found
+      inspection,
     });
 
     const savedEntity = await this.repository.save(entity);

@@ -1,8 +1,8 @@
 import { AutoMap } from 'automapper-classes';
-import { BaseCodeDto } from '../common/dtos/base.dto';
-import { User } from '../user/user.entity';
-import { UserDto } from '../user/user.dto';
 import { Section } from '../alcs/compliance-and-enforcement/document/document.entity';
+import { BaseCodeDto } from '../common/dtos/base.dto';
+import { UserDto } from '../user/user.dto';
+import { User } from '../user/user.entity';
 
 export enum DOCUMENT_SOURCE {
   // All types
@@ -85,5 +85,6 @@ export class CreateDocumentDto {
   system: DOCUMENT_SYSTEM;
   tags?: string[];
   section?: Section;
-  chronologyEntry?: string;
+  chronologyEntryUuid?: string;
+  inspectionUuid?: string;
 }

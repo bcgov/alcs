@@ -24,6 +24,9 @@ export interface DocumentUploadDialogOptions {
   defaultDocumentType?: DOCUMENT_TYPE;
   section?: Section;
   chronologyEntryUuid?: string;
+  inspectionUuid?: string;
+  typeDisabled?: boolean;
+  sourceDisabled?: boolean;
 }
 
 export interface DocumentUploadDialogData extends DocumentUploadDialogOptions {

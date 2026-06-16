@@ -1,10 +1,15 @@
+import { ServiceValidationException } from '@app/common/exceptions/base.exception';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ComplianceAndEnforcementValidatorService } from './compliance-and-enforcement-validator.service';
-import { ComplianceAndEnforcement, InitialSubmissionType, AllegedActivity } from './compliance-and-enforcement.entity';
-import { ComplianceAndEnforcementSubmitterDto } from './submitter/submitter.dto';
+import { ComplianceAndEnforcement } from './compliance-and-enforcement.entity';
+import { AllegedActivity, InitialSubmissionType } from './compliance-and-enforcement.enum';
 import { ComplianceAndEnforcementPropertyDto } from './property/property.dto';
-import { ComplianceAndEnforcementResponsibleParty, ResponsiblePartyType, FOIPPACategory } from './responsible-parties/responsible-party.entity';
-import { ServiceValidationException } from '@app/common/exceptions/base.exception';
+import {
+  ComplianceAndEnforcementResponsibleParty,
+  FOIPPACategory,
+  ResponsiblePartyType,
+} from './responsible-parties/responsible-party.entity';
+import { ComplianceAndEnforcementSubmitterDto } from './submitter/submitter.dto';
 
 describe('ComplianceAndEnforcementValidatorService', () => {
   let service: ComplianceAndEnforcementValidatorService;
@@ -31,38 +36,42 @@ describe('ComplianceAndEnforcementValidatorService', () => {
       });
 
       const submitters: ComplianceAndEnforcementSubmitterDto[] = [];
-      const properties: ComplianceAndEnforcementPropertyDto[] = [{
-        uuid: 'test-uuid',
-        civicAddress: '123 Test St',
-        legalDescription: 'Test legal description',
-        localGovernmentUuid: 'lg-uuid',
-        localGovernment: null as any,
-        regionCode: 'BC',
-        latitude: 49.2827,
-        longitude: -123.1207,
-        areaHectares: 10.5,
-        alrPercentage: 75.0,
-        ownershipTypeCode: 'SMPL',
-        pid: '123456789',
-        pin: null,
-        alcHistory: '',
-        certificateOfTitleUuid: null,
-        fileUuid: 'file-uuid',
-      }];
+      const properties: ComplianceAndEnforcementPropertyDto[] = [
+        {
+          uuid: 'test-uuid',
+          civicAddress: '123 Test St',
+          legalDescription: 'Test legal description',
+          localGovernmentUuid: 'lg-uuid',
+          localGovernment: null as any,
+          regionCode: 'BC',
+          latitude: 49.2827,
+          longitude: -123.1207,
+          areaHectares: 10.5,
+          alrPercentage: 75.0,
+          ownershipTypeCode: 'SMPL',
+          pid: '123456789',
+          pin: null,
+          alcHistory: '',
+          certificateOfTitleUuid: null,
+          fileUuid: 'file-uuid',
+        },
+      ];
 
-      const responsibleParties: ComplianceAndEnforcementResponsibleParty[] = [{
-        uuid: 'party-uuid',
-        partyType: ResponsiblePartyType.PROPERTY_OWNER,
-        foippaCategory: FOIPPACategory.INDIVIDUAL,
-        isPrevious: false,
-        individualName: 'John Doe',
-        individualMailingAddress: '123 Test St',
-        individualTelephone: '123-456-7890',
-        individualEmail: 'john@test.com',
-        ownerSince: new Date(),
-        file: null as any,
-        fileUuid: 'file-uuid',
-      }];
+      const responsibleParties: ComplianceAndEnforcementResponsibleParty[] = [
+        {
+          uuid: 'party-uuid',
+          partyType: ResponsiblePartyType.PROPERTY_OWNER,
+          foippaCategory: FOIPPACategory.INDIVIDUAL,
+          isPrevious: false,
+          individualName: 'John Doe',
+          individualMailingAddress: '123 Test St',
+          individualTelephone: '123-456-7890',
+          individualEmail: 'john@test.com',
+          ownerSince: new Date(),
+          file: null as any,
+          fileUuid: 'file-uuid',
+        },
+      ];
 
       const result = await service.validateSubmission(cae, submitters, properties, responsibleParties);
 
@@ -78,37 +87,41 @@ describe('ComplianceAndEnforcementValidatorService', () => {
       });
 
       const submitters: ComplianceAndEnforcementSubmitterDto[] = [];
-      const properties: ComplianceAndEnforcementPropertyDto[] = [{
-        uuid: 'test-uuid',
-        civicAddress: '123 Test St',
-        legalDescription: 'Test legal description',
-        localGovernmentUuid: 'lg-uuid',
-        localGovernment: null as any,
-        regionCode: 'BC',
-        latitude: 49.2827,
-        longitude: -123.1207,
-        areaHectares: 10.5,
-        alrPercentage: 75.0,
-        ownershipTypeCode: 'SMPL',
-        pid: '123456789',
-        pin: null,
-        alcHistory: '',
-        certificateOfTitleUuid: null,
-        fileUuid: 'file-uuid',
-      }];
-      const responsibleParties: ComplianceAndEnforcementResponsibleParty[] = [{
-        uuid: 'party-uuid',
-        partyType: ResponsiblePartyType.PROPERTY_OWNER,
-        foippaCategory: FOIPPACategory.INDIVIDUAL,
-        isPrevious: false,
-        individualName: 'John Doe',
-        individualMailingAddress: '123 Test St',
-        individualTelephone: '123-456-7890',
-        individualEmail: 'john@test.com',
-        ownerSince: new Date(),
-        file: null as any,
-        fileUuid: 'file-uuid',
-      }];
+      const properties: ComplianceAndEnforcementPropertyDto[] = [
+        {
+          uuid: 'test-uuid',
+          civicAddress: '123 Test St',
+          legalDescription: 'Test legal description',
+          localGovernmentUuid: 'lg-uuid',
+          localGovernment: null as any,
+          regionCode: 'BC',
+          latitude: 49.2827,
+          longitude: -123.1207,
+          areaHectares: 10.5,
+          alrPercentage: 75.0,
+          ownershipTypeCode: 'SMPL',
+          pid: '123456789',
+          pin: null,
+          alcHistory: '',
+          certificateOfTitleUuid: null,
+          fileUuid: 'file-uuid',
+        },
+      ];
+      const responsibleParties: ComplianceAndEnforcementResponsibleParty[] = [
+        {
+          uuid: 'party-uuid',
+          partyType: ResponsiblePartyType.PROPERTY_OWNER,
+          foippaCategory: FOIPPACategory.INDIVIDUAL,
+          isPrevious: false,
+          individualName: 'John Doe',
+          individualMailingAddress: '123 Test St',
+          individualTelephone: '123-456-7890',
+          individualEmail: 'john@test.com',
+          ownerSince: new Date(),
+          file: null as any,
+          fileUuid: 'file-uuid',
+        },
+      ];
 
       const result = await service.validateSubmission(cae, submitters, properties, responsibleParties);
 
@@ -126,37 +139,41 @@ describe('ComplianceAndEnforcementValidatorService', () => {
       });
 
       const submitters: ComplianceAndEnforcementSubmitterDto[] = [];
-      const properties: ComplianceAndEnforcementPropertyDto[] = [{
-        uuid: 'test-uuid',
-        civicAddress: '123 Test St',
-        legalDescription: 'Test legal description',
-        localGovernmentUuid: 'lg-uuid',
-        localGovernment: null as any,
-        regionCode: 'BC',
-        latitude: 49.2827,
-        longitude: -123.1207,
-        areaHectares: 10.5,
-        alrPercentage: 75.0,
-        ownershipTypeCode: 'SMPL',
-        pid: '123456789',
-        pin: null,
-        alcHistory: '',
-        certificateOfTitleUuid: null,
-        fileUuid: 'file-uuid',
-      }];
-      const responsibleParties: ComplianceAndEnforcementResponsibleParty[] = [{
-        uuid: 'party-uuid',
-        partyType: ResponsiblePartyType.PROPERTY_OWNER,
-        foippaCategory: FOIPPACategory.INDIVIDUAL,
-        isPrevious: false,
-        individualName: 'John Doe',
-        individualMailingAddress: '123 Test St',
-        individualTelephone: '123-456-7890',
-        individualEmail: 'john@test.com',
-        ownerSince: new Date(),
-        file: null as any,
-        fileUuid: 'file-uuid',
-      }];
+      const properties: ComplianceAndEnforcementPropertyDto[] = [
+        {
+          uuid: 'test-uuid',
+          civicAddress: '123 Test St',
+          legalDescription: 'Test legal description',
+          localGovernmentUuid: 'lg-uuid',
+          localGovernment: null as any,
+          regionCode: 'BC',
+          latitude: 49.2827,
+          longitude: -123.1207,
+          areaHectares: 10.5,
+          alrPercentage: 75.0,
+          ownershipTypeCode: 'SMPL',
+          pid: '123456789',
+          pin: null,
+          alcHistory: '',
+          certificateOfTitleUuid: null,
+          fileUuid: 'file-uuid',
+        },
+      ];
+      const responsibleParties: ComplianceAndEnforcementResponsibleParty[] = [
+        {
+          uuid: 'party-uuid',
+          partyType: ResponsiblePartyType.PROPERTY_OWNER,
+          foippaCategory: FOIPPACategory.INDIVIDUAL,
+          isPrevious: false,
+          individualName: 'John Doe',
+          individualMailingAddress: '123 Test St',
+          individualTelephone: '123-456-7890',
+          individualEmail: 'john@test.com',
+          ownerSince: new Date(),
+          file: null as any,
+          fileUuid: 'file-uuid',
+        },
+      ];
 
       const result = await service.validateSubmission(cae, submitters, properties, responsibleParties);
 
@@ -174,37 +191,41 @@ describe('ComplianceAndEnforcementValidatorService', () => {
       });
 
       const submitters: ComplianceAndEnforcementSubmitterDto[] = [];
-      const properties: ComplianceAndEnforcementPropertyDto[] = [{
-        uuid: 'test-uuid',
-        civicAddress: '123 Test St',
-        legalDescription: 'Test legal description',
-        localGovernmentUuid: 'lg-uuid',
-        localGovernment: null as any,
-        regionCode: 'BC',
-        latitude: 49.2827,
-        longitude: -123.1207,
-        areaHectares: 10.5,
-        alrPercentage: 75.0,
-        ownershipTypeCode: 'SMPL',
-        pid: '123456789',
-        pin: null,
-        alcHistory: '',
-        certificateOfTitleUuid: null,
-        fileUuid: 'file-uuid',
-      }];
-      const responsibleParties: ComplianceAndEnforcementResponsibleParty[] = [{
-        uuid: 'party-uuid',
-        partyType: ResponsiblePartyType.PROPERTY_OWNER,
-        foippaCategory: FOIPPACategory.INDIVIDUAL,
-        isPrevious: false,
-        individualName: 'John Doe',
-        individualMailingAddress: '123 Test St',
-        individualTelephone: '123-456-7890',
-        individualEmail: 'john@test.com',
-        ownerSince: new Date(),
-        file: null as any,
-        fileUuid: 'file-uuid',
-      }];
+      const properties: ComplianceAndEnforcementPropertyDto[] = [
+        {
+          uuid: 'test-uuid',
+          civicAddress: '123 Test St',
+          legalDescription: 'Test legal description',
+          localGovernmentUuid: 'lg-uuid',
+          localGovernment: null as any,
+          regionCode: 'BC',
+          latitude: 49.2827,
+          longitude: -123.1207,
+          areaHectares: 10.5,
+          alrPercentage: 75.0,
+          ownershipTypeCode: 'SMPL',
+          pid: '123456789',
+          pin: null,
+          alcHistory: '',
+          certificateOfTitleUuid: null,
+          fileUuid: 'file-uuid',
+        },
+      ];
+      const responsibleParties: ComplianceAndEnforcementResponsibleParty[] = [
+        {
+          uuid: 'party-uuid',
+          partyType: ResponsiblePartyType.PROPERTY_OWNER,
+          foippaCategory: FOIPPACategory.INDIVIDUAL,
+          isPrevious: false,
+          individualName: 'John Doe',
+          individualMailingAddress: '123 Test St',
+          individualTelephone: '123-456-7890',
+          individualEmail: 'john@test.com',
+          ownerSince: new Date(),
+          file: null as any,
+          fileUuid: 'file-uuid',
+        },
+      ];
 
       const result = await service.validateSubmission(cae, submitters, properties, responsibleParties);
 
@@ -222,37 +243,41 @@ describe('ComplianceAndEnforcementValidatorService', () => {
       });
 
       const submitters: ComplianceAndEnforcementSubmitterDto[] = [];
-      const properties: ComplianceAndEnforcementPropertyDto[] = [{
-        uuid: 'test-uuid',
-        civicAddress: '123 Test St',
-        legalDescription: 'Test legal description',
-        localGovernmentUuid: 'lg-uuid',
-        localGovernment: null as any,
-        regionCode: 'BC',
-        latitude: 49.2827,
-        longitude: -123.1207,
-        areaHectares: 10.5,
-        alrPercentage: 75.0,
-        ownershipTypeCode: 'SMPL',
-        pid: '123456789',
-        pin: null,
-        alcHistory: '',
-        certificateOfTitleUuid: null,
-        fileUuid: 'file-uuid',
-      }];
-      const responsibleParties: ComplianceAndEnforcementResponsibleParty[] = [{
-        uuid: 'party-uuid',
-        partyType: ResponsiblePartyType.PROPERTY_OWNER,
-        foippaCategory: FOIPPACategory.INDIVIDUAL,
-        isPrevious: false,
-        individualName: 'John Doe',
-        individualMailingAddress: '123 Test St',
-        individualTelephone: '123-456-7890',
-        individualEmail: 'john@test.com',
-        ownerSince: new Date(),
-        file: null as any,
-        fileUuid: 'file-uuid',
-      }];
+      const properties: ComplianceAndEnforcementPropertyDto[] = [
+        {
+          uuid: 'test-uuid',
+          civicAddress: '123 Test St',
+          legalDescription: 'Test legal description',
+          localGovernmentUuid: 'lg-uuid',
+          localGovernment: null as any,
+          regionCode: 'BC',
+          latitude: 49.2827,
+          longitude: -123.1207,
+          areaHectares: 10.5,
+          alrPercentage: 75.0,
+          ownershipTypeCode: 'SMPL',
+          pid: '123456789',
+          pin: null,
+          alcHistory: '',
+          certificateOfTitleUuid: null,
+          fileUuid: 'file-uuid',
+        },
+      ];
+      const responsibleParties: ComplianceAndEnforcementResponsibleParty[] = [
+        {
+          uuid: 'party-uuid',
+          partyType: ResponsiblePartyType.PROPERTY_OWNER,
+          foippaCategory: FOIPPACategory.INDIVIDUAL,
+          isPrevious: false,
+          individualName: 'John Doe',
+          individualMailingAddress: '123 Test St',
+          individualTelephone: '123-456-7890',
+          individualEmail: 'john@test.com',
+          ownerSince: new Date(),
+          file: null as any,
+          fileUuid: 'file-uuid',
+        },
+      ];
 
       const result = await service.validateSubmission(cae, submitters, properties, responsibleParties);
 
@@ -271,19 +296,21 @@ describe('ComplianceAndEnforcementValidatorService', () => {
 
       const submitters: ComplianceAndEnforcementSubmitterDto[] = [];
       const properties: ComplianceAndEnforcementPropertyDto[] = [];
-      const responsibleParties: ComplianceAndEnforcementResponsibleParty[] = [{
-        uuid: 'party-uuid',
-        partyType: ResponsiblePartyType.PROPERTY_OWNER,
-        foippaCategory: FOIPPACategory.INDIVIDUAL,
-        isPrevious: false,
-        individualName: 'John Doe',
-        individualMailingAddress: '123 Test St',
-        individualTelephone: '123-456-7890',
-        individualEmail: 'john@test.com',
-        ownerSince: new Date(),
-        file: null as any,
-        fileUuid: 'file-uuid',
-      }];
+      const responsibleParties: ComplianceAndEnforcementResponsibleParty[] = [
+        {
+          uuid: 'party-uuid',
+          partyType: ResponsiblePartyType.PROPERTY_OWNER,
+          foippaCategory: FOIPPACategory.INDIVIDUAL,
+          isPrevious: false,
+          individualName: 'John Doe',
+          individualMailingAddress: '123 Test St',
+          individualTelephone: '123-456-7890',
+          individualEmail: 'john@test.com',
+          ownerSince: new Date(),
+          file: null as any,
+          fileUuid: 'file-uuid',
+        },
+      ];
 
       const result = await service.validateSubmission(cae, submitters, properties, responsibleParties);
 
@@ -302,24 +329,26 @@ describe('ComplianceAndEnforcementValidatorService', () => {
       });
 
       const submitters: ComplianceAndEnforcementSubmitterDto[] = [];
-      const properties: ComplianceAndEnforcementPropertyDto[] = [{
-        uuid: 'test-uuid',
-        civicAddress: '123 Test St',
-        legalDescription: 'Test legal description',
-        localGovernmentUuid: 'lg-uuid',
-        localGovernment: null as any,
-        regionCode: 'BC',
-        latitude: 49.2827,
-        longitude: -123.1207,
-        areaHectares: 10.5,
-        alrPercentage: 75.0,
-        ownershipTypeCode: 'SMPL',
-        pid: '123456789',
-        pin: null,
-        alcHistory: '',
-        certificateOfTitleUuid: null,
-        fileUuid: 'file-uuid',
-      }];
+      const properties: ComplianceAndEnforcementPropertyDto[] = [
+        {
+          uuid: 'test-uuid',
+          civicAddress: '123 Test St',
+          legalDescription: 'Test legal description',
+          localGovernmentUuid: 'lg-uuid',
+          localGovernment: null as any,
+          regionCode: 'BC',
+          latitude: 49.2827,
+          longitude: -123.1207,
+          areaHectares: 10.5,
+          alrPercentage: 75.0,
+          ownershipTypeCode: 'SMPL',
+          pid: '123456789',
+          pin: null,
+          alcHistory: '',
+          certificateOfTitleUuid: null,
+          fileUuid: 'file-uuid',
+        },
+      ];
       const responsibleParties: ComplianceAndEnforcementResponsibleParty[] = [];
 
       const result = await service.validateSubmission(cae, submitters, properties, responsibleParties);
@@ -338,37 +367,41 @@ describe('ComplianceAndEnforcementValidatorService', () => {
       });
 
       const submitters: ComplianceAndEnforcementSubmitterDto[] = [];
-      const properties: ComplianceAndEnforcementPropertyDto[] = [{
-        uuid: 'test-uuid',
-        civicAddress: '123 Test St',
-        legalDescription: 'Test legal description',
-        localGovernmentUuid: 'lg-uuid',
-        localGovernment: null as any,
-        regionCode: 'BC',
-        latitude: 49.2827,
-        longitude: -123.1207,
-        areaHectares: 10.5,
-        alrPercentage: 75.0,
-        ownershipTypeCode: 'SMPL',
-        pid: '123456789',
-        pin: null,
-        alcHistory: '',
-        certificateOfTitleUuid: null,
-        fileUuid: 'file-uuid',
-      }];
+      const properties: ComplianceAndEnforcementPropertyDto[] = [
+        {
+          uuid: 'test-uuid',
+          civicAddress: '123 Test St',
+          legalDescription: 'Test legal description',
+          localGovernmentUuid: 'lg-uuid',
+          localGovernment: null as any,
+          regionCode: 'BC',
+          latitude: 49.2827,
+          longitude: -123.1207,
+          areaHectares: 10.5,
+          alrPercentage: 75.0,
+          ownershipTypeCode: 'SMPL',
+          pid: '123456789',
+          pin: null,
+          alcHistory: '',
+          certificateOfTitleUuid: null,
+          fileUuid: 'file-uuid',
+        },
+      ];
 
-      const responsibleParties: ComplianceAndEnforcementResponsibleParty[] = [{
-        uuid: 'party-uuid',
-        partyType: ResponsiblePartyType.PROPERTY_OWNER,
-        foippaCategory: FOIPPACategory.INDIVIDUAL,
-        isPrevious: false,
-        individualName: 'John Doe',
-        individualMailingAddress: '123 Test St',
-        // Individual telephone and email are now optional
-        ownerSince: new Date(),
-        file: null as any,
-        fileUuid: 'file-uuid',
-      }];
+      const responsibleParties: ComplianceAndEnforcementResponsibleParty[] = [
+        {
+          uuid: 'party-uuid',
+          partyType: ResponsiblePartyType.PROPERTY_OWNER,
+          foippaCategory: FOIPPACategory.INDIVIDUAL,
+          isPrevious: false,
+          individualName: 'John Doe',
+          individualMailingAddress: '123 Test St',
+          // Individual telephone and email are now optional
+          ownerSince: new Date(),
+          file: null as any,
+          fileUuid: 'file-uuid',
+        },
+      ];
 
       const result = await service.validateSubmission(cae, submitters, properties, responsibleParties);
 
@@ -384,36 +417,40 @@ describe('ComplianceAndEnforcementValidatorService', () => {
       });
 
       const submitters: ComplianceAndEnforcementSubmitterDto[] = [];
-      const properties: ComplianceAndEnforcementPropertyDto[] = [{
-        uuid: 'test-uuid',
-        civicAddress: '123 Test St',
-        legalDescription: 'Test legal description',
-        localGovernmentUuid: 'lg-uuid',
-        localGovernment: null as any,
-        regionCode: 'BC',
-        latitude: 49.2827,
-        longitude: -123.1207,
-        areaHectares: 10.5,
-        alrPercentage: 75.0,
-        ownershipTypeCode: 'SMPL',
-        pid: '123456789',
-        pin: null,
-        alcHistory: '',
-        certificateOfTitleUuid: null,
-        fileUuid: 'file-uuid',
-      }];
+      const properties: ComplianceAndEnforcementPropertyDto[] = [
+        {
+          uuid: 'test-uuid',
+          civicAddress: '123 Test St',
+          legalDescription: 'Test legal description',
+          localGovernmentUuid: 'lg-uuid',
+          localGovernment: null as any,
+          regionCode: 'BC',
+          latitude: 49.2827,
+          longitude: -123.1207,
+          areaHectares: 10.5,
+          alrPercentage: 75.0,
+          ownershipTypeCode: 'SMPL',
+          pid: '123456789',
+          pin: null,
+          alcHistory: '',
+          certificateOfTitleUuid: null,
+          fileUuid: 'file-uuid',
+        },
+      ];
 
-      const responsibleParties: ComplianceAndEnforcementResponsibleParty[] = [{
-        uuid: 'party-uuid',
-        partyType: ResponsiblePartyType.PROPERTY_OWNER,
-        foippaCategory: FOIPPACategory.INDIVIDUAL,
-        isPrevious: false,
-        individualName: 'John Doe',
-        individualMailingAddress: '123 Test St',
-        ownerSince: new Date(),
-        file: null as any,
-        fileUuid: 'file-uuid',
-      }];
+      const responsibleParties: ComplianceAndEnforcementResponsibleParty[] = [
+        {
+          uuid: 'party-uuid',
+          partyType: ResponsiblePartyType.PROPERTY_OWNER,
+          foippaCategory: FOIPPACategory.INDIVIDUAL,
+          isPrevious: false,
+          individualName: 'John Doe',
+          individualMailingAddress: '123 Test St',
+          ownerSince: new Date(),
+          file: null as any,
+          fileUuid: 'file-uuid',
+        },
+      ];
 
       const result = await service.validateSubmission(cae, submitters, properties, responsibleParties);
 
@@ -429,47 +466,53 @@ describe('ComplianceAndEnforcementValidatorService', () => {
         allegedActivity: [AllegedActivity.BREACH_OF_CONDITION],
       });
 
-      const submitters: ComplianceAndEnforcementSubmitterDto[] = [{
-        uuid: 'submitter-uuid',
-        isAnonymous: false,
-        name: 'John Doe',
-        email: 'john@test.com',
-        telephoneNumber: '123-456-7890',
-        dateAdded: null,
-        affiliation: '',
-        additionalContactInformation: '',
-      }];
+      const submitters: ComplianceAndEnforcementSubmitterDto[] = [
+        {
+          uuid: 'submitter-uuid',
+          isAnonymous: false,
+          name: 'John Doe',
+          email: 'john@test.com',
+          telephoneNumber: '123-456-7890',
+          dateAdded: null,
+          affiliation: '',
+          additionalContactInformation: '',
+        },
+      ];
 
-      const properties: ComplianceAndEnforcementPropertyDto[] = [{
-        uuid: 'test-uuid',
-        civicAddress: '123 Test St',
-        legalDescription: 'Test legal description',
-        localGovernmentUuid: 'lg-uuid',
-        localGovernment: null as any,
-        regionCode: 'BC',
-        latitude: 49.2827,
-        longitude: -123.1207,
-        areaHectares: 10.5,
-        alrPercentage: 75.0,
-        ownershipTypeCode: 'SMPL',
-        pid: '123456789',
-        pin: null,
-        alcHistory: '',
-        certificateOfTitleUuid: null,
-        fileUuid: 'file-uuid',
-      }];
+      const properties: ComplianceAndEnforcementPropertyDto[] = [
+        {
+          uuid: 'test-uuid',
+          civicAddress: '123 Test St',
+          legalDescription: 'Test legal description',
+          localGovernmentUuid: 'lg-uuid',
+          localGovernment: null as any,
+          regionCode: 'BC',
+          latitude: 49.2827,
+          longitude: -123.1207,
+          areaHectares: 10.5,
+          alrPercentage: 75.0,
+          ownershipTypeCode: 'SMPL',
+          pid: '123456789',
+          pin: null,
+          alcHistory: '',
+          certificateOfTitleUuid: null,
+          fileUuid: 'file-uuid',
+        },
+      ];
 
-      const responsibleParties: ComplianceAndEnforcementResponsibleParty[] = [{
-        uuid: 'party-uuid',
-        partyType: ResponsiblePartyType.PROPERTY_OWNER,
-        foippaCategory: FOIPPACategory.INDIVIDUAL,
-        isPrevious: false,
-        individualName: 'John Doe',
-        individualMailingAddress: '123 Test St',
-        ownerSince: new Date(),
-        file: null as any,
-        fileUuid: 'file-uuid',
-      }];
+      const responsibleParties: ComplianceAndEnforcementResponsibleParty[] = [
+        {
+          uuid: 'party-uuid',
+          partyType: ResponsiblePartyType.PROPERTY_OWNER,
+          foippaCategory: FOIPPACategory.INDIVIDUAL,
+          isPrevious: false,
+          individualName: 'John Doe',
+          individualMailingAddress: '123 Test St',
+          ownerSince: new Date(),
+          file: null as any,
+          fileUuid: 'file-uuid',
+        },
+      ];
 
       const result = await service.validateSubmission(cae, submitters, properties, responsibleParties);
 

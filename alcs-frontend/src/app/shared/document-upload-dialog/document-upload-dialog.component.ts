@@ -2,6 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, Inject, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Subject } from 'rxjs';
 import { ToastService } from '../../services/toast/toast.service';
 import { DEFAULT_DOCUMENT_SOURCES, DOCUMENT_SOURCE, DOCUMENT_TYPE, DocumentTypeDto } from '../document/document.dto';
 import { FileHandle } from '../drag-drop-file/drag-drop-file.directive';
@@ -12,7 +13,6 @@ import {
   SelectableParcelDto,
   UpdateDocumentDto,
 } from './document-upload-dialog.dto';
-import { Subject } from 'rxjs';
 import { DocumentUploadDialogData } from './document-upload-dialog.interface';
 
 export enum VisibilityGroup {
@@ -24,7 +24,7 @@ export enum VisibilityGroup {
   selector: 'app-document-upload-dialog',
   templateUrl: './document-upload-dialog.component.html',
   styleUrls: ['./document-upload-dialog.component.scss'],
-    standalone: false
+  standalone: false,
 })
 export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
@@ -91,6 +91,10 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
       this.source.setValue(this.documentSources[0]);
     }
 
+    if (this.data.sourceDisabled) {
+      this.source.disable();
+    }
+
     if (this.data.existingDocument) {
       const document = this.data.existingDocument;
       this.title = 'Edit';
@@ -139,6 +143,10 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
       this.source.setValue(DOCUMENT_SOURCE.ALC);
       this.visibleToInternal.setValue(true);
       this.visibleToPublic.setValue(true);
+    }
+
+    if (this.data.typeDisabled) {
+      this.type.disable();
     }
   }
 
@@ -208,6 +216,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
       ownerUuid: this.ownerId.value ?? undefined,
       section: this.data.section ?? undefined,
       chronologyEntryUuid: this.data.chronologyEntryUuid ?? undefined,
+      inspectionUuid: this.data.inspectionUuid ?? undefined,
       parcelUuid: this.parcelId.value ?? undefined,
     };
 

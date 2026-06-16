@@ -1,7 +1,8 @@
 import { AutoMap } from 'automapper-classes';
-import { IsString, IsOptional, IsNumber, IsBoolean } from 'class-validator';
-import { ComplianceAndEnforcementDocumentDto } from '../document/document.dto';
+import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
 import { UserDto } from '../../../user/user.dto';
+import { ComplianceAndEnforcementDocumentDto } from '../document/document.dto';
+import { InspectionDto } from './inspection/inspection.dto';
 
 export class ComplianceAndEnforcementChronologyEntryDto {
   @AutoMap()
@@ -24,6 +25,9 @@ export class ComplianceAndEnforcementChronologyEntryDto {
 
   @AutoMap()
   documents: ComplianceAndEnforcementDocumentDto[];
+
+  @AutoMap()
+  inspections: InspectionDto[];
 }
 
 export class UpdateComplianceAndEnforcementChronologyEntryDto {
