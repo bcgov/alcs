@@ -21,9 +21,9 @@ export enum VisibilityGroup {
 }
 
 @Component({
-    selector: 'app-document-upload-dialog',
-    templateUrl: './document-upload-dialog.component.html',
-    styleUrls: ['./document-upload-dialog.component.scss'],
+  selector: 'app-document-upload-dialog',
+  templateUrl: './document-upload-dialog.component.html',
+  styleUrls: ['./document-upload-dialog.component.scss'],
     standalone: false
 })
 export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
@@ -436,7 +436,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
       docTypes.sort((a, b) => (a.label > b.label ? 1 : -1));
       this.documentTypes = docTypes.filter((type) => type.code !== DOCUMENT_TYPE.ORIGINAL_APPLICATION);
 
-      if (this.data.defaultDocumentType) {
+      if (this.type.value === null && this.data.defaultDocumentType) {
         this.type.setValue(this.data.defaultDocumentType);
       } else if (this.documentTypes.length === 1) {
         this.type.setValue(this.documentTypes[0].code);
