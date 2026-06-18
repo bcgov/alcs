@@ -1,0 +1,189 @@
+<h3>Chronology > {{ entryDateText() }} > ALC C&E Action > Inspection</h3>
+
+<form [formGroup]="form">
+  <div class="form-field-wrapper">
+    <mat-form-field appearance="outline">
+      <mat-label>Inspection Date</mat-label>
+      <input
+        matInput
+        (click)="datePicker.open()"
+        [matDatepicker]="datePicker"
+        name="date-submitted"
+        [required]="true"
+        formControlName="date"
+      />
+      <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+      <mat-datepicker #datePicker type="date"></mat-datepicker>
+    </mat-form-field>
+    @if (showErrors && form.controls.date.errors) {
+      <div>
+        @if (form.controls.date.errors['required']) {
+          <app-error-message message="This field is required"></app-error-message>
+        }
+      </div>
+    }
+  </div>
+
+  <div class="form-field-wrapper">
+    <mat-form-field appearance="outline">
+      <mat-label>Inspection Type</mat-label>
+      <mat-select panelClass="author-list-panel" [required]="true" formControlName="type">
+        @for (inspectionType of inspectionTypes; track inspectionType) {
+          <mat-option [value]="inspectionType"> {{ inspectionType }} </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    @if (showErrors && form.controls.type.errors) {
+      <div>
+        @if (form.controls.type.errors['required']) {
+          <app-error-message message="This field is required"></app-error-message>
+        }
+      </div>
+    }
+  </div>
+
+  <div class="form-field-wrapper">
+    <mat-form-field appearance="outline">
+      <mat-label>Officer</mat-label>
+      <mat-select panelClass="officer-list-panel" formControlName="officerUuid">
+        @for (officer of officers; track officer) {
+          <mat-option [value]="officer.uuid">
+            {{ officer.prettyName }}
+          </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    @if (showErrors && form.controls.officerUuid.errors) {
+      <div>
+        @if (form.controls.officerUuid.errors['required']) {
+          <app-error-message message="This field is required"></app-error-message>
+        }
+      </div>
+    }
+  </div>
+
+  <div class="form-field-wrapper">
+    <mat-form-field appearance="outline">
+      <mat-label>Alleged Activity</mat-label>
+      <mat-select panelClass="author-list-panel" [multiple]="true" [required]="true" formControlName="allegedActivity">
+        @for (activity of allegedActivities; track activity) {
+          <mat-option [value]="activity"> {{ activity }} </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    @if (showErrors && form.controls.allegedActivity.errors) {
+      <div>
+        @if (form.controls.allegedActivity.errors['required']) {
+          <app-error-message message="This field is required"></app-error-message>
+        }
+      </div>
+    }
+  </div>
+
+  <h6 class="full-width">Attendees</h6>
+
+  <div class="attendees full-width">
+    <div formArrayName="attendees" class="attendees-table">
+      <div class="attendees-heading">#</div>
+      <div class="attendees-heading">Name*</div>
+      <div class="attendees-heading">Organization</div>
+      <div class="attendees-heading">Actions</div>
+
+      @for (attendeeForm of form.controls.attendees.controls; track attendeeForm; let i = $index) {
+        <div [formGroupName]="i" class="attendee">
+          <div class="attendee-number">
+            {{ i + 1 }}
+          </div>
+
+          <div class="form-field-wrapper">
+            <mat-form-field appearance="outline">
+              <input type="text" matInput [required]="true" formControlName="name" />
+            </mat-form-field>
+            @if (showErrors && attendeeForm.controls.name.errors) {
+              <div>
+                @if (attendeeForm.controls.name.errors['required']) {
+                  <app-error-message message="This field is required"></app-error-message>
+                }
+              </div>
+            }
+          </div>
+
+          <div class="form-field-wrapper">
+            <mat-form-field appearance="outline">
+              <input type="text" matInput [required]="true" formControlName="organization" />
+            </mat-form-field>
+            @if (showErrors && attendeeForm.controls.organization.errors) {
+              <div>
+                @if (attendeeForm.controls.organization.errors['required']) {
+                  <app-error-message message="This field is required"></app-error-message>
+                }
+              </div>
+            }
+          </div>
+
+          <button mat-icon-button type="button" class="attendee-delete-button" (click)="removeAttendee(i)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      }
+    </div>
+
+    <button mat-flat-button color="accent" type="button" class="add-attendee-button" (click)="addAttendee()">
+      + Add Attendee
+    </button>
+  </div>
+
+  <div class="form-field-wrapper full-width">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Observations/Comments</mat-label>
+      <textarea matInput formControlName="comments" rows="3" [required]="true"></textarea>
+    </mat-form-field>
+    @if (showErrors && form.controls.comments.errors) {
+      <div>
+        @if (form.controls.comments.errors['required']) {
+          <app-error-message message="This field is required"></app-error-message>
+        }
+      </div>
+    }
+  </div>
+
+  <h4 class="full-width">Inspection Report</h4>
+
+  <app-compliance-and-enforcement-inspection-reports
+    class="full-width"
+    [documents]="inspection()?.documents ?? []"
+    (edit)="openEditDocumentDialog($event)"
+    (delete)="confirmDocumentDelete($event)"
+  />
+
+  <div class="report-add-button-wrapper full-width">
+    <button
+      mat-flat-button
+      color="accent"
+      type="button"
+      [disabled]="!uuid"
+      (click)="openAddCorrespondenceDialog(entryUuid, uuid)"
+      class="add-correspondence-button"
+    >
+      + Add Report
+    </button>
+    @if (showErrors && !inspection()?.documents?.length) {
+      <div>
+        <app-error-message message="This field is required"></app-error-message>
+      </div>
+    }
+  </div>
+</form>
+
+<div class="actions">
+  <button mat-stroked-button color="warn" type="button" class="delete-button" (click)="onDeleteButtonClick()">
+    Delete Inspection
+  </button>
+  <button mat-stroked-button color="primary" type="button" class="save-button" (click)="saveAndExit(true)">
+    Save &amp; Exit
+  </button>
+  <button mat-flat-button color="primary" type="button" class="finish-button" (click)="onFinishButtonClick()">
+    Finish
+  </button>
+</div>

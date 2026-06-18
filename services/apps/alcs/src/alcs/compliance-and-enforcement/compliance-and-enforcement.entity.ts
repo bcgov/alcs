@@ -2,25 +2,12 @@ import { AutoMap } from 'automapper-classes';
 import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { Base } from '../../common/entities/base.entity';
 import { FILE_NUMBER_SEQUENCE } from '../../file-number/file-number.constants';
-import { ComplianceAndEnforcementSubmitter } from './submitter/submitter.entity';
-import { ComplianceAndEnforcementProperty } from './property/property.entity';
-import { ComplianceAndEnforcementResponsibleParty } from './responsible-parties/responsible-party.entity';
 import { User } from '../../user/user.entity';
 import { ComplianceAndEnforcementChronologyEntry } from './chronology/chronology.entity';
-
-export enum InitialSubmissionType {
-  COMPLAINT = 'Complaint',
-  REFERRAL = 'Referral',
-}
-
-export enum AllegedActivity {
-  BREACH_OF_CONDITION = 'Breach of Condition',
-  EXTRACTION = 'Extraction',
-  FILL = 'Fill',
-  NON_FARM_USE = 'Non-Farm Use',
-  OTHER = 'Other',
-  RESIDENCE = 'Residence',
-}
+import { AllegedActivity, InitialSubmissionType } from './compliance-and-enforcement.enum';
+import { ComplianceAndEnforcementProperty } from './property/property.entity';
+import { ComplianceAndEnforcementResponsibleParty } from './responsible-parties/responsible-party.entity';
+import { ComplianceAndEnforcementSubmitter } from './submitter/submitter.entity';
 
 @Entity({
   comment: 'Compliance and enforcement file',

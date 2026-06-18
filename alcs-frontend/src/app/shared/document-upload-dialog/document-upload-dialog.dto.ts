@@ -12,6 +12,7 @@ export interface UpdateDocumentDto {
   file?: File;
   section?: Section;
   chronologyEntryUuid?: string;
+  inspectionUuid?: string;
 }
 
 export interface CreateDocumentDto extends UpdateDocumentDto {

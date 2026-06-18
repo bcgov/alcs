@@ -1,13 +1,13 @@
 import { AutoMap } from 'automapper-classes';
-import { IsNumber, IsString, IsEnum, IsOptional, IsArray, ValidateNested } from 'class-validator';
-import { AllegedActivity, InitialSubmissionType } from './compliance-and-enforcement.entity';
+import { Type } from 'class-transformer';
+import { IsArray, IsEnum, IsNumber, IsOptional, IsString, ValidateNested } from 'class-validator';
+import { UserDto } from '../../user/user.dto';
+import { AllegedActivity, InitialSubmissionType } from './compliance-and-enforcement.enum';
+import { ComplianceAndEnforcementPropertyDto } from './property/property.dto';
 import {
   ComplianceAndEnforcementSubmitterDto,
   UpdateComplianceAndEnforcementSubmitterDto,
 } from './submitter/submitter.dto';
-import { Type } from 'class-transformer';
-import { ComplianceAndEnforcementPropertyDto } from './property/property.dto';
-import { UserDto } from '../../user/user.dto';
 
 export class ComplianceAndEnforcementDto {
   @AutoMap()

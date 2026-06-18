@@ -1,9 +1,10 @@
 import { AutoMap } from 'automapper-classes';
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { ComplianceAndEnforcement } from '../compliance-and-enforcement.entity';
-import { ComplianceAndEnforcementDocument } from '../document/document.entity';
 import { Auditable } from '../../../common/entities/audit.entity';
 import { User } from '../../../user/user.entity';
+import { ComplianceAndEnforcement } from '../compliance-and-enforcement.entity';
+import { ComplianceAndEnforcementDocument } from '../document/document.entity';
+import { ComplianceAndEnforcementChronologyInspection } from './inspection/inspection.entity';
 
 @Entity({
   comment: 'Compliance and enforcement chronology entry',
@@ -44,4 +45,9 @@ export class ComplianceAndEnforcementChronologyEntry extends Auditable {
   @AutoMap()
   @Column({ type: 'text', nullable: true })
   nrisInspectionId: string | null;
+
+  @OneToMany(() => ComplianceAndEnforcementChronologyInspection, (inspection) => inspection.entry, {
+    onDelete: 'CASCADE',
+  })
+  inspections: ComplianceAndEnforcementChronologyInspection[];
 }

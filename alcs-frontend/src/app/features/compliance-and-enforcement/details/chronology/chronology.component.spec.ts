@@ -1,5 +1,4 @@
 import { HttpClient } from '@angular/common/http';
-import { EventEmitter } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -21,6 +20,7 @@ import { ToastService } from '../../../../services/toast/toast.service';
 import { UserDto } from '../../../../services/user/user.dto';
 import { UserService } from '../../../../services/user/user.service';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
+import { findFileNumberInRouteTree } from '../../../../shared/utils/routing';
 import { ComplianceAndEnforcementChronologyComponent } from './chronology.component';
 
 describe('ComplianceAndEnforcementChronologyComponent', () => {
@@ -128,7 +128,6 @@ describe('ComplianceAndEnforcementChronologyComponent', () => {
   describe('ngOnInit', () => {
     it('should load file from observable', () => {
       jest.spyOn(mockActivatedRoute.snapshot.paramMap, 'get').mockReturnValue('file-number');
-      jest.spyOn(mockChronologyService, 'entriesByFileId').mockReturnValue(of([]));
       jest.spyOn(mockUserService, 'getComplianceAndEnforcementOfficers').mockResolvedValue([]);
 
       mockFileSubject.next(mockFile);
@@ -139,7 +138,6 @@ describe('ComplianceAndEnforcementChronologyComponent', () => {
 
     it('should load current user profile', () => {
       jest.spyOn(mockActivatedRoute.snapshot.paramMap, 'get').mockReturnValue('file-number');
-      jest.spyOn(mockChronologyService, 'entriesByFileId').mockReturnValue(of([]));
       jest.spyOn(mockUserService, 'getComplianceAndEnforcementOfficers').mockResolvedValue([]);
 
       mockUserProfileSubject.next(mockUser);
@@ -158,7 +156,6 @@ describe('ComplianceAndEnforcementChronologyComponent', () => {
 
     it('should create a draft entry successfully', async () => {
       jest.spyOn(mockChronologyService, 'createEntry').mockReturnValue(of(mockChronologyEntryDto));
-      jest.spyOn(mockChronologyService, 'entriesByFileId').mockReturnValue(of([]));
       jest.spyOn(mockUserService, 'getComplianceAndEnforcementOfficers').mockResolvedValue([]);
       component.file = mockFile;
       component.currentUserUuid = 'user-uuid';
@@ -170,11 +167,15 @@ describe('ComplianceAndEnforcementChronologyComponent', () => {
     });
 
     it('should show error when file uuid is missing', async () => {
+      // Suppress error
+      const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
       component.file = undefined;
 
       await component.createDraftEntry();
 
       expect(mockToastService.showErrorToast).toHaveBeenCalledWith('Failed to create draft entry');
+
+      errorSpy.mockRestore();
     });
 
     it('should handle error when creating draft entry fails', async () => {
@@ -188,104 +189,45 @@ describe('ComplianceAndEnforcementChronologyComponent', () => {
 
   describe('hasDraftEntries', () => {
     it('should return true when draft entries exist', () => {
-      component.entries = [
-        { isDraft: true, uuid: '1' },
-        { isDraft: false, uuid: '2' },
-      ] as ComplianceAndEnforcementChronologyEntryDto[];
+      mockChronologyService.entriesByUuid.mockReturnValue(
+        new Map<string, ComplianceAndEnforcementChronologyEntryDto>([
+          ['1', { uuid: '1', isDraft: true } as ComplianceAndEnforcementChronologyEntryDto],
+          ['2', { uuid: '2', isDraft: false } as ComplianceAndEnforcementChronologyEntryDto],
+        ]),
+      );
 
       expect(component.hasDraftEntries()).toBe(true);
     });
 
     it('should return false when no draft entries exist', () => {
-      component.entries = [
-        { isDraft: false, uuid: '1' },
-        { isDraft: false, uuid: '2' },
-      ] as ComplianceAndEnforcementChronologyEntryDto[];
+      mockChronologyService.entriesByUuid.mockReturnValue(
+        new Map<string, ComplianceAndEnforcementChronologyEntryDto>([
+          ['1', { uuid: '1', isDraft: false } as ComplianceAndEnforcementChronologyEntryDto],
+          ['2', { uuid: '2', isDraft: false } as ComplianceAndEnforcementChronologyEntryDto],
+        ]),
+      );
 
       expect(component.hasDraftEntries()).toBe(false);
     });
 
     it('should return false when entries array is empty', () => {
-      component.entries = [];
+      mockChronologyService.entriesByUuid.mockReturnValue(
+        new Map<string, ComplianceAndEnforcementChronologyEntryDto>([]),
+      );
 
       expect(component.hasDraftEntries()).toBe(false);
     });
   });
 
-  describe('setDraft', () => {
-    beforeEach(() => {
-      component.fileNumber = 'file-number';
-    });
-
-    it('should set entry as draft successfully', async () => {
-      jest.spyOn(mockChronologyService, 'updateEntry').mockReturnValue(of(mockChronologyEntryDto));
-      jest.spyOn(mockChronologyService, 'entriesByFileId').mockReturnValue(of([]));
-      jest.spyOn(mockUserService, 'getComplianceAndEnforcementOfficers').mockResolvedValue([]);
-
-      await component.setDraft('entry-uuid');
-
-      expect(mockChronologyService.updateEntry).toHaveBeenCalledWith('entry-uuid', { isDraft: true });
-    });
-
-    it('should handle error when setting draft fails', async () => {
-      jest.spyOn(mockChronologyService, 'updateEntry').mockReturnValue(throwError(() => new Error('API error')));
-
-      await component.setDraft('entry-uuid');
-
-      expect(mockToastService.showErrorToast).toHaveBeenCalledWith('Failed to set draft entry.');
-    });
-  });
-
-  describe('completeDraftEntry', () => {
-    beforeEach(() => {
-      component.fileNumber = 'file-number';
-    });
-
-    it('should complete draft entry successfully', async () => {
-      jest.spyOn(mockChronologyService, 'updateEntry').mockReturnValue(of(mockChronologyEntryDto));
-      jest.spyOn(mockChronologyService, 'entriesByFileId').mockReturnValue(of([]));
-      jest.spyOn(mockUserService, 'getComplianceAndEnforcementOfficers').mockResolvedValue([]);
-
-      await component.completeDraftEntry({ uuid: 'entry-uuid', updateDto: mockUpdateChronologyEntryDto });
-
-      expect(mockChronologyService.updateEntry).toHaveBeenCalledWith('entry-uuid', mockUpdateChronologyEntryDto);
-      expect(mockToastService.showSuccessToast).toHaveBeenCalledWith('Entry completed successfully.');
-    });
-
-    it('should handle error when completing draft entry fails', async () => {
-      jest.spyOn(mockChronologyService, 'updateEntry').mockReturnValue(throwError(() => new Error('API error')));
-
-      await component.completeDraftEntry({ uuid: 'entry-uuid', updateDto: {} });
-
-      expect(mockToastService.showErrorToast).toHaveBeenCalledWith('Failed to complete draft entry.');
-    });
-  });
-
-  describe('confirmEntryDelete', () => {
-    beforeEach(() => {
-      component.fileNumber = 'file-number';
-    });
-
-    it('should not delete entry when user declines', (done) => {
-      jest.spyOn(mockConfirmationDialogService, 'openDialog').mockReturnValue(new EventEmitter<boolean>(false));
-      jest.spyOn(mockChronologyService, 'deleteEntry').mockResolvedValue(mockChronologyEntryDto);
-
-      component.confirmEntryDelete('entry-uuid');
-
-      setTimeout(() => {
-        expect(mockChronologyService.deleteEntry).not.toHaveBeenCalled();
-        done();
-      }, 0);
-    });
-  });
-
   describe('datesInUse', () => {
     it('should return dates of all entries except excluded', () => {
-      component.entries = [
-        { uuid: '1', date: 1000, isDraft: false },
-        { uuid: '2', date: 2000, isDraft: false },
-        { uuid: '3', date: 3000, isDraft: false },
-      ] as ComplianceAndEnforcementChronologyEntryDto[];
+      mockChronologyService.entriesByUuid.mockReturnValue(
+        new Map<string, ComplianceAndEnforcementChronologyEntryDto>([
+          ['1', { uuid: '1', date: 1000, isDraft: false } as ComplianceAndEnforcementChronologyEntryDto],
+          ['2', { uuid: '2', date: 2000, isDraft: false } as ComplianceAndEnforcementChronologyEntryDto],
+          ['3', { uuid: '3', date: 3000, isDraft: false } as ComplianceAndEnforcementChronologyEntryDto],
+        ]),
+      );
 
       const result = component.datesInUse('2');
 
@@ -293,10 +235,12 @@ describe('ComplianceAndEnforcementChronologyComponent', () => {
     });
 
     it('should filter out null dates', () => {
-      component.entries = [
-        { uuid: '1', date: 1000, isDraft: false },
-        { uuid: '2', date: null, isDraft: false },
-      ] as ComplianceAndEnforcementChronologyEntryDto[];
+      mockChronologyService.entriesByUuid.mockReturnValue(
+        new Map<string, ComplianceAndEnforcementChronologyEntryDto>([
+          ['1', { uuid: '1', date: 1000, isDraft: false } as ComplianceAndEnforcementChronologyEntryDto],
+          ['2', { uuid: '2', date: null, isDraft: false } as ComplianceAndEnforcementChronologyEntryDto],
+        ]),
+      );
 
       const result = component.datesInUse('3');
 
@@ -309,7 +253,7 @@ describe('ComplianceAndEnforcementChronologyComponent', () => {
       jest.spyOn(mockActivatedRoute.snapshot.paramMap, 'get').mockReturnValue('file-number');
       Object.defineProperty(mockActivatedRoute, 'parent', { value: null });
 
-      const result = component.findFileNumberInRouteTree(mockActivatedRoute);
+      const result = findFileNumberInRouteTree(mockActivatedRoute);
 
       expect(result).toBe('file-number');
     });
@@ -321,7 +265,7 @@ describe('ComplianceAndEnforcementChronologyComponent', () => {
       jest.spyOn(mockActivatedRoute.snapshot.paramMap, 'get').mockReturnValue(null);
       Object.defineProperty(mockActivatedRoute, 'parent', { value: parentRoute });
 
-      const result = component.findFileNumberInRouteTree(mockActivatedRoute);
+      const result = findFileNumberInRouteTree(mockActivatedRoute);
 
       expect(result).toBe('file-number');
     });
@@ -330,7 +274,7 @@ describe('ComplianceAndEnforcementChronologyComponent', () => {
       jest.spyOn(mockActivatedRoute.snapshot.paramMap, 'get').mockReturnValue(null);
       Object.defineProperty(mockActivatedRoute, 'parent', { value: null });
 
-      expect(() => component.findFileNumberInRouteTree(mockActivatedRoute)).toThrow('File number not found in route');
+      expect(() => findFileNumberInRouteTree(mockActivatedRoute)).toThrow('File number not found in route');
     });
   });
 

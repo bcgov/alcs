@@ -35,7 +35,7 @@
           type="button"
           class="edit-button"
           [disabled]="!entry?.uuid || editDisabled"
-          (click)="edit.emit(entry?.uuid!)"
+          (click)="setDraft(entry?.uuid!)"
         >
           <mat-icon>edit</mat-icon>
         </button>
@@ -74,13 +74,59 @@
         <div class="description-view">{{ entry?.description }}</div>
       }
 
-      @if (entry?.isDraft) {
-        <div class="c-and-e-action-list"><strong>C&E Action:</strong> <span class="no-data"> No Data</span></div>
-      }
+      <div class="c-and-e-action-list">
+        <strong>C&E Action:</strong>
+        @if (sortedInspections().length > 0) {
+          @for (inspection of sortedInspections(); track inspection) {
+            <div class="c-and-e-action-wrapper">
+              <div class="c-and-e-action">
+                @if (inspection.isDraft) {
+                  DRAFT
+                }
+                {{ inspection.type }} Inspection
+                @if (entry?.isDraft) {
+                  <button
+                    mat-icon-button
+                    class="action-button inspection-edit-button"
+                    type="button"
+                    (click)="onEditInspectionClick(inspection.uuid)"
+                    touch-target="none"
+                  >
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button
+                    mat-icon-button
+                    class="action-button inspection-delete-button"
+                    type="button"
+                    (click)="confirmInspectionDelete(inspection.uuid)"
+                    touch-target="none"
+                  >
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                }
+              </div>
+              @if (showErrors && inspection.isDraft) {
+                <div>
+                  <app-error-message message="Inspection must be finalized"></app-error-message>
+                </div>
+              }
+            </div>
+          }
+        } @else {
+          <span class="no-data"> No Data</span>
+        }
+      </div>
 
       @if (entry?.isDraft) {
         <div class="add-component-actions">
-          <button mat-stroked-button color="primary" type="button" [disabled]="!entry?.uuid" class="add-action-button">
+          <button
+            mat-stroked-button
+            color="primary"
+            type="button"
+            [disabled]="!entry?.uuid"
+            class="add-action-button"
+            [matMenuTriggerFor]="decisionComponentMenu"
+          >
             + ALC C&E Action
             <mat-icon>arrow_drop_down</mat-icon>
           </button>
@@ -88,12 +134,16 @@
             mat-stroked-button
             type="button"
             [disabled]="!entry?.uuid"
-            (click)="addCorrespondence.emit(entry?.uuid!)"
+            (click)="openAddCorrespondenceDialog(entry?.uuid!)"
             class="add-correspondence-button"
           >
             + Correspondence
           </button>
         </div>
+
+        <mat-menu xPosition="before" #decisionComponentMenu="matMenu">
+          <button type="button" mat-menu-item (click)="onAddInspectionClick()">Inspection</button>
+        </mat-menu>
       }
 
       <!-- Documents -->
@@ -106,7 +156,7 @@
             color="warn"
             type="button"
             [disabled]="!entry?.uuid"
-            (click)="delete.emit(entry?.uuid!)"
+            (click)="confirmEntryDelete(this.entry?.uuid)"
           >
             Delete
           </button>
