@@ -41,7 +41,13 @@ export class ComplianceAndEnforcementChronologyInspection {
   officer!: User;
 
   @AutoMap()
-  @Column({ type: 'enum', enum: AllegedActivity, array: true, default: [] })
+  @Column({
+    type: 'enum',
+    enum: AllegedActivity,
+    enumName: 'compliance_and_enforcement_alleged_activity_enum',
+    array: true,
+    default: [],
+  })
   allegedActivity!: AllegedActivity[];
 
   @Column({ type: 'jsonb', default: () => "'[]'::jsonb" })
