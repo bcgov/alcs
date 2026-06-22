@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
 import { firstValueFrom, map, Observable, tap } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
+import { downloadDocxFile } from '../../../../shared/utils/file';
 import { InspectionDto, UpdateInspectionDto } from './inspection.dto';
 
 export interface InspectionOptions {
@@ -69,5 +70,15 @@ export class ComplianceAndEnforcementChronologyInspectionService {
         });
       }),
     );
+  }
+
+  async generateReportTemplate(uuid: string) {
+    const httpOptions = {
+      responseType: 'blob' as 'json',
+    };
+
+    const data = await firstValueFrom(this.http.get(`${this.url}/report-template-data/${uuid}`, httpOptions));
+
+    await downloadDocxFile('inspection-report-template', data);
   }
 }

@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { CdogsModule } from '../../../../../libs/common/src/cdogs/cdogs.module';
 import { DocumentCode } from '../../document/document-code.entity';
 import { DocumentModule } from '../../document/document.module';
 import { ComplianceAndEnforcementChronologyProfile } from './chronology/chronology.automapper.profile';
@@ -48,6 +49,7 @@ import { ComplianceAndEnforcementSubmitterService } from './submitter/submitter.
       ComplianceAndEnforcementChronologyInspection,
       DocumentCode,
     ]),
+    CdogsModule,
     DocumentModule,
   ],
   controllers: [

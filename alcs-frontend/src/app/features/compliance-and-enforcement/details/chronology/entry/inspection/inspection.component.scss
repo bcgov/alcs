@@ -56,3 +56,18 @@ form {
   align-items: center;
   gap: 12px;
 }
+
+.generate-report-template-wrapper {
+  display: flex;
+  align-items: top;
+  gap: 12px;
+}
+
+.generate-report-template-help-text {
+  font-size: 12px;
+}
+
+.generate-report-template-button {
+  --mat-button-filled-container-color: #ba5a27;
+  flex-shrink: 0;
+}

@@ -1,9 +1,11 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Req, Res, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
+import { FastifyReply } from 'fastify';
 import { AUTH_ROLE } from '../../../../common/authorization/roles';
 import { RolesGuard } from '../../../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../../../common/authorization/roles.decorator';
+import { User } from '../../../../user/user.entity';
 import { InspectionDto, UpdateInspectionDto } from './inspection.dto';
 import { ComplianceAndEnforcementChronologyInspectionService } from './inspection.service';
 
@@ -38,5 +40,16 @@ export class ComplianceAndEnforcementChronologyInspectionController {
   async delete(@Param('uuid') uuid: string): Promise<{ uuid: string }> {
     await this.service.delete(uuid);
     return { uuid };
+  }
+
+  @Get('/report-template-data/:uuid')
+  @UserRoles(AUTH_ROLE.ADMIN, AUTH_ROLE.C_AND_E)
+  async reportTemplateData(@Req() req, @Param('uuid') uuid: string, @Res() response: FastifyReply) {
+    const user = req.user as User;
+
+    const document = await this.service.reportTemplateData(uuid, user);
+
+    response.type('application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+    response.send(document.data);
   }
 }
