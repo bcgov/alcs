@@ -247,7 +247,7 @@ export class ComplianceAndEnforcementChronologyEntryInspectionComponent implemen
         }
 
         try {
-          await this.service.delete(this.uuid);
+          this.service.delete(this.uuid).subscribe();
           this.toastService.showSuccessToast('Entry deleted successfully.');
           this.router.navigate(['../../../../..'], { relativeTo: this.route });
         } catch (error) {
