@@ -184,6 +184,57 @@ describe('ComplianceAndEnforcementChronologyInspectionService', () => {
     await expect(service.delete('missing')).rejects.toBeInstanceOf(ServiceNotFoundException);
   });
 
+  it('should generate report template data document', async () => {
+    const inspectionEntity: any = {
+      uuid: 'r-1',
+      entry: {
+        file: {
+          fileNumber: 'FILE-123',
+          properties: [{ localGovernment: 'LG' }],
+        },
+      },
+    };
+
+    // stub mapper to avoid requiring real automapper mappings in unit test
+    const propertyDto = { localGovernment: 'LG' } as any;
+    const inspectionDto = { uuid: 'r-1' } as any;
+    (service as any).mapper = {
+      map: jest.fn()
+        .mockImplementationOnce(() => propertyDto)
+        .mockImplementationOnce(() => inspectionDto),
+    };
+
+    mockRepository.findOne.mockResolvedValue(inspectionEntity as any);
+
+    const document = { data: Buffer.from('doc-bytes') } as any;
+    mockDocumentGenerationService.generateDocument.mockReturnValue(document as any);
+
+    const result = await service.reportTemplateData('r-1', { uuid: 'user-1' } as any);
+
+    expect(mockRepository.findOne).toHaveBeenCalledWith(
+      expect.objectContaining({ where: { uuid: 'r-1' }, relations: expect.any(Object) }),
+    );
+
+    const expectedTemplatePath = `${config.get<string>('CDOGS.TEMPLATE_FOLDER')}/inspection-report/inspection-report-template.docx`;
+
+    expect(mockDocumentGenerationService.generateDocument).toHaveBeenCalledWith(
+      'inspection-report-template',
+      expectedTemplatePath,
+      expect.objectContaining({ fileNumber: 'FILE-123' }),
+      'docx',
+    );
+
+    expect(result).toBe(document);
+  });
+
+  it('should throw ServiceNotFoundException when report data missing', async () => {
+    mockRepository.findOne.mockResolvedValue(null as any);
+
+    await expect(service.reportTemplateData('missing', { uuid: 'user' } as any)).rejects.toBeInstanceOf(
+      ServiceNotFoundException,
+    );
+  });
+
   afterAll(() => {
     jest.useRealTimers();
   });
