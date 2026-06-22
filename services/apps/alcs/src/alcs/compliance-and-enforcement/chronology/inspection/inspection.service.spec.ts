@@ -6,6 +6,7 @@ import { classes } from 'automapper-classes';
 import { AutomapperModule } from 'automapper-nestjs';
 import * as config from 'config';
 import { Repository } from 'typeorm';
+import { CdogsService } from '../../../../../../../libs/common/src/cdogs/cdogs.service';
 import {
   ServiceConflictException,
   ServiceNotFoundException,
@@ -31,6 +32,8 @@ describe('ComplianceAndEnforcementChronologyInspectionService', () => {
 
   let mockUserService: DeepMocked<UserService>;
 
+  let mockDocumentGenerationService: DeepMocked<CdogsService>;
+
   beforeEach(async () => {
     mockRepository = createMock<Repository<ComplianceAndEnforcementChronologyInspection>>();
 
@@ -41,6 +44,7 @@ describe('ComplianceAndEnforcementChronologyInspectionService', () => {
     mockComplianceAndEnforcementRepository = createMock<Repository<ComplianceAndEnforcement>>();
 
     mockUserService = createMock<UserService>();
+    mockDocumentGenerationService = createMock<CdogsService>();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -74,6 +78,10 @@ describe('ComplianceAndEnforcementChronologyInspectionService', () => {
         {
           provide: UserService,
           useValue: mockUserService,
+        },
+        {
+          provide: CdogsService,
+          useValue: mockDocumentGenerationService,
         },
         {
           provide: CONFIG_TOKEN,
