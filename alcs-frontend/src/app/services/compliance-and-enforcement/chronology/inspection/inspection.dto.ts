@@ -1,6 +1,7 @@
 import { UserDto } from '../../../user/user.dto';
 import { AllegedActivity } from '../../compliance-and-enforcement.dto';
 import { ComplianceAndEnforcementDocumentDto } from '../../documents/document.dto';
+import { ComplianceAndEnforcementPropertyDto } from '../../property/property.dto';
 
 export enum InspectionType {
   INITIAL = 'Initial',
@@ -40,4 +41,10 @@ export interface UpdateInspectionDto {
   attendees?: UpdateAttendeeDto[];
   comments?: string;
   entryFileNumber?: string;
+}
+
+export interface InspectionReportDto {
+  fileNumber: string;
+  inspection: InspectionDto;
+  property: ComplianceAndEnforcementPropertyDto;
 }

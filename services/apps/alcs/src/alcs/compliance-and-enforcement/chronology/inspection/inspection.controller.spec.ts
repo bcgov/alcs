@@ -83,4 +83,25 @@ describe('ComplianceAndEnforcementController', () => {
     expect(result).toEqual({ uuid: 'del-1' });
     expect(mockComplianceAndEnforcementInspectionService.delete).toHaveBeenCalledWith('del-1');
   });
+
+  it('should call reportTemplateData and stream document', async () => {
+    const mockUser = { uuid: 'user-1' } as any;
+    const mockReq = { user: mockUser } as any;
+
+    const document = { data: Buffer.from('doc-bytes') } as any;
+    mockComplianceAndEnforcementInspectionService.reportTemplateData.mockResolvedValue(document);
+
+    const mockResponse: any = {
+      type: jest.fn().mockReturnThis(),
+      send: jest.fn(),
+    };
+
+    await controller.reportTemplateData(mockReq, 'ins-123', mockResponse);
+
+    expect(mockComplianceAndEnforcementInspectionService.reportTemplateData).toHaveBeenCalledWith('ins-123', mockUser);
+    expect(mockResponse.type).toHaveBeenCalledWith(
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    );
+    expect(mockResponse.send).toHaveBeenCalledWith(document.data);
+  });
 });
