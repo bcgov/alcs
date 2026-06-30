@@ -131,8 +131,8 @@ export class EmailService {
     try {
       if (this.config.get<string>('CHES.MODE') !== 'production') {
         this.logger.log(
-          { to, body, subject, cc, bcc },
           'EmailService did not send the email. Set CHES.MODE to production if you need to send an email.',
+          { to, body, subject, cc, bcc },
         );
         return false;
       }
@@ -163,7 +163,7 @@ export class EmailService {
           },
         ),
       );
-      this.logger.debug({ to, from, subject }, `Email sent`);
+      this.logger.debug('Email sent', { to, from, subject });
       await this.repository.save(
         new EmailStatus({
           recipients: [...to, ...cc, ...bcc].join(', '),
@@ -176,7 +176,7 @@ export class EmailService {
       );
       return true;
     } catch (e) {
-      this.logger.error(e, 'Failed to Send Email');
+      this.logger.error('Failed to Send Email', e);
 
       let errorMessage = e.message;
       if (e.response) {
