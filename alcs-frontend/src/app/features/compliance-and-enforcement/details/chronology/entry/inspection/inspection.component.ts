@@ -414,6 +414,14 @@ export class ComplianceAndEnforcementChronologyEntryInspectionComponent implemen
       });
   }
 
+  generateReportTemplate() {
+    if (!this.uuid) {
+      return;
+    }
+
+    this.service.generateReportTemplate(this.uuid);
+  }
+
   ngOnDestroy(): void {
     this.$destroy.next();
     this.$destroy.complete();

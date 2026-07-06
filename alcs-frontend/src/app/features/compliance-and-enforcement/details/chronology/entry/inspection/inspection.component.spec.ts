@@ -267,6 +267,24 @@ describe('ComplianceAndEnforcementChronologyComponent', () => {
     });
   });
 
+  describe('generateReportTemplate', () => {
+    it('should not call service when uuid is missing', () => {
+      component.uuid = undefined;
+
+      component.generateReportTemplate();
+
+      expect(mockService.generateReportTemplate).not.toHaveBeenCalled();
+    });
+
+    it('should call service.generateReportTemplate when uuid is set', () => {
+      component.uuid = 'i-123';
+
+      component.generateReportTemplate();
+
+      expect(mockService.generateReportTemplate).toHaveBeenCalledWith('i-123');
+    });
+  });
+
   describe('ngOnDestroy', () => {
     it('should complete destroy subject', () => {
       const nextSpy = jest.spyOn(component.$destroy, 'next');
