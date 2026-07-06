@@ -331,7 +331,7 @@ export class ComplianceAndEnforcementChronologyEntryInspectionComponent implemen
     return dto;
   }
 
-  openAddCorrespondenceDialog(entryUuid: string | undefined, inspectionUuid: string | undefined): void {
+  openAddReportDialog(entryUuid: string | undefined, inspectionUuid: string | undefined): void {
     this.openDocumentDialog({
       chronologyEntryUuid: entryUuid,
       inspectionUuid: inspectionUuid,

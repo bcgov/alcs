@@ -1,10 +1,11 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { ApplicationDecisionConditionDateDto } from '../../../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
-import { NoticeOfIntentDecisionConditionDateDto } from '../../../../../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision.dto';
-import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 import moment, { Moment } from 'moment';
+import { ApplicationDecisionConditionDateDto } from '../../../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
+import { NoticeDueDateDto } from '../../../../../../../../services/compliance-and-enforcement/chronology/notice/notice.dto';
+import { NoticeOfIntentDecisionConditionDateDto } from '../../../../../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision.dto';
 
 export interface DueDate {
   uuid?: string;
@@ -27,7 +28,7 @@ export class DecisionConditionDateDialogComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public data: {
-      dates: ApplicationDecisionConditionDateDto[] | NoticeOfIntentDecisionConditionDateDto[];
+      dates: ApplicationDecisionConditionDateDto[] | NoticeOfIntentDecisionConditionDateDto[] | NoticeDueDateDto[];
       isAdding: boolean;
       isRequired: boolean;
     },

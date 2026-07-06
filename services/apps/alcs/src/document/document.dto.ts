@@ -87,4 +87,5 @@ export class CreateDocumentDto {
   section?: Section;
   chronologyEntryUuid?: string;
   inspectionUuid?: string;
+  noticeUuid?: string;
 }

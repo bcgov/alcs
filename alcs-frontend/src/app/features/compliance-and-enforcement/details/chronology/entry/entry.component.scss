@@ -97,8 +97,16 @@ form {
 
   font-size: 14px;
   padding: 0 8px;
-  border: 2px solid #5eca00;
+  border: 2px solid transparent;
   border-radius: 3px;
+
+  &.inspection {
+    border-color: #5eca00;
+  }
+
+  &.notice {
+    border-color: #fba924;
+  }
 }
 
 .c-and-e-action-menu-item {

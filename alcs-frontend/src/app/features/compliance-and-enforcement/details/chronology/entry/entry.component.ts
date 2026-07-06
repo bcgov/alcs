@@ -10,6 +10,7 @@ import {
 } from '../../../../../services/compliance-and-enforcement/chronology/chronology.dto';
 import { ComplianceAndEnforcementChronologyService } from '../../../../../services/compliance-and-enforcement/chronology/chronology.service';
 import { ComplianceAndEnforcementChronologyInspectionService } from '../../../../../services/compliance-and-enforcement/chronology/inspection/inspection.service';
+import { ComplianceAndEnforcementNoticeService } from '../../../../../services/compliance-and-enforcement/chronology/notice/notice.service';
 import { ComplianceAndEnforcementDocumentDto } from '../../../../../services/compliance-and-enforcement/documents/document.dto';
 import {
   ComplianceAndEnforcementDocumentService,
@@ -57,6 +58,12 @@ export class ComplianceAndEnforcementChronologyEntryComponent implements OnInit,
       .sort((a, b) => (a.date && b.date ? a.createdAt - b.createdAt : -1)),
   );
 
+  sortedNotices = computed(() =>
+    Array.from(this.noticeService.noticesByUuid().values())
+      .filter((notice) => notice.entryUuid === this.entry?.uuid)
+      .sort((a, b) => (a.date && b.date ? a.createdAt - b.createdAt : -1)),
+  );
+
   section: Section = Section.CHRONOLOGY_ENTRY;
 
   documentOptions: DocumentUploadDialogOptions = {
@@ -88,6 +95,7 @@ export class ComplianceAndEnforcementChronologyEntryComponent implements OnInit,
     private readonly chronologyService: ComplianceAndEnforcementChronologyService,
     private readonly documentService: ComplianceAndEnforcementDocumentService,
     private readonly inspectionService: ComplianceAndEnforcementChronologyInspectionService,
+    private readonly noticeService: ComplianceAndEnforcementNoticeService,
     private readonly userService: UserService,
     private readonly toastService: ToastService,
     private readonly confirmationDialogService: ConfirmationDialogService,
@@ -125,6 +133,7 @@ export class ComplianceAndEnforcementChronologyEntryComponent implements OnInit,
     }
 
     this.inspectionService.loadInspections({ filterByEntryUuid: this.entry.uuid }).subscribe();
+    this.noticeService.loadNotices({ filterByEntryUuid: this.entry.uuid }).subscribe();
   }
 
   fillForm(entry: ComplianceAndEnforcementChronologyEntryDto): void {
@@ -169,7 +178,7 @@ export class ComplianceAndEnforcementChronologyEntryComponent implements OnInit,
   }
 
   async onCompleteButtonClick(): Promise<void> {
-    if (this.form.invalid || this.hasDraftInspections()) {
+    if (this.form.invalid || this.hasDraftInspections() || this.hasDraftNotices()) {
       this.date.markAsTouched();
       this.description.markAsTouched();
       this.showErrors = true;
@@ -182,6 +191,10 @@ export class ComplianceAndEnforcementChronologyEntryComponent implements OnInit,
 
   hasDraftInspections(): boolean {
     return this.sortedInspections().some((inspection) => inspection.isDraft);
+  }
+
+  hasDraftNotices(): boolean {
+    return this.sortedNotices().some((notice) => notice.isDraft);
   }
 
   async onAddInspectionClick(): Promise<void> {
@@ -251,6 +264,76 @@ export class ComplianceAndEnforcementChronologyEntryComponent implements OnInit,
 
         this.chronologyService.loadEntries({ filterByUuid: this.entry.uuid }).subscribe();
         this.inspectionService.loadInspections({ filterByEntryUuid: this.entry.uuid }).subscribe();
+      });
+  }
+
+  async onAddNoticeClick(): Promise<void> {
+    if (!this.entry || !this.entry?.uuid) {
+      console.error('Must have a chronology entry with valid UUID');
+      this.toastService.showErrorToast("Can't find chronology entry");
+      return;
+    }
+
+    if (!this.currentUserUuid) {
+      console.error('Current user not loaded. Wait and try again.');
+      this.toastService.showErrorToast('Current user not loaded. Wait and try again.');
+      return;
+    }
+
+    await this.save();
+
+    try {
+      const noticeUuid = await this.noticeService.createDraft(this.entry.uuid);
+      this.toastService.showSuccessToast('Draft notice created');
+      this.router.navigate(['entry', this.entry.uuid, 'notice', noticeUuid, 'edit'], {
+        relativeTo: this.route,
+      });
+    } catch (error) {
+      console.error("Couldn't create draft inspection", error);
+      this.toastService.showErrorToast("Couldn't create draft inspection");
+    }
+  }
+
+  async onEditNoticeClick(noticeUuid: string) {
+    if (!this.entry || !this.entry?.uuid) {
+      console.error('Must have a chronology entry with valid UUID');
+      this.toastService.showErrorToast("Can't find chronology entry");
+      return;
+    }
+
+    await this.save();
+
+    await this.router.navigate(['entry', this.entry.uuid, 'notice', noticeUuid, 'edit'], {
+      relativeTo: this.route,
+    });
+  }
+
+  async confirmNoticeDelete(noticeUuid: string) {
+    this.confirmationDialogService
+      .openDialog({
+        body: `Are you sure you want to delete the notice and associated report?`,
+      })
+      .subscribe(async (accepted) => {
+        if (!accepted) {
+          return;
+        }
+
+        try {
+          await firstValueFrom(this.noticeService.delete(noticeUuid));
+          this.toastService.showSuccessToast('Notice deleted successfully.');
+        } catch (error) {
+          console.error('Error deleting notice:', error);
+          this.toastService.showErrorToast('Failed to delete notice.');
+        }
+
+        if (!this.entry) {
+          console.error("Couldn't refresh entry. No entry found.");
+          this.toastService.showErrorToast("Couldn't refresh entry");
+          return;
+        }
+
+        this.chronologyService.loadEntries({ filterByUuid: this.entry.uuid }).subscribe();
+        this.noticeService.loadNotices({ filterByEntryUuid: this.entry.uuid }).subscribe();
       });
   }
 

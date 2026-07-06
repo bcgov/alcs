@@ -30,10 +30,8 @@
       </div>
     }
     <!-- Regular Responsible Parties -->
-    @for (party of responsibleParties; track party) {
-      <div
-        class="party-card"
-        [class.previous-party]="party.isPrevious">
+    @for (party of responsibleParties; track party.uuid) {
+      <div class="party-card" [class.previous-party]="party.isPrevious">
         <div class="party-header">
           <h4>{{ getPartyDisplayName(party) }}</h4>
           <div class="party-type-badge" [class.previous]="party.isPrevious">
@@ -108,7 +106,7 @@
           }
           @if (party.foippaCategory === FOIPPACategory.ORGANIZATION && party.directors?.length) {
             <div class="directors-section">
-              @for (director of party.directors; track director; let i = $index) {
+              @for (director of party.directors; track director.uuid; let i = $index) {
                 <div class="director-container">
                   <!-- Director Name Row -->
                   <div class="director-name-row">

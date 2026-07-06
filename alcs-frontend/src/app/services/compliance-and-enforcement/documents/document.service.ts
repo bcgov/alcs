@@ -30,6 +30,7 @@ export class ComplianceAndEnforcementDocumentService {
     section?: Section,
     chronologyEntryUuid?: string,
     inspectionUuid?: string,
+    noticeUuid?: string,
   ): Promise<ComplianceAndEnforcementDocumentDto[]> {
     let params = new HttpParams();
 
@@ -44,6 +45,9 @@ export class ComplianceAndEnforcementDocumentService {
     }
     if (inspectionUuid) {
       params = params.append('chronologyEntryUuid', inspectionUuid);
+    }
+    if (noticeUuid) {
+      params = params.append('chronologyEntryUuid', noticeUuid);
     }
 
     return firstValueFrom(this.http.get<ComplianceAndEnforcementDocumentDto[]>(this.url, { params }));
@@ -115,6 +119,9 @@ export class ComplianceAndEnforcementDocumentService {
     }
     if (dto.inspectionUuid) {
       formData.set('inspectionUuid', dto.inspectionUuid);
+    }
+    if (dto.noticeUuid) {
+      formData.set('noticeUuid', dto.noticeUuid);
     }
     if (dto.parcelUuid) {
       formData.set('parcelUuid', dto.parcelUuid);
