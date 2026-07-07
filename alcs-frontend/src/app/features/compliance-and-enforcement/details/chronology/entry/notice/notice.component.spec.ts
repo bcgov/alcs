@@ -10,7 +10,8 @@ import {
   UpdateComplianceAndEnforcementChronologyEntryDto,
 } from '../../../../../../services/compliance-and-enforcement/chronology/chronology.dto';
 import { ComplianceAndEnforcementChronologyService } from '../../../../../../services/compliance-and-enforcement/chronology/chronology.service';
-import { ComplianceAndEnforcementChronologyInspectionService } from '../../../../../../services/compliance-and-enforcement/chronology/inspection/inspection.service';
+import { NoticeType } from '../../../../../../services/compliance-and-enforcement/chronology/notice/notice.dto';
+import { ComplianceAndEnforcementNoticeService } from '../../../../../../services/compliance-and-enforcement/chronology/notice/notice.service';
 import {
   AllegedActivity,
   ComplianceAndEnforcementDto,
@@ -18,19 +19,20 @@ import {
 } from '../../../../../../services/compliance-and-enforcement/compliance-and-enforcement.dto';
 import { ComplianceAndEnforcementService } from '../../../../../../services/compliance-and-enforcement/compliance-and-enforcement.service';
 import { ComplianceAndEnforcementDocumentService } from '../../../../../../services/compliance-and-enforcement/documents/document.service';
+import { ResponsiblePartiesService } from '../../../../../../services/compliance-and-enforcement/responsible-parties/responsible-parties.service';
 import { ToastService } from '../../../../../../services/toast/toast.service';
 import { UserDto } from '../../../../../../services/user/user.dto';
 import { UserService } from '../../../../../../services/user/user.service';
 import { ConfirmationDialogService } from '../../../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { ComplianceAndEnforcementChronologyComponent } from '../../chronology.component';
-import { ComplianceAndEnforcementChronologyEntryInspectionComponent } from './inspection.component';
+import { ComplianceAndEnforcementNoticeComponent } from './notice.component';
 
 describe('ComplianceAndEnforcementChronologyComponent', () => {
-  let component: ComplianceAndEnforcementChronologyEntryInspectionComponent;
-  let fixture: ComponentFixture<ComplianceAndEnforcementChronologyEntryInspectionComponent>;
+  let component: ComplianceAndEnforcementNoticeComponent;
+  let fixture: ComponentFixture<ComplianceAndEnforcementNoticeComponent>;
   let mockActivatedRoute: DeepMocked<ActivatedRoute>;
   let mockRouter: DeepMocked<Router>;
-  let mockService: DeepMocked<ComplianceAndEnforcementChronologyInspectionService>;
+  let mockService: DeepMocked<ComplianceAndEnforcementNoticeService>;
   let mockComplianceAndEnforcementService: DeepMocked<ComplianceAndEnforcementService>;
   let mockToastService: DeepMocked<ToastService>;
   let mockHttpClient: DeepMocked<HttpClient>;
@@ -40,6 +42,7 @@ describe('ComplianceAndEnforcementChronologyComponent', () => {
   let mockUserProfileSubject: BehaviorSubject<UserDto | undefined>;
   let mockUserService: DeepMocked<UserService>;
   let mockDialog: DeepMocked<MatDialog>;
+  let mockResponsiblePartiesService: DeepMocked<ResponsiblePartiesService>;
 
   const mockUser: UserDto = {
     uuid: 'user-uuid',
@@ -87,10 +90,11 @@ describe('ComplianceAndEnforcementChronologyComponent', () => {
   beforeEach(async () => {
     mockActivatedRoute = createMock<ActivatedRoute>();
     mockRouter = createMock<Router>();
-    mockService = createMock<ComplianceAndEnforcementChronologyInspectionService>();
+    mockService = createMock<ComplianceAndEnforcementNoticeService>();
     mockToastService = createMock<ToastService>();
     mockHttpClient = createMock<HttpClient>();
     mockChronologyService = createMock<ComplianceAndEnforcementChronologyService>();
+    mockResponsiblePartiesService = createMock<ResponsiblePartiesService>();
     mockDocumentService = createMock<ComplianceAndEnforcementDocumentService>();
     mockConfirmationDialogService = createMock<ConfirmationDialogService>();
     mockUserProfileSubject = new BehaviorSubject<UserDto | undefined>(undefined);
@@ -101,14 +105,15 @@ describe('ComplianceAndEnforcementChronologyComponent', () => {
 
     TestBed.configureTestingModule({
       imports: [],
-      declarations: [ComplianceAndEnforcementChronologyComponent],
+      declarations: [ComplianceAndEnforcementChronologyComponent, ComplianceAndEnforcementNoticeComponent],
       providers: [
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
         { provide: Router, useValue: mockRouter },
-        { provide: ComplianceAndEnforcementChronologyInspectionService, useValue: mockService },
+        { provide: ComplianceAndEnforcementNoticeService, useValue: mockService },
         { provide: ToastService, useValue: mockToastService },
         { provide: HttpClient, useValue: mockHttpClient },
         { provide: ComplianceAndEnforcementChronologyService, useValue: mockChronologyService },
+        { provide: ResponsiblePartiesService, useValue: mockResponsiblePartiesService },
         { provide: ComplianceAndEnforcementDocumentService, useValue: mockDocumentService },
         { provide: ConfirmationDialogService, useValue: mockConfirmationDialogService },
         { provide: UserService, useValue: mockUserService },
@@ -116,155 +121,12 @@ describe('ComplianceAndEnforcementChronologyComponent', () => {
       ],
     });
 
-    fixture = TestBed.createComponent(ComplianceAndEnforcementChronologyEntryInspectionComponent);
+    fixture = TestBed.createComponent(ComplianceAndEnforcementNoticeComponent);
     component = fixture.componentInstance;
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  describe('fillForm', () => {
-    it('should populate form and attendees', () => {
-      const inspection: any = {
-        uuid: 'i-1',
-        date: '2020-01-01',
-        type: 'TYPE',
-        allegedActivity: [AllegedActivity.EXTRACTION],
-        officer: { uuid: 'o-1' },
-        attendees: [{ name: 'A', organization: 'Org' }],
-        comments: 'notes',
-        documents: [],
-      };
-
-      component.fillForm(inspection, false);
-
-      expect(component.form.controls.comments.value).toBe('notes');
-      expect(component.form.controls.officerUuid.value).toBe('o-1');
-      expect(component.form.controls.attendees.length).toBe(1);
-    });
-  });
-
-  describe('dateText', () => {
-    it('should return formatted date when entry date exists', () => {
-      const dateString = '2021-01-01';
-      mockChronologyService.entriesByUuid.mockReturnValue(
-        new Map([
-          ['entry-uuid', { date: moment(dateString).toDate().getTime() } as ComplianceAndEnforcementChronologyEntryDto],
-        ]),
-      );
-      component.entryUuid = 'entry-uuid';
-
-      const txt = component.entryDateText();
-
-      expect(txt).toBe(dateString);
-    });
-
-    it('should return No Date when missing', () => {
-      mockChronologyService.entriesByUuid.mockReturnValue(new Map());
-      component.entryUuid = 'missing';
-
-      expect(component.entryDateText()).toBe('No Date');
-    });
-  });
-
-  describe('attendees', () => {
-    it('should add and remove attendees', () => {
-      component.addAttendee({ name: 'Name', organization: 'Org' }, false);
-      expect(component.form.controls.attendees.length).toBe(1);
-
-      component.removeAttendee(0);
-      expect(component.form.controls.attendees.length).toBe(0);
-    });
-  });
-
-  describe('dtoFromForm', () => {
-    it('should map form values to dto', () => {
-      component.form.patchValue({
-        date: moment('2020-01-02'),
-        type: 'TYPE',
-        allegedActivity: [AllegedActivity.EXTRACTION],
-        officerUuid: 'o-1',
-        comments: 'c',
-      } as any);
-      component.addAttendee({ name: 'A', organization: 'Org' }, false);
-
-      const dto = component.dtoFromForm(component.form.value as any, true);
-
-      expect(dto.isDraft).toBe(true);
-      expect(dto.date).toBe('2020-01-02');
-      expect(dto.officerUuid).toBe('o-1');
-      expect(dto.attendees?.length).toBe(1);
-    });
-  });
-
-  describe('loadOfficers', () => {
-    it('should load officers from user service', async () => {
-      mockUserService.getComplianceAndEnforcementOfficers.mockResolvedValue([mockUser]);
-
-      await component.loadOfficers();
-
-      expect(component.officers.length).toBe(1);
-      expect(component.officers[0].uuid).toBe('user-uuid');
-    });
-  });
-
-  describe('onDeleteButtonClick', () => {
-    it('should delete when confirmed', async () => {
-      mockConfirmationDialogService.openDialog.mockReturnValue(of(true) as any);
-      component.uuid = 'i-1';
-      mockService.delete.mockReturnValue(of(''));
-
-      await component.onDeleteButtonClick();
-
-      expect(mockService.delete).toHaveBeenCalledWith('i-1');
-      expect(mockToastService.showSuccessToast).toHaveBeenCalled();
-      expect(mockRouter.navigate).toHaveBeenCalled();
-    });
-
-    it('should not delete when not confirmed', async () => {
-      mockConfirmationDialogService.openDialog.mockReturnValue(of(false) as any);
-
-      await component.onDeleteButtonClick();
-
-      expect(mockService.delete).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('openDocumentDialog', () => {
-    it('should not open dialog when fileNumber missing', () => {
-      component.fileNumber = undefined;
-
-      component.openDocumentDialog();
-
-      expect(mockDialog.open).not.toHaveBeenCalled();
-    });
-
-    it('should open dialog when fileNumber present', () => {
-      component.fileNumber = 'file-1';
-      const afterClosed = of(true);
-      const dialogRef: any = { afterClosed: () => afterClosed };
-      mockDialog.open.mockReturnValue(dialogRef as any);
-      component.uuid = 'i-1';
-      mockChronologyService.entriesByUuid.mockReturnValue(
-        new Map([['entry-uuid', { uuid: 'entry-uuid' } as ComplianceAndEnforcementChronologyEntryDto]]),
-      );
-      component.entryUuid = 'entry-uuid';
-
-      component.openDocumentDialog();
-
-      expect(mockDialog.open).toHaveBeenCalled();
-    });
-  });
-
-  describe('openAddCorrespondenceDialog', () => {
-    it('should call openDocumentDialog', () => {
-      const spy = jest.spyOn(component as any, 'openDocumentDialog');
-
-      component.openAddCorrespondenceDialog('entry-uuid', 'i-1');
-
-      expect(spy).toHaveBeenCalledWith({ chronologyEntryUuid: 'entry-uuid', inspectionUuid: 'i-1' });
-    });
   });
 
   describe('ngOnDestroy', () => {
@@ -276,6 +138,138 @@ describe('ComplianceAndEnforcementChronologyComponent', () => {
 
       expect(nextSpy).toHaveBeenCalled();
       expect(completeSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('form and helpers', () => {
+    it('fillForm populates controls from notice', () => {
+      const notice: any = {
+        date: '2020-01-02',
+        type: NoticeType.COMPLIANCE_NOTICE,
+        allegedActivity: [AllegedActivity.EXTRACTION],
+        issuedToIndividualResponsiblePartyUuid: 'issuee-1',
+        notifications: [],
+      };
+
+      component.fillForm(notice, false);
+
+      expect(component.form.controls.type.value).toEqual(NoticeType.COMPLIANCE_NOTICE);
+      expect(component.form.controls.allegedActivity.value).toEqual([AllegedActivity.EXTRACTION]);
+      expect(component.form.controls.issuedToUuid.value).toEqual('issuee-1');
+      expect(component.form.controls.date.value).not.toBeNull();
+      expect(component.form.controls.date.value!.format('YYYY-MM-DD')).toEqual('2020-01-02');
+    });
+
+    it('dtoFromForm converts form to DTO including notifications and issuee mapping', () => {
+      // prepare an issuee that matches the issuedToUuid
+      component.issuees.set([
+        { uuid: 'issuee-1', type: 'Individual Responsible Party', name: 'X', organization: null },
+      ] as any);
+
+      // populate form
+      component.form.controls.date.setValue(moment('2020-02-02'));
+      component.form.controls.type.setValue(NoticeType.COMPLIANCE_NOTICE);
+      component.form.controls.allegedActivity.setValue([AllegedActivity.EXTRACTION]);
+      component.form.controls.issuedToUuid.setValue('issuee-1');
+
+      const notifiedControls = component.form.controls.notifiedBy.controls as any;
+      const firstMethod = Object.keys(notifiedControls)[0];
+      notifiedControls[firstMethod].controls.wasNotified.patchValue(true);
+      notifiedControls[firstMethod].controls.on.patchValue('2020-03-03');
+
+      const dto = component.dtoFromForm(component.form.value as any, false);
+
+      expect(dto.date).toEqual('2020-02-02');
+      expect(dto.type).toEqual(NoticeType.COMPLIANCE_NOTICE);
+      expect(dto.allegedActivity).toEqual([AllegedActivity.EXTRACTION]);
+      expect(dto.issuedToIndividualResponsiblePartyUuid).toEqual('issuee-1');
+      expect(dto.notifications).toHaveLength(1);
+      expect(dto.notifications?.[0]).toBeDefined();
+      expect(dto.notifications?.[0].method).toEqual(firstMethod);
+      expect(dto.notifications?.[0].date).toEqual('2020-03-03');
+    });
+
+    it('entryDateText returns formatted date or No Date', () => {
+      const dateString = '2020-Apr-05';
+      const timestamp = moment(dateString).toDate().getTime();
+      mockChronologyService.entriesByUuid.mockReturnValue(
+        new Map<string, ComplianceAndEnforcementChronologyEntryDto>([
+          [
+            'entry-uuid',
+            { date: timestamp, uuid: 'entry-uuid' } as unknown as ComplianceAndEnforcementChronologyEntryDto,
+          ],
+        ]),
+      );
+
+      component.entryUuid = 'entry-uuid';
+
+      expect(component.entryDateText()).toEqual(dateString);
+    });
+
+    it('notification helpers work as expected', () => {
+      const notifiedControls = component.form.controls.notifiedBy.controls as any;
+      const firstMethod = Object.keys(notifiedControls)[0];
+
+      // initially false
+      expect(component.notificationMethodChecked(firstMethod)).toBeFalsy();
+
+      // set and check
+      notifiedControls[firstMethod].controls.wasNotified.patchValue(true);
+      notifiedControls[firstMethod].controls.on.patchValue('2020-06-06');
+
+      expect(component.notificationMethodChecked(firstMethod)).toBeTruthy();
+      const ts = component.notificationDateTimestamp(firstMethod);
+      expect(ts).toEqual(moment('2020-06-06').toDate().getTime());
+
+      component.onNotificationDateSave(firstMethod, moment('2020-06-06').toDate().getTime());
+      expect(notifiedControls[firstMethod].controls.on.getRawValue()).toEqual('2020-06-06');
+
+      expect(component.formattedDate('2020-06-06')).toEqual(moment('2020-06-06').format('YYYY-MMM-DD'));
+    });
+  });
+
+  describe('actions and dialog guards', () => {
+    it('loadResponsibleParties shows error toast when no fileNumber', async () => {
+      component.fileNumber = undefined;
+
+      await component.loadResponsibleParties();
+
+      expect(mockToastService.showErrorToast).toHaveBeenCalledWith('There was a problem loading responsible parties');
+    });
+
+    it('openDocumentDialog does not open dialog when fileNumber missing', () => {
+      component.fileNumber = undefined;
+
+      const openSpy = jest.spyOn(mockDialog, 'open');
+
+      component.openAddDocumentDialog(undefined, undefined);
+
+      expect(openSpy).not.toHaveBeenCalled();
+    });
+
+    it('onDeleteButtonClick does nothing when confirmation declined', () => {
+      mockConfirmationDialogService.openDialog.mockReturnValue(of(false) as any);
+
+      component.uuid = 'some-uuid';
+
+      component.onDeleteButtonClick();
+
+      expect(mockService.delete).not.toHaveBeenCalled();
+    });
+
+    it('onDeleteButtonClick deletes and navigates when confirmed', async () => {
+      mockConfirmationDialogService.openDialog.mockReturnValue(of(true) as any);
+      mockService.delete.mockReturnValue(of('some-uuid') as any);
+      component.uuid = 'some-uuid';
+
+      component.onDeleteButtonClick();
+
+      // wait for microtasks spawned by subscribe async handler
+      await new Promise((r) => setTimeout(r, 0));
+
+      expect(mockService.delete).toHaveBeenCalledWith('some-uuid');
+      expect(mockToastService.showSuccessToast).toHaveBeenCalledWith('Entry deleted successfully.');
+      expect(mockRouter.navigate).toHaveBeenCalled();
     });
   });
 });

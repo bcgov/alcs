@@ -13,6 +13,8 @@ import {
 import { UserService } from '../../../../user/user.service';
 import { ComplianceAndEnforcement } from '../../compliance-and-enforcement.entity';
 import { ComplianceAndEnforcementService } from '../../compliance-and-enforcement.service';
+import { ComplianceAndEnforcementResponsiblePartyService } from '../../responsible-parties/responsible-parties.service';
+import { ComplianceAndEnforcementResponsibleParty } from '../../responsible-parties/responsible-party.entity';
 import { ComplianceAndEnforcementChronologyEntry } from '../chronology.entity';
 import { ComplianceAndEnforcementChronologyService } from '../chronology.service';
 import { ComplianceAndEnforcementNoticeProfile } from './notice.automapper.profile';
@@ -29,6 +31,9 @@ describe('ComplianceAndEnforcementChronologyNoticeService', () => {
   let mockComplianceAndEnforcementService: DeepMocked<ComplianceAndEnforcementService>;
   let mockComplianceAndEnforcementRepository: DeepMocked<Repository<ComplianceAndEnforcement>>;
 
+  let mockPartiesService: DeepMocked<ComplianceAndEnforcementResponsiblePartyService>;
+  let mockPartiesRepository: DeepMocked<Repository<ComplianceAndEnforcementResponsibleParty>>;
+
   let mockUserService: DeepMocked<UserService>;
 
   beforeEach(async () => {
@@ -39,6 +44,9 @@ describe('ComplianceAndEnforcementChronologyNoticeService', () => {
 
     mockComplianceAndEnforcementService = createMock<ComplianceAndEnforcementService>();
     mockComplianceAndEnforcementRepository = createMock<Repository<ComplianceAndEnforcement>>();
+
+    mockPartiesService = createMock<ComplianceAndEnforcementResponsiblePartyService>();
+    mockPartiesRepository = createMock<Repository<ComplianceAndEnforcementResponsibleParty>>();
 
     mockUserService = createMock<UserService>();
 
@@ -72,6 +80,14 @@ describe('ComplianceAndEnforcementChronologyNoticeService', () => {
           useValue: mockComplianceAndEnforcementRepository,
         },
         {
+          provide: ComplianceAndEnforcementResponsiblePartyService,
+          useValue: mockPartiesService,
+        },
+        {
+          provide: getRepositoryToken(ComplianceAndEnforcementResponsibleParty),
+          useValue: mockPartiesRepository,
+        },
+        {
           provide: UserService,
           useValue: mockUserService,
         },
@@ -98,7 +114,6 @@ describe('ComplianceAndEnforcementChronologyNoticeService', () => {
       uuid: 'i-1',
       createdAt: new Date(),
       isDraft: false,
-      comments: 'c',
     });
     mockRepository.find.mockResolvedValue([entity] as any);
 
@@ -137,14 +152,11 @@ describe('ComplianceAndEnforcementChronologyNoticeService', () => {
 
   it('should update existing notice', async () => {
     mockRepository.findOneBy.mockResolvedValue(new ComplianceAndEnforcementNotice({ uuid: 'u-1' }) as any);
-    mockRepository.save.mockResolvedValue(
-      new ComplianceAndEnforcementNotice({ uuid: 'u-1', comments: 'updated' }) as any,
-    );
+    mockRepository.save.mockResolvedValue(new ComplianceAndEnforcementNotice({ uuid: 'u-1' }) as any);
 
-    const result = await service.update('u-1', { comments: 'updated' } as any);
+    const result = await service.update('u-1', {} as any);
 
     expect(result).toBeDefined();
-    expect((result as any).comments).toBe('updated');
     expect(mockRepository.findOneBy).toHaveBeenCalledWith({ uuid: 'u-1' });
     expect(mockRepository.save).toHaveBeenCalledTimes(1);
   });

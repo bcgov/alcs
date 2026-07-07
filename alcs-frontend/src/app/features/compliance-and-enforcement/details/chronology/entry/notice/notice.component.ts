@@ -242,7 +242,7 @@ export class ComplianceAndEnforcementNoticeComponent implements OnInit, OnDestro
   entryDateText() {
     const timestamp = this.entry()?.date;
 
-    return timestamp ? moment(timestamp).format('YYYY-MM-DD') : 'No Date';
+    return timestamp ? moment(timestamp).format('YYYY-MMM-DD') : 'No Date';
   }
 
   subscribeFormChanges(uuid: string): void {

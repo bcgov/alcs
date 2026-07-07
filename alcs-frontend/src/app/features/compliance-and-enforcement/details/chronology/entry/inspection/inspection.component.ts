@@ -185,7 +185,7 @@ export class ComplianceAndEnforcementChronologyEntryInspectionComponent implemen
   entryDateText() {
     const timestamp = this.entry()?.date;
 
-    return timestamp ? moment(timestamp).format('YYYY-MM-DD') : 'No Date';
+    return timestamp ? moment(timestamp).format('YYYY-MMM-DD') : 'No Date';
   }
 
   addAttendee(attendee: Partial<AttendeeDto> = {}, emitEvent: boolean = true): void {
