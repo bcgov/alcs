@@ -38,7 +38,9 @@ export class ComplianceAndEnforcementChronologyComponent implements OnInit, OnDe
   currentUserUuid?: string;
 
   rankByDocumentTypeCode: Map<DOCUMENT_TYPE, number> = new Map(
-    [DOCUMENT_TYPE.C_AND_E_INSPECTION, DOCUMENT_TYPE.CORRESPONDENCE].map((type, index) => [type, index]),
+    [DOCUMENT_TYPE.C_AND_E_INSPECTION, DOCUMENT_TYPE.C_AND_E_NOTICE, DOCUMENT_TYPE.CORRESPONDENCE].map(
+      (type, index) => [type, index],
+    ),
   );
 
   $destroy = new Subject<void>();

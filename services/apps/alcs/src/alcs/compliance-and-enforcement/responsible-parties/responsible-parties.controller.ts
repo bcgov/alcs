@@ -1,16 +1,16 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
+import { DeleteResult } from 'typeorm';
+import { AUTH_ROLE } from '../../../common/authorization/roles';
 import { RolesGuard } from '../../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../../common/authorization/roles.decorator';
-import { AUTH_ROLE } from '../../../common/authorization/roles';
-import { ComplianceAndEnforcementResponsiblePartyService } from './responsible-parties.service';
 import {
   ComplianceAndEnforcementResponsiblePartyDto,
   CreateComplianceAndEnforcementResponsiblePartyDto,
   UpdateComplianceAndEnforcementResponsiblePartyDto,
 } from './responsible-parties.dto';
-import { DeleteResult } from 'typeorm';
+import { ComplianceAndEnforcementResponsiblePartyService } from './responsible-parties.service';
 import { ResponsiblePartyType } from './responsible-party.entity';
 
 @Controller('compliance-and-enforcement/responsible-parties')

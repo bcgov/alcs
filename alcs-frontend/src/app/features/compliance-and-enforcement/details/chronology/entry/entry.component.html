@@ -45,7 +45,7 @@
         <mat-form-field appearance="outline">
           <mat-label>Author</mat-label>
           <mat-select panelClass="author-list-panel" [formControl]="authorDropdown">
-            @for (author of authors; track author) {
+            @for (author of authors; track author.uuid) {
               <mat-option [value]="author.uuid">
                 {{ author.prettyName }}
               </mat-option>
@@ -77,9 +77,9 @@
       <div class="c-and-e-action-list">
         <strong>C&E Action:</strong>
         @if (sortedInspections().length > 0) {
-          @for (inspection of sortedInspections(); track inspection) {
+          @for (inspection of sortedInspections(); track inspection.uuid) {
             <div class="c-and-e-action-wrapper">
-              <div class="c-and-e-action">
+              <div class="c-and-e-action inspection">
                 @if (inspection.isDraft) {
                   DRAFT
                 }
@@ -87,7 +87,7 @@
                 @if (entry?.isDraft) {
                   <button
                     mat-icon-button
-                    class="action-button inspection-edit-button"
+                    class="action-button action-edit-button"
                     type="button"
                     (click)="onEditInspectionClick(inspection.uuid)"
                     touch-target="none"
@@ -96,7 +96,7 @@
                   </button>
                   <button
                     mat-icon-button
-                    class="action-button inspection-delete-button"
+                    class="action-button action-delete-button"
                     type="button"
                     (click)="confirmInspectionDelete(inspection.uuid)"
                     touch-target="none"
@@ -112,7 +112,51 @@
               }
             </div>
           }
+        }
+
+        @if (sortedNotices().length > 0) {
+          @for (notice of sortedNotices(); track notice.uuid) {
+            <div class="c-and-e-action-wrapper">
+              <div class="c-and-e-action notice">
+                @if (notice.isDraft) {
+                  DRAFT
+                }
+                @if (notice.type) {
+                  {{ notice.type }}
         } @else {
+                  Notice
+                }
+                @if (entry?.isDraft) {
+                  <button
+                    mat-icon-button
+                    class="action-button action-edit-button"
+                    type="button"
+                    (click)="onEditNoticeClick(notice.uuid)"
+                    touch-target="none"
+                  >
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button
+                    mat-icon-button
+                    class="action-button action-delete-button"
+                    type="button"
+                    (click)="confirmNoticeDelete(notice.uuid)"
+                    touch-target="none"
+                  >
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                }
+              </div>
+              @if (showErrors && notice.isDraft) {
+                <div>
+                  <app-error-message message="Notice must be finalized"></app-error-message>
+                </div>
+              }
+            </div>
+          }
+        }
+
+        @if (sortedInspections().length < 1 && sortedNotices().length < 1) {
           <span class="no-data"> No Data</span>
         }
       </div>
@@ -144,6 +188,9 @@
         <mat-menu xPosition="before" #decisionComponentMenu="matMenu">
           <button type="button" mat-menu-item class="c-and-e-action-menu-item" (click)="onAddInspectionClick()">
             Inspection
+          </button>
+          <button type="button" mat-menu-item class="c-and-e-action-menu-item" (click)="onAddNoticeClick()">
+            Notice
           </button>
         </mat-menu>
       }

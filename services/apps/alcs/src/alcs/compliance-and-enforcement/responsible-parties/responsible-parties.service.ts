@@ -1,13 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { DeleteResult, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { InjectMapper } from 'automapper-nestjs';
 import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
+import { DeleteResult, Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
-import {
-  ServiceConflictException,
-  ServiceNotFoundException,
-} from '../../../../../../libs/common/src/exceptions/base.exception';
+import { ServiceNotFoundException } from '../../../../../../libs/common/src/exceptions/base.exception';
+import { ComplianceAndEnforcementDocument } from '../document/document.entity';
 import {
   ComplianceAndEnforcementResponsibleParty,
   ComplianceAndEnforcementResponsiblePartyDirector,
@@ -18,7 +16,6 @@ import {
   CreateComplianceAndEnforcementResponsiblePartyDto,
   UpdateComplianceAndEnforcementResponsiblePartyDto,
 } from './responsible-parties.dto';
-import { ComplianceAndEnforcementDocument } from '../document/document.entity';
 
 @Injectable()
 export class ComplianceAndEnforcementResponsiblePartyService {

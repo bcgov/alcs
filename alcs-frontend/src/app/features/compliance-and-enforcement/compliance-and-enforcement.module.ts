@@ -3,12 +3,15 @@ import { NgModule } from '@angular/core';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { Route, RouterModule, Routes } from '@angular/router';
 import { SharedModule } from '../../shared/shared.module';
+import { DecisionModule } from '../application/decision/decision.module';
 import { ComplianceAndEnforcementComponent } from './compliance-and-enforcement.component';
 import { ComplianceAndEnforcementChronologyComponent } from './details/chronology/chronology.component';
 import { ComplianceAndEnforcementChronologyEntryDocumentsComponent } from './details/chronology/entry/documents/documents.component';
 import { ComplianceAndEnforcementChronologyEntryComponent } from './details/chronology/entry/entry.component';
 import { ComplianceAndEnforcementInspectionReportsComponent } from './details/chronology/entry/inspection/inspection-reports/inspection-reports.component';
 import { ComplianceAndEnforcementChronologyEntryInspectionComponent } from './details/chronology/entry/inspection/inspection.component';
+import { ComplianceAndEnforcementNoticeDocumentsComponent } from './details/chronology/entry/notice/documents/documents.component';
+import { ComplianceAndEnforcementNoticeComponent } from './details/chronology/entry/notice/notice.component';
 import { ComplaintReferralComponent } from './details/complaint-referral/complaint-referral.component';
 import { ComplaintReferralOverviewComponent } from './details/complaint-referral/overview/overview.component';
 import { AddSubmitterDialogComponent } from './details/complaint-referral/submitters/add-submitter-dialog/add-submitter-dialog.component';
@@ -103,6 +106,11 @@ export const detailsRoutes: (Route & { icon?: string; menuTitle?: string })[] = 
         component: ComplianceAndEnforcementChronologyEntryInspectionComponent,
         data: { editing: null },
       },
+      {
+        path: 'entry/:entryUuid/notice/:noticeUuid/edit',
+        component: ComplianceAndEnforcementNoticeComponent,
+        data: { editing: null },
+      },
     ],
   },
 ];
@@ -142,7 +150,16 @@ const routes: Routes = [
     ComplianceAndEnforcementChronologyEntryDocumentsComponent,
     ComplianceAndEnforcementChronologyEntryInspectionComponent,
     ComplianceAndEnforcementInspectionReportsComponent,
+    ComplianceAndEnforcementNoticeComponent,
+    ComplianceAndEnforcementNoticeDocumentsComponent,
   ],
-  imports: [SharedModule.forRoot(), RouterModule.forChild(routes), MatMomentDateModule, CommonModule, SharedModule],
+  imports: [
+    SharedModule.forRoot(),
+    RouterModule.forChild(routes),
+    MatMomentDateModule,
+    CommonModule,
+    SharedModule,
+    DecisionModule,
+  ],
 })
 export class ComplianceAndEnforcementModule {}

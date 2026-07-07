@@ -47,7 +47,7 @@
     <mat-form-field appearance="outline">
       <mat-label>Officer</mat-label>
       <mat-select panelClass="officer-list-panel" formControlName="officerUuid">
-        @for (officer of officers; track officer) {
+        @for (officer of officers; track officer.uuid) {
           <mat-option [value]="officer.uuid">
             {{ officer.prettyName }}
           </mat-option>
@@ -90,7 +90,7 @@
       <div class="attendees-heading">Organization*</div>
       <div class="attendees-heading">Actions</div>
 
-      @for (attendeeForm of form.controls.attendees.controls; track attendeeForm; let i = $index) {
+      @for (attendeeForm of form.controls.attendees.controls; track i; let i = $index) {
         <div [formGroupName]="i" class="attendee">
           <div class="attendee-number">
             {{ i + 1 }}
@@ -173,7 +173,7 @@
       color="accent"
       type="button"
       [disabled]="!uuid"
-      (click)="openAddCorrespondenceDialog(entryUuid, uuid)"
+      (click)="openAddReportDialog(entryUuid, uuid)"
       class="add-correspondence-button"
     >
       + Add Report

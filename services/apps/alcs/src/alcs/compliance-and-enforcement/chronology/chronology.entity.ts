@@ -5,6 +5,7 @@ import { User } from '../../../user/user.entity';
 import { ComplianceAndEnforcement } from '../compliance-and-enforcement.entity';
 import { ComplianceAndEnforcementDocument } from '../document/document.entity';
 import { ComplianceAndEnforcementChronologyInspection } from './inspection/inspection.entity';
+import { ComplianceAndEnforcementNotice } from './notice/notice.entity';
 
 @Entity({
   comment: 'Compliance and enforcement chronology entry',
@@ -50,4 +51,9 @@ export class ComplianceAndEnforcementChronologyEntry extends Auditable {
     onDelete: 'CASCADE',
   })
   inspections: ComplianceAndEnforcementChronologyInspection[];
+
+  @OneToMany(() => ComplianceAndEnforcementNotice, (notice) => notice.entry, {
+    onDelete: 'CASCADE',
+  })
+  notices: ComplianceAndEnforcementNotice[];
 }
