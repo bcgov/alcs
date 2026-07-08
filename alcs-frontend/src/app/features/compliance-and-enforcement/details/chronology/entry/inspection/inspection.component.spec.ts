@@ -147,7 +147,7 @@ describe('ComplianceAndEnforcementChronologyComponent', () => {
 
   describe('dateText', () => {
     it('should return formatted date when entry date exists', () => {
-      const dateString = '2021-01-01';
+      const dateString = '2021-Jan-01';
       mockChronologyService.entriesByUuid.mockReturnValue(
         new Map([
           ['entry-uuid', { date: moment(dateString).toDate().getTime() } as ComplianceAndEnforcementChronologyEntryDto],
@@ -155,9 +155,7 @@ describe('ComplianceAndEnforcementChronologyComponent', () => {
       );
       component.entryUuid = 'entry-uuid';
 
-      const txt = component.entryDateText();
-
-      expect(txt).toBe(dateString);
+      expect(component.entryDateText()).toBe(dateString);
     });
 
     it('should return No Date when missing', () => {
@@ -257,11 +255,11 @@ describe('ComplianceAndEnforcementChronologyComponent', () => {
     });
   });
 
-  describe('openAddCorrespondenceDialog', () => {
+  describe('openAddReportDialog', () => {
     it('should call openDocumentDialog', () => {
       const spy = jest.spyOn(component as any, 'openDocumentDialog');
 
-      component.openAddCorrespondenceDialog('entry-uuid', 'i-1');
+      component.openAddReportDialog('entry-uuid', 'i-1');
 
       expect(spy).toHaveBeenCalledWith({ chronologyEntryUuid: 'entry-uuid', inspectionUuid: 'i-1' });
     });

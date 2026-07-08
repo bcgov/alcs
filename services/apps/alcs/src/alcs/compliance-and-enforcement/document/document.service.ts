@@ -14,6 +14,7 @@ import { DocumentService } from '../../../document/document.service';
 import { User } from '../../../user/user.entity';
 import { ComplianceAndEnforcementChronologyEntry } from '../chronology/chronology.entity';
 import { ComplianceAndEnforcementChronologyInspection } from '../chronology/inspection/inspection.entity';
+import { ComplianceAndEnforcementNotice } from '../chronology/notice/notice.entity';
 import { ComplianceAndEnforcementOrder } from '../chronology/order/order.entity';
 import { ComplianceAndEnforcement } from '../compliance-and-enforcement.entity';
 import { ComplianceAndEnforcementPropertyService } from '../property/property.service';
@@ -35,6 +36,8 @@ export class ComplianceAndEnforcementDocumentService {
     private chronologyEntryRepository: Repository<ComplianceAndEnforcementChronologyEntry>,
     @InjectRepository(ComplianceAndEnforcementChronologyInspection)
     private inspectionRepository: Repository<ComplianceAndEnforcementChronologyInspection>,
+    @InjectRepository(ComplianceAndEnforcementNotice)
+    private noticeRepository: Repository<ComplianceAndEnforcementNotice>,
     @InjectRepository(ComplianceAndEnforcementOrder)
     private orderRepository: Repository<ComplianceAndEnforcementOrder>,
     @InjectRepository(DocumentCode)
@@ -47,6 +50,7 @@ export class ComplianceAndEnforcementDocumentService {
     section?: Section,
     chronologyEntryUuid?: string,
     inspectionUuid?: string,
+    noticeUuid?: string,
   ): Promise<ComplianceAndEnforcementDocumentDto[]> {
     const criteria: FindOptionsWhere<ComplianceAndEnforcementDocument> = {};
 
@@ -64,6 +68,10 @@ export class ComplianceAndEnforcementDocumentService {
 
     if (inspectionUuid !== undefined) {
       criteria.inspection = { uuid: inspectionUuid } as any;
+    }
+
+    if (noticeUuid !== undefined) {
+      criteria.notice = { uuid: noticeUuid } as any;
     }
 
     const entities = await this.repository.find({
@@ -116,6 +124,33 @@ export class ComplianceAndEnforcementDocumentService {
       throw new ServiceNotFoundException('Compliance and Enforcement file not found.');
     }
 
+    let chronologyEntry: ComplianceAndEnforcementChronologyEntry | null = null;
+    if (createDto.chronologyEntryUuid) {
+      chronologyEntry = await this.chronologyEntryRepository.findOneBy({ uuid: createDto.chronologyEntryUuid });
+
+      if (!chronologyEntry) {
+        throw new ServiceNotFoundException('Chronology entry not found.');
+      }
+    }
+
+    let inspection: ComplianceAndEnforcementChronologyInspection | null = null;
+    if (createDto.inspectionUuid) {
+      inspection = await this.inspectionRepository.findOneBy({ uuid: createDto.inspectionUuid });
+
+      if (!inspection) {
+        throw new ServiceNotFoundException('Chronology inspection not found.');
+      }
+    }
+
+    let notice: ComplianceAndEnforcementNotice | null = null;
+    if (createDto.noticeUuid) {
+      notice = await this.noticeRepository.findOneBy({ uuid: createDto.noticeUuid });
+
+      if (!notice) {
+        throw new ServiceNotFoundException('Chronology notice not found.');
+      }
+    }
+
     const type = await this.documentCodeRepository.findOneBy({ code: createDto.typeCode });
 
     if (!type) {
@@ -147,6 +182,16 @@ export class ComplianceAndEnforcementDocumentService {
       }
 
       entity.inspection = inspection;
+    }
+
+    if (createDto.noticeUuid) {
+      const notice = await this.noticeRepository.findOneBy({ uuid: createDto.noticeUuid });
+
+      if (!notice) {
+        throw new ServiceNotFoundException('Chronology notice not found.');
+      }
+
+      entity.notice = notice;
     }
 
     if (createDto.orderUuid) {

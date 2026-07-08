@@ -49,9 +49,7 @@ export class ComplianceAndEnforcementChronologyInspectionProfile extends Automap
         ),
         forMember(
           (dto) => dto.attendees,
-          mapFrom((entity) => {
-            return entity.attendees;
-          }),
+          mapFrom((entity) => entity.attendees),
         ),
         forMember(
           (dto) => dto.comments,

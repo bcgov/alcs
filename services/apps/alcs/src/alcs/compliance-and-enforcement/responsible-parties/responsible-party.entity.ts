@@ -2,6 +2,7 @@ import { AutoMap } from 'automapper-classes';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { ComplianceAndEnforcement } from '../compliance-and-enforcement.entity';
 import { ComplianceAndEnforcementDocument } from '../document/document.entity';
+import { ComplianceAndEnforcementResponsiblePartyDirector } from './responsible-party-director.entity';
 
 export enum ResponsiblePartyType {
   PROPERTY_OWNER = 'Property Owner',
@@ -81,7 +82,7 @@ export class ComplianceAndEnforcementResponsibleParty {
 
   @AutoMap()
   @OneToMany('ComplianceAndEnforcementResponsiblePartyDirector', 'responsibleParty', { cascade: true })
-  directors?: any[];
+  directors?: ComplianceAndEnforcementResponsiblePartyDirector[];
 
   // Property Owner specific
   @AutoMap()

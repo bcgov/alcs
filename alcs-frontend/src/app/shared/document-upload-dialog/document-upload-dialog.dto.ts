@@ -13,6 +13,7 @@ export interface UpdateDocumentDto {
   section?: Section;
   chronologyEntryUuid?: string;
   inspectionUuid?: string;
+  noticeUuid?: string;
   orderUuid?: string;
 }
 

@@ -17,6 +17,13 @@ export enum InspectionType {
   FOLLOW_UP = 'Follow-up',
 }
 
+export enum NoticeType {
+  COMPLIANCE_NOTICE = 'Compliance Notice',
+  NOTICE_OF_CONTRAVENTION = 'Notice of Contravention',
+  NOTICE_OF_CONSIDERATION_OF_PENALTY = 'Notice of Consideration of Penalty',
+  NOTICE_OF_DEBT_COLLECTION = 'Notice of Debt Collection',
+}
+
 export enum OrderType {
   STOP_WORK_ORDER = 'Stop Work Order',
   PENALTY_ORDER = 'Penalty Order',

@@ -40,7 +40,7 @@
         </div>
       </div>
     }
-    @for (entry of sortedEntries(); track entry) {
+    @for (entry of sortedEntries(); track entry.uuid) {
       <app-compliance-and-enforcement-chronology-entry
         [fileNumber]="fileNumber"
         [entry]="entry"

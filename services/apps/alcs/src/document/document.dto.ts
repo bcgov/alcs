@@ -112,5 +112,8 @@ export class CreateDocumentDto {
   inspectionUuid?: string;
 
   @AutoMap()
+  noticeUuid?: string;
+
+  @AutoMap()
   orderUuid?: string;
 }

@@ -217,6 +217,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
       section: this.data.section ?? undefined,
       chronologyEntryUuid: this.data.chronologyEntryUuid ?? undefined,
       inspectionUuid: this.data.inspectionUuid ?? undefined,
+      noticeUuid: this.data.noticeUuid ?? undefined,
       orderUuid: this.data.orderUuid ?? undefined,
       parcelUuid: this.parcelId.value ?? undefined,
     };
