@@ -47,14 +47,7 @@
         [authors]="authors"
         [datesInUse]="datesInUse(entry.uuid)"
         [editDisabled]="hasDraftEntries() || !!file?.chronologyClosedAt"
-      >
-        @if (entry.isDraft || entry?.documents?.length) {
-          <app-compliance-and-enforcement-chronology-entry-documents
-            [isDraft]="entry.isDraft"
-            [documents]="sortDocuments(entry.documents)"
-          />
-        }
-      </app-compliance-and-enforcement-chronology-entry>
+      />
     }
   </div>
 } @else {

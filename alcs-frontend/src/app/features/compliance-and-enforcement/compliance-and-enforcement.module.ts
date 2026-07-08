@@ -9,6 +9,8 @@ import { ComplianceAndEnforcementChronologyEntryDocumentsComponent } from './det
 import { ComplianceAndEnforcementChronologyEntryComponent } from './details/chronology/entry/entry.component';
 import { ComplianceAndEnforcementInspectionReportsComponent } from './details/chronology/entry/inspection/inspection-reports/inspection-reports.component';
 import { ComplianceAndEnforcementChronologyEntryInspectionComponent } from './details/chronology/entry/inspection/inspection.component';
+import { ComplianceAndEnforcementOrderDocumentsComponent } from './details/chronology/entry/order/documents/documents.component';
+import { ComplianceAndEnforcementOrderComponent } from './details/chronology/entry/order/order.component';
 import { ComplaintReferralComponent } from './details/complaint-referral/complaint-referral.component';
 import { ComplaintReferralOverviewComponent } from './details/complaint-referral/overview/overview.component';
 import { AddSubmitterDialogComponent } from './details/complaint-referral/submitters/add-submitter-dialog/add-submitter-dialog.component';
@@ -103,6 +105,11 @@ export const detailsRoutes: (Route & { icon?: string; menuTitle?: string })[] = 
         component: ComplianceAndEnforcementChronologyEntryInspectionComponent,
         data: { editing: null },
       },
+      {
+        path: 'entry/:entryUuid/order/:orderUuid/edit',
+        component: ComplianceAndEnforcementOrderComponent,
+        data: { editing: null },
+      },
     ],
   },
 ];
@@ -142,6 +149,8 @@ const routes: Routes = [
     ComplianceAndEnforcementChronologyEntryDocumentsComponent,
     ComplianceAndEnforcementChronologyEntryInspectionComponent,
     ComplianceAndEnforcementInspectionReportsComponent,
+    ComplianceAndEnforcementOrderComponent,
+    ComplianceAndEnforcementOrderDocumentsComponent,
   ],
   imports: [SharedModule.forRoot(), RouterModule.forChild(routes), MatMomentDateModule, CommonModule, SharedModule],
 })

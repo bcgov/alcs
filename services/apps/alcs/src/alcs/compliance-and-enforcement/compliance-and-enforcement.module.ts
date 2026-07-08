@@ -11,6 +11,11 @@ import { ComplianceAndEnforcementChronologyInspectionProfile } from './chronolog
 import { ComplianceAndEnforcementChronologyInspectionController } from './chronology/inspection/inspection.controller';
 import { ComplianceAndEnforcementChronologyInspection } from './chronology/inspection/inspection.entity';
 import { ComplianceAndEnforcementChronologyInspectionService } from './chronology/inspection/inspection.service';
+import { ComplianceAndEnforcementOrderDueDate } from './chronology/order/due-date/due-date.entity';
+import { ComplianceAndEnforcementOrderProfile } from './chronology/order/order.automapper.profile';
+import { ComplianceAndEnforcementOrderController } from './chronology/order/order.controller';
+import { ComplianceAndEnforcementOrder } from './chronology/order/order.entity';
+import { ComplianceAndEnforcementOrderService } from './chronology/order/order.service';
 import { ComplianceAndEnforcementValidatorService } from './compliance-and-enforcement-validator.service';
 import { ComplianceAndEnforcementProfile } from './compliance-and-enforcement.automapper.profile';
 import { ComplianceAndEnforcementController } from './compliance-and-enforcement.controller';
@@ -47,6 +52,8 @@ import { ComplianceAndEnforcementSubmitterService } from './submitter/submitter.
       ComplianceAndEnforcementResponsiblePartyDirector,
       ComplianceAndEnforcementChronologyEntry,
       ComplianceAndEnforcementChronologyInspection,
+      ComplianceAndEnforcementOrder,
+      ComplianceAndEnforcementOrderDueDate,
       DocumentCode,
     ]),
     CdogsModule,
@@ -60,6 +67,7 @@ import { ComplianceAndEnforcementSubmitterService } from './submitter/submitter.
     ComplianceAndEnforcementResponsiblePartyController,
     ComplianceAndEnforcementChronologyController,
     ComplianceAndEnforcementChronologyInspectionController,
+    ComplianceAndEnforcementOrderController,
   ],
   providers: [
     ComplianceAndEnforcementService,
@@ -69,7 +77,9 @@ import { ComplianceAndEnforcementSubmitterService } from './submitter/submitter.
     ComplianceAndEnforcementResponsiblePartyService,
     ComplianceAndEnforcementChronologyService,
     ComplianceAndEnforcementChronologyInspectionService,
+    ComplianceAndEnforcementOrderService,
     ComplianceAndEnforcementValidatorService,
+
     ComplianceAndEnforcementProfile,
     ComplianceAndEnforcementSubmitterProfile,
     ComplianceAndEnforcementPropertyProfile,
@@ -77,6 +87,7 @@ import { ComplianceAndEnforcementSubmitterService } from './submitter/submitter.
     ComplianceAndEnforcementResponsiblePartyProfile,
     ComplianceAndEnforcementChronologyProfile,
     ComplianceAndEnforcementChronologyInspectionProfile,
+    ComplianceAndEnforcementOrderProfile,
   ],
   exports: [
     ComplianceAndEnforcementService,

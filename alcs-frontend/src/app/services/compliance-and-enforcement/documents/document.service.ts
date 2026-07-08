@@ -62,6 +62,8 @@ export class ComplianceAndEnforcementDocumentService {
   ): Promise<ComplianceAndEnforcementDocumentDto> {
     let formData = this.convertDtoToFormData(createDto);
 
+    console.log(formData);
+
     return firstValueFrom(this.http.post<ComplianceAndEnforcementDocumentDto>(`${this.url}/${fileNumber}`, formData));
   }
 
@@ -115,6 +117,9 @@ export class ComplianceAndEnforcementDocumentService {
     }
     if (dto.inspectionUuid) {
       formData.set('inspectionUuid', dto.inspectionUuid);
+    }
+    if (dto.orderUuid) {
+      formData.set('orderUuid', dto.orderUuid);
     }
     if (dto.parcelUuid) {
       formData.set('parcelUuid', dto.parcelUuid);

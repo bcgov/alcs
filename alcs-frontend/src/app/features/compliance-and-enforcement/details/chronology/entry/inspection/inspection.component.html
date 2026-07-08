@@ -163,7 +163,7 @@
   <app-compliance-and-enforcement-inspection-reports
     class="full-width"
     [documents]="inspection()?.documents ?? []"
-    (edit)="openEditDocumentDialog($event)"
+    (edit)="openEditDocumentDialog(entryUuid, uuid, $event)"
     (delete)="confirmDocumentDelete($event)"
   />
 

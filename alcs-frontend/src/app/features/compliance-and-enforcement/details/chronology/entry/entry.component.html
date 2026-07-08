@@ -76,10 +76,10 @@
 
       <div class="c-and-e-action-list">
         <strong>C&E Action:</strong>
-        @if (sortedInspections().length > 0) {
+        @if (sortedInspections().length > 0 || sortedOrders().length > 0) {
           @for (inspection of sortedInspections(); track inspection) {
             <div class="c-and-e-action-wrapper">
-              <div class="c-and-e-action">
+              <div class="c-and-e-action inspection">
                 @if (inspection.isDraft) {
                   DRAFT
                 }
@@ -87,7 +87,7 @@
                 @if (entry?.isDraft) {
                   <button
                     mat-icon-button
-                    class="action-button inspection-edit-button"
+                    class="c-and-e-action-button c-and-e-action-edit-button"
                     type="button"
                     (click)="onEditInspectionClick(inspection.uuid)"
                     touch-target="none"
@@ -96,7 +96,7 @@
                   </button>
                   <button
                     mat-icon-button
-                    class="action-button inspection-delete-button"
+                    class="c-and-e-action-button c-and-e-action-delete-button"
                     type="button"
                     (click)="confirmInspectionDelete(inspection.uuid)"
                     touch-target="none"
@@ -108,6 +108,41 @@
               @if (showErrors && inspection.isDraft) {
                 <div>
                   <app-error-message message="Inspection must be finalized"></app-error-message>
+                </div>
+              }
+            </div>
+          }
+          @for (order of sortedOrders(); track order) {
+            <div class="c-and-e-action-wrapper">
+              <div class="c-and-e-action order">
+                @if (order.isDraft) {
+                  DRAFT
+                }
+                {{ order.type }} Order
+                @if (entry?.isDraft) {
+                  <button
+                    mat-icon-button
+                    class="c-and-e-action-button c-and-e-action-edit-button"
+                    type="button"
+                    (click)="onEditOrderClick(order.uuid)"
+                    touch-target="none"
+                  >
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button
+                    mat-icon-button
+                    class="c-and-e-action-button c-and-e-action-delete-button"
+                    type="button"
+                    (click)="confirmOrderDelete(order.uuid)"
+                    touch-target="none"
+                  >
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                }
+              </div>
+              @if (showErrors && order.isDraft) {
+                <div>
+                  <app-error-message message="Order must be finalized"></app-error-message>
                 </div>
               }
             </div>
@@ -145,11 +180,21 @@
           <button type="button" mat-menu-item class="c-and-e-action-menu-item" (click)="onAddInspectionClick()">
             Inspection
           </button>
+
+          <button type="button" mat-menu-item class="c-and-e-action-menu-item" (click)="onAddOrderClick()">
+            Order
+          </button>
         </mat-menu>
       }
 
-      <!-- Documents -->
-      <ng-content></ng-content>
+      @if (entry?.isDraft || entry?.documents?.length) {
+        <app-compliance-and-enforcement-chronology-entry-documents
+          [isDraft]="!!entry?.isDraft"
+          [documents]="sortDocuments(entry?.documents ?? [])"
+          (edit)="openEditDocumentDialog(entry?.uuid, $event)"
+          (delete)="confirmDocumentDelete($event)"
+        />
+      }
 
       @if (entry?.isDraft) {
         <div class="actions">
