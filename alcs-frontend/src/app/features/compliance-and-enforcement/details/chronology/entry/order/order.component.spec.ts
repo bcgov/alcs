@@ -10,8 +10,8 @@ import {
   UpdateComplianceAndEnforcementChronologyEntryDto,
 } from '../../../../../../services/compliance-and-enforcement/chronology/chronology.dto';
 import { ComplianceAndEnforcementChronologyService } from '../../../../../../services/compliance-and-enforcement/chronology/chronology.service';
-import { NoticeType } from '../../../../../../services/compliance-and-enforcement/chronology/notice/notice.dto';
-import { ComplianceAndEnforcementNoticeService } from '../../../../../../services/compliance-and-enforcement/chronology/notice/notice.service';
+import { OrderType } from '../../../../../../services/compliance-and-enforcement/chronology/order/order.dto';
+import { ComplianceAndEnforcementOrderService } from '../../../../../../services/compliance-and-enforcement/chronology/order/order.service';
 import {
   AllegedActivity,
   ComplianceAndEnforcementDto,
@@ -25,14 +25,14 @@ import { UserDto } from '../../../../../../services/user/user.dto';
 import { UserService } from '../../../../../../services/user/user.service';
 import { ConfirmationDialogService } from '../../../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { ComplianceAndEnforcementChronologyComponent } from '../../chronology.component';
-import { ComplianceAndEnforcementNoticeComponent } from './notice.component';
+import { ComplianceAndEnforcementOrderComponent } from './order.component';
 
 describe('ComplianceAndEnforcementChronologyComponent', () => {
-  let component: ComplianceAndEnforcementNoticeComponent;
-  let fixture: ComponentFixture<ComplianceAndEnforcementNoticeComponent>;
+  let component: ComplianceAndEnforcementOrderComponent;
+  let fixture: ComponentFixture<ComplianceAndEnforcementOrderComponent>;
   let mockActivatedRoute: DeepMocked<ActivatedRoute>;
   let mockRouter: DeepMocked<Router>;
-  let mockService: DeepMocked<ComplianceAndEnforcementNoticeService>;
+  let mockService: DeepMocked<ComplianceAndEnforcementOrderService>;
   let mockComplianceAndEnforcementService: DeepMocked<ComplianceAndEnforcementService>;
   let mockToastService: DeepMocked<ToastService>;
   let mockHttpClient: DeepMocked<HttpClient>;
@@ -90,7 +90,7 @@ describe('ComplianceAndEnforcementChronologyComponent', () => {
   beforeEach(async () => {
     mockActivatedRoute = createMock<ActivatedRoute>();
     mockRouter = createMock<Router>();
-    mockService = createMock<ComplianceAndEnforcementNoticeService>();
+    mockService = createMock<ComplianceAndEnforcementOrderService>();
     mockToastService = createMock<ToastService>();
     mockHttpClient = createMock<HttpClient>();
     mockChronologyService = createMock<ComplianceAndEnforcementChronologyService>();
@@ -105,11 +105,11 @@ describe('ComplianceAndEnforcementChronologyComponent', () => {
 
     TestBed.configureTestingModule({
       imports: [],
-      declarations: [ComplianceAndEnforcementChronologyComponent, ComplianceAndEnforcementNoticeComponent],
+      declarations: [ComplianceAndEnforcementChronologyComponent, ComplianceAndEnforcementOrderComponent],
       providers: [
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
         { provide: Router, useValue: mockRouter },
-        { provide: ComplianceAndEnforcementNoticeService, useValue: mockService },
+        { provide: ComplianceAndEnforcementOrderService, useValue: mockService },
         { provide: ToastService, useValue: mockToastService },
         { provide: HttpClient, useValue: mockHttpClient },
         { provide: ComplianceAndEnforcementChronologyService, useValue: mockChronologyService },
@@ -121,7 +121,7 @@ describe('ComplianceAndEnforcementChronologyComponent', () => {
       ],
     });
 
-    fixture = TestBed.createComponent(ComplianceAndEnforcementNoticeComponent);
+    fixture = TestBed.createComponent(ComplianceAndEnforcementOrderComponent);
     component = fixture.componentInstance;
   });
 
@@ -142,18 +142,18 @@ describe('ComplianceAndEnforcementChronologyComponent', () => {
   });
 
   describe('form and helpers', () => {
-    it('fillForm populates controls from notice', () => {
-      const notice: any = {
+    it('fillForm populates controls from order', () => {
+      const order: any = {
         date: '2020-01-02',
-        type: NoticeType.COMPLIANCE_NOTICE,
+        type: OrderType.COURT_ORDER,
         allegedActivity: [AllegedActivity.EXTRACTION],
         issuedToIndividualResponsiblePartyUuid: 'issuee-1',
         notifications: [],
       };
 
-      component.fillForm(notice, false);
+      component.fillForm(order, false);
 
-      expect(component.form.controls.type.value).toEqual(NoticeType.COMPLIANCE_NOTICE);
+      expect(component.form.controls.type.value).toEqual(OrderType.COURT_ORDER);
       expect(component.form.controls.allegedActivity.value).toEqual([AllegedActivity.EXTRACTION]);
       expect(component.form.controls.issuedToUuid.value).toEqual('issuee-1');
       expect(component.form.controls.date.value).not.toBeNull();
@@ -168,7 +168,7 @@ describe('ComplianceAndEnforcementChronologyComponent', () => {
 
       // populate form
       component.form.controls.date.setValue(moment('2020-02-02'));
-      component.form.controls.type.setValue(NoticeType.COMPLIANCE_NOTICE);
+      component.form.controls.type.setValue(OrderType.COURT_ORDER);
       component.form.controls.allegedActivity.setValue([AllegedActivity.EXTRACTION]);
       component.form.controls.issuedToUuid.setValue('issuee-1');
 
@@ -180,7 +180,7 @@ describe('ComplianceAndEnforcementChronologyComponent', () => {
       const dto = component.dtoFromForm(component.form.value as any, false);
 
       expect(dto.date).toEqual('2020-02-02');
-      expect(dto.type).toEqual(NoticeType.COMPLIANCE_NOTICE);
+      expect(dto.type).toEqual(OrderType.COURT_ORDER);
       expect(dto.allegedActivity).toEqual([AllegedActivity.EXTRACTION]);
       expect(dto.issuedToIndividualResponsiblePartyUuid).toEqual('issuee-1');
       expect(dto.notifications).toHaveLength(1);

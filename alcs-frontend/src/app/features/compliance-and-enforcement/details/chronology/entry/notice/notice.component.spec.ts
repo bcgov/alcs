@@ -268,7 +268,7 @@ describe('ComplianceAndEnforcementChronologyComponent', () => {
       await new Promise((r) => setTimeout(r, 0));
 
       expect(mockService.delete).toHaveBeenCalledWith('some-uuid');
-      expect(mockToastService.showSuccessToast).toHaveBeenCalledWith('Entry deleted successfully.');
+      expect(mockToastService.showSuccessToast).toHaveBeenCalledWith('Notice deleted successfully.');
       expect(mockRouter.navigate).toHaveBeenCalled();
     });
   });
