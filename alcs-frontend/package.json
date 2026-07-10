@@ -50,8 +50,8 @@
     "@angular-eslint/eslint-plugin-template": "21.4.0",
     "@angular-eslint/schematics": "21.4.0",
     "@angular-eslint/template-parser": "21.4.0",
-    "@angular/build": "^21.2.18",
-    "@angular/cli": "^21.2.18",
+    "@angular/build": "^21.2.19",
+    "@angular/cli": "^21.2.19",
     "@angular/compiler-cli": "^21.2.18",
     "@golevelup/ts-jest": "^3.0.0",
     "@types/jest": "^30.0.0",
@@ -60,7 +60,7 @@
     "eslint": "^8.57.0",
     "jest": "^30.3.0",
     "jest-environment-jsdom": "^30.3.0",
-    "prettier": "^3.9.4",
+    "prettier": "^3.9.5",
     "typescript": "5.9.3"
   }
 }
