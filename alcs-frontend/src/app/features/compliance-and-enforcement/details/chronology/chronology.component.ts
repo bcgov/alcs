@@ -32,7 +32,7 @@ export class ComplianceAndEnforcementChronologyComponent implements OnInit, OnDe
   file?: ComplianceAndEnforcementDto;
   authors: UserDto[] = [];
   sortedEntries = computed(() =>
-    Array.from(this.service.entriesByUuid().values()).sort((a, b) => (a.date && b.date ? a.date - b.date : -1)),
+    Array.from(this.service.entriesByUuid().values()).sort((a, b) => (a.date && b.date ? b.date - a.date : -1)),
   );
 
   currentUserUuid?: string;
