@@ -97,7 +97,7 @@ form {
 
   font-size: 14px;
   padding: 0 8px;
-  border: 2px solid transparent;
+  border: 2px solid colors.$grey;
   border-radius: 3px;
 
   &.inspection {
@@ -107,6 +107,10 @@ form {
   &.notice {
     border-color: #fba924;
   }
+
+  &.order {
+    border-color: #9747ff;
+  }
 }
 
 .c-and-e-action-menu-item {
@@ -114,14 +118,14 @@ form {
   font-weight: normal !important;
 }
 
-.action-button {
+.c-and-e-action-button {
   display: block;
 
   width: 16px;
   height: 16px;
   padding: 0;
 
-  &.inspection-delete-button {
+  &.c-and-e-action-delete-button {
     color: colors.$error-color;
   }
 

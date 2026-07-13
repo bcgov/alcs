@@ -11,13 +11,11 @@ import {
   ComplianceAndEnforcementService,
   DEFAULT_C_AND_E_FETCH_OPTIONS,
 } from '../../../../services/compliance-and-enforcement/compliance-and-enforcement.service';
-import { ComplianceAndEnforcementDocumentDto } from '../../../../services/compliance-and-enforcement/documents/document.dto';
 import { ToastService } from '../../../../services/toast/toast.service';
 import { UserDto } from '../../../../services/user/user.dto';
 import { UserService } from '../../../../services/user/user.service';
 import { ConfirmationDialogStyle } from '../../../../shared/confirmation-dialog/confirmation-dialog.component';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
-import { DOCUMENT_TYPE } from '../../../../shared/document/document.dto';
 import { findFileNumberInRouteTree } from '../../../../shared/utils/routing';
 
 @Component({
@@ -36,12 +34,6 @@ export class ComplianceAndEnforcementChronologyComponent implements OnInit, OnDe
   );
 
   currentUserUuid?: string;
-
-  rankByDocumentTypeCode: Map<DOCUMENT_TYPE, number> = new Map(
-    [DOCUMENT_TYPE.C_AND_E_INSPECTION, DOCUMENT_TYPE.C_AND_E_NOTICE, DOCUMENT_TYPE.CORRESPONDENCE].map(
-      (type, index) => [type, index],
-    ),
-  );
 
   $destroy = new Subject<void>();
 
@@ -199,15 +191,6 @@ export class ComplianceAndEnforcementChronologyComponent implements OnInit, OnDe
     }
 
     this.complianceAndEnforcementService.loadFile(this.fileNumber, DEFAULT_C_AND_E_FETCH_OPTIONS);
-  }
-
-  sortDocuments(documents: ComplianceAndEnforcementDocumentDto[]): ComplianceAndEnforcementDocumentDto[] {
-    return documents.sort(
-      (documentA, documentB) =>
-        (this.rankByDocumentTypeCode.get(documentA.type.code) ?? Number.MAX_SAFE_INTEGER) -
-          (this.rankByDocumentTypeCode.get(documentB.type.code) ?? Number.MAX_SAFE_INTEGER) ||
-        documentA.uploadedAt - documentB.uploadedAt,
-    );
   }
 
   ngOnDestroy() {

@@ -3,16 +3,16 @@ import { AbstractControl, FormControl, FormGroup, ValidationErrors, Validators }
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import moment, { Moment } from 'moment';
-import { catchError, debounceTime, EMPTY, firstValueFrom, map, Subject, switchMap, takeUntil } from 'rxjs';
+import { catchError, debounceTime, EMPTY, firstValueFrom, Subject, switchMap, takeUntil } from 'rxjs';
 import { ComplianceAndEnforcementChronologyService } from '../../../../../../services/compliance-and-enforcement/chronology/chronology.service';
 import {
-  NoticeDto,
-  NoticeNotification,
-  NoticeType,
   NotificationMethods,
-  UpdateNoticeDto,
-} from '../../../../../../services/compliance-and-enforcement/chronology/notice/notice.dto';
-import { ComplianceAndEnforcementNoticeService } from '../../../../../../services/compliance-and-enforcement/chronology/notice/notice.service';
+  OrderDto,
+  OrderNotification,
+  OrderType,
+  UpdateOrderDto,
+} from '../../../../../../services/compliance-and-enforcement/chronology/order/order.dto';
+import { ComplianceAndEnforcementOrderService } from '../../../../../../services/compliance-and-enforcement/chronology/order/order.service';
 import { AllegedActivity } from '../../../../../../services/compliance-and-enforcement/compliance-and-enforcement.dto';
 import { ComplianceAndEnforcementDocumentDto } from '../../../../../../services/compliance-and-enforcement/documents/document.dto';
 import {
@@ -81,16 +81,16 @@ const notificationValidator = (group: AbstractControl): ValidationErrors | null 
 };
 
 @Component({
-  selector: 'app-compliance-and-enforcement-notice',
-  templateUrl: './notice.component.html',
-  styleUrls: ['./notice.component.scss'],
+  selector: 'app-compliance-and-enforcement-order',
+  templateUrl: './order.component.html',
+  styleUrls: ['./order.component.scss'],
   standalone: false,
 })
-export class ComplianceAndEnforcementNoticeComponent implements OnInit, OnDestroy {
+export class ComplianceAndEnforcementOrderComponent implements OnInit, OnDestroy {
   documentOptions: DocumentUploadDialogOptions = {
     allowedVisibilityFlags: [],
     allowsFileEdit: true,
-    defaultDocumentType: DOCUMENT_TYPE.C_AND_E_NOTICE,
+    defaultDocumentType: DOCUMENT_TYPE.C_AND_E_ORDER,
     defaultDocumentSource: DOCUMENT_SOURCE.ALC,
     typeDisabled: true,
     sourceDisabled: true,
@@ -98,7 +98,8 @@ export class ComplianceAndEnforcementNoticeComponent implements OnInit, OnDestro
 
   section = Section.CHRONOLOGY_ENTRY;
 
-  noticeTypes = Object.values(NoticeType);
+  OrderType = OrderType;
+  orderTypes = Object.values(OrderType);
   notificationMethods = Object.values(NotificationMethods);
   allegedActivities = Object.values(AllegedActivity);
   IssueeType = IssueeType;
@@ -113,12 +114,12 @@ export class ComplianceAndEnforcementNoticeComponent implements OnInit, OnDestro
     return this.chronologyService.entriesByUuid().get(this.entryUuid);
   });
   uuid?: string;
-  notice = computed(() => {
+  order = computed(() => {
     if (!this.uuid) {
       return;
     }
 
-    return this.service.noticesByUuid().get(this.uuid);
+    return this.service.ordersByUuid().get(this.uuid);
   });
 
   issuees = signal<Issuee[] | null>(null);
@@ -127,8 +128,9 @@ export class ComplianceAndEnforcementNoticeComponent implements OnInit, OnDestro
 
   form = new FormGroup({
     date: new FormControl<Moment | null>(null, [Validators.required]),
-    type: new FormControl<NoticeType | null>(null, [Validators.required]),
+    type: new FormControl<OrderType | null>(null, [Validators.required]),
     allegedActivity: new FormControl<AllegedActivity[]>([], [Validators.required]),
+    amount: new FormControl<string | null>(null),
     issuedToUuid: new FormControl<string | null>(null, [Validators.required]),
     notifiedBy: new FormGroup(
       Object.values(NotificationMethods).reduce(
@@ -148,14 +150,14 @@ export class ComplianceAndEnforcementNoticeComponent implements OnInit, OnDestro
 
   showErrors = false;
 
-  dueDates = computed(() => (this.uuid ? this.service.noticesByUuid().get(this.uuid)?.dueDates : undefined) ?? []);
+  dueDates = computed(() => (this.uuid ? this.service.ordersByUuid().get(this.uuid)?.dueDates : undefined) ?? []);
 
   $destroy = new Subject<void>();
 
   constructor(
     private readonly route: ActivatedRoute,
     private readonly router: Router,
-    private readonly service: ComplianceAndEnforcementNoticeService,
+    private readonly service: ComplianceAndEnforcementOrderService,
     private readonly chronologyService: ComplianceAndEnforcementChronologyService,
     private readonly responsiblePartiesService: ResponsiblePartiesService,
     private readonly toastService: ToastService,
@@ -168,13 +170,13 @@ export class ComplianceAndEnforcementNoticeComponent implements OnInit, OnDestro
         return;
       }
 
-      const notice = this.notice();
+      const order = this.order();
 
-      if (!notice) {
+      if (!order) {
         return;
       }
 
-      this.fillForm(notice, false);
+      this.fillForm(order, false);
     });
   }
 
@@ -183,14 +185,11 @@ export class ComplianceAndEnforcementNoticeComponent implements OnInit, OnDestro
 
     this.route.params
       .pipe(
-        map((params) => {
-          return params;
-        }),
         switchMap(async (params) => {
           // Cast is safe, since uuid required by route
-          const { entryUuid, noticeUuid }: { entryUuid: string; noticeUuid: string } = params as {
+          const { entryUuid, orderUuid }: { entryUuid: string; orderUuid: string } = params as {
             entryUuid: string;
-            noticeUuid: string;
+            orderUuid: string;
           };
 
           // Must come before checking this.entry()
@@ -199,13 +198,13 @@ export class ComplianceAndEnforcementNoticeComponent implements OnInit, OnDestro
             this.chronologyService.loadEntries({ filterByUuid: entryUuid }).subscribe();
           }
 
-          // Must come before checking this.notice()
-          this.uuid = noticeUuid;
-          if (!this.notice()) {
-            this.service.loadNotices({ filterByUuid: noticeUuid }).subscribe();
+          // Must come before checking this.order()
+          this.uuid = orderUuid;
+          if (!this.order()) {
+            this.service.loadOrders({ filterByUuid: orderUuid }).subscribe();
           }
 
-          this.subscribeFormChanges(noticeUuid);
+          this.subscribeFormChanges(orderUuid);
         }),
         takeUntil(this.$destroy),
       )
@@ -214,16 +213,17 @@ export class ComplianceAndEnforcementNoticeComponent implements OnInit, OnDestro
     this.loadResponsibleParties();
   }
 
-  fillForm(notice: NoticeDto, emitEvent: boolean = true): void {
+  fillForm(order: OrderDto, emitEvent: boolean = true): void {
     this.form.reset({}, { emitEvent: false });
 
     this.form.patchValue(
       {
-        date: notice.date ? moment(notice.date) : null,
-        type: notice.type,
-        allegedActivity: notice.allegedActivity,
-        issuedToUuid: notice.issuedToIndividualResponsiblePartyUuid || notice.issuedToDirectorUuid,
-        notifiedBy: notice.notifications.reduce(
+        date: order.date ? moment(order.date) : null,
+        type: order.type,
+        allegedActivity: order.allegedActivity,
+        amount: order.amount,
+        issuedToUuid: order.issuedToIndividualResponsiblePartyUuid || order.issuedToDirectorUuid,
+        notifiedBy: order.notifications.reduce(
           (notifiedBy, { method, date }) => {
             notifiedBy[method] = {
               wasNotified: true,
@@ -255,14 +255,14 @@ export class ComplianceAndEnforcementNoticeComponent implements OnInit, OnDestro
           return this.service.update(uuid, dto);
         }),
         catchError((error) => {
-          console.error('Error saving notice', error);
-          this.toastService.showErrorToast('Failed to save notice');
+          console.error('Error saving order', error);
+          this.toastService.showErrorToast('Failed to save order');
           return EMPTY;
         }),
         takeUntil(this.$destroy),
       )
       .subscribe(() => {
-        this.toastService.showSuccessToast('Notice saved');
+        this.toastService.showSuccessToast('Order saved');
       });
   }
 
@@ -307,7 +307,7 @@ export class ComplianceAndEnforcementNoticeComponent implements OnInit, OnDestro
   async onDeleteButtonClick() {
     this.confirmationDialogService
       .openDialog({
-        body: `Are you sure you want to delete the notice and associated report?`,
+        body: `Are you sure you want to delete the order and associated report?`,
       })
       .subscribe(async (accepted) => {
         if (!accepted) {
@@ -315,8 +315,8 @@ export class ComplianceAndEnforcementNoticeComponent implements OnInit, OnDestro
         }
 
         if (!this.uuid) {
-          console.error('No notice UUID found');
-          this.toastService.showErrorToast('Failed to delete notice');
+          console.error('No order UUID found');
+          this.toastService.showErrorToast('Failed to delete order');
           return;
         }
 
@@ -324,13 +324,13 @@ export class ComplianceAndEnforcementNoticeComponent implements OnInit, OnDestro
           .delete(this.uuid)
           .pipe(
             catchError((error) => {
-              console.error('Error deleting notice:', error);
-              this.toastService.showErrorToast('Failed to delete notice.');
+              console.error('Error deleting entry:', error);
+              this.toastService.showErrorToast('Failed to delete entry.');
               return EMPTY;
             }),
           )
           .subscribe(() => {
-            this.toastService.showSuccessToast('Notice deleted successfully.');
+            this.toastService.showSuccessToast('Entry deleted successfully.');
             this.router.navigate(['../../../../..'], { relativeTo: this.route });
           });
       });
@@ -342,10 +342,10 @@ export class ComplianceAndEnforcementNoticeComponent implements OnInit, OnDestro
     if (this.uuid) {
       try {
         await firstValueFrom(this.service.update(this.uuid, dto));
-        this.toastService.showSuccessToast('Notice saved');
+        this.toastService.showSuccessToast('Order saved');
       } catch (error) {
-        console.error('Error saving notice', error);
-        this.toastService.showErrorToast('Failed to save notice');
+        console.error('Error saving order', error);
+        this.toastService.showErrorToast('Failed to save order');
         return;
       }
     }
@@ -354,7 +354,7 @@ export class ComplianceAndEnforcementNoticeComponent implements OnInit, OnDestro
   }
 
   async onFinishButtonClick() {
-    if (this.form.invalid || !this.notice()?.documents.length) {
+    if (this.form.invalid || !this.order()?.documents.length) {
       this.form.controls.date.markAsTouched();
       this.form.controls.type.markAsTouched();
       this.form.controls.issuedToUuid.markAsTouched();
@@ -368,10 +368,12 @@ export class ComplianceAndEnforcementNoticeComponent implements OnInit, OnDestro
     }
   }
 
-  dtoFromForm(formData: typeof this.form.value, isDraft: boolean): UpdateNoticeDto {
-    const dto: UpdateNoticeDto = { isDraft };
+  dtoFromForm(formData: typeof this.form.value, isDraft: boolean): UpdateOrderDto {
+    const dto: UpdateOrderDto = { isDraft };
 
-    if (formData.date) {
+    if (formData.date === null) {
+      dto.date = null;
+    } else if (formData.date !== undefined) {
       dto.date = formData.date.format('YYYY-MM-DD');
     }
 
@@ -393,6 +395,10 @@ export class ComplianceAndEnforcementNoticeComponent implements OnInit, OnDestro
       dto.allegedActivity = formData.allegedActivity;
     }
 
+    if (formData.amount !== undefined) {
+      dto.amount = formData.amount ? formData.amount : null;
+    }
+
     dto.notifications = Object.entries(this.form.controls.notifiedBy.getRawValue()).reduce(
       (methods, [method, { wasNotified, on }]) => {
         if (wasNotified) {
@@ -404,21 +410,31 @@ export class ComplianceAndEnforcementNoticeComponent implements OnInit, OnDestro
 
         return methods;
       },
-      [] as NoticeNotification[],
+      [] as OrderNotification[],
     );
 
     return dto;
   }
 
-  openAddDocumentDialog(entryUuid: string | undefined, noticeUuid: string | undefined): void {
+  openAddDocumentDialog(entryUuid: string | undefined, orderUuid: string | undefined): void {
     this.openDocumentDialog({
       chronologyEntryUuid: entryUuid,
-      noticeUuid: noticeUuid,
+      orderUuid: orderUuid,
     });
   }
 
-  openEditDocumentDialog(document: ComplianceAndEnforcementDocumentDto) {
-    this.openDocumentDialog({}, document);
+  openEditDocumentDialog(
+    entryUuid: string | undefined,
+    orderUuid: string | undefined,
+    document: ComplianceAndEnforcementDocumentDto,
+  ) {
+    this.openDocumentDialog(
+      {
+        chronologyEntryUuid: entryUuid,
+        orderUuid: orderUuid,
+      },
+      document,
+    );
   }
 
   openDocumentDialog(optionOverrides?: DocumentUploadDialogOptions, document?: DocumentDto) {
@@ -452,12 +468,12 @@ export class ComplianceAndEnforcementNoticeComponent implements OnInit, OnDestro
         }
 
         if (!this.uuid) {
-          console.error('Failed to reload notice');
-          this.toastService.showErrorToast('Filed to reload notice');
+          console.error('Failed to reload order');
+          this.toastService.showErrorToast('Filed to reload order');
           return;
         }
 
-        this.service.loadNotices({ filterByUuid: this.uuid }).subscribe();
+        this.service.loadOrders({ filterByUuid: this.uuid }).subscribe();
 
         const entry = this.entry();
 
@@ -489,7 +505,7 @@ export class ComplianceAndEnforcementNoticeComponent implements OnInit, OnDestro
           this.toastService.showErrorToast('Failed to delete document.');
         }
 
-        this.service.loadNotices({ filterByUuid: this.uuid }).subscribe();
+        this.service.loadOrders({ filterByUuid: this.uuid }).subscribe();
       });
   }
 
@@ -529,24 +545,33 @@ export class ComplianceAndEnforcementNoticeComponent implements OnInit, OnDestro
           return;
         }
 
-        const notice = this.dtoFromForm(this.form.value, true);
+        const order = this.dtoFromForm(this.form.value, true);
 
-        notice.dueDates = dueDates.map((dueDate) => ({
+        order.dueDates = dueDates.map((dueDate) => ({
           uuid: dueDate.uuid,
-          noticeUuid: this.uuid,
+          orderUuid: this.uuid,
           date: dueDate.date?.format('YYYY-MM-DD'),
         }));
 
         try {
-          await firstValueFrom(this.service.update(this.uuid, notice));
-          this.toastService.showSuccessToast('Notice saved');
-          this.service.loadNotices({ filterByUuid: this.uuid }).subscribe();
+          await firstValueFrom(this.service.update(this.uuid, order));
+          this.toastService.showSuccessToast('Order saved');
+          this.service.loadOrders({ filterByUuid: this.uuid }).subscribe();
         } catch (error) {
-          console.error('Error saving notice', error);
-          this.toastService.showErrorToast('Failed to save notice');
+          console.error('Error saving order', error);
+          this.toastService.showErrorToast('Failed to save order');
           return;
         }
       });
+  }
+
+  onTypeChange(event: OrderType) {
+    if (event === OrderType.PENALTY_ORDER) {
+      this.form.controls.amount.setValidators([Validators.required]);
+    } else {
+      this.form.controls.amount.clearValidators();
+      this.form.controls.amount.setValue(null);
+    }
   }
 
   ngOnDestroy(): void {

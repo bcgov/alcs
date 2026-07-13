@@ -26,6 +26,7 @@ export interface DocumentUploadDialogOptions {
   chronologyEntryUuid?: string;
   inspectionUuid?: string;
   noticeUuid?: string;
+  orderUuid?: string;
   typeDisabled?: boolean;
   sourceDisabled?: boolean;
 }

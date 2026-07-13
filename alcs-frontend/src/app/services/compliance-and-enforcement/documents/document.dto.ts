@@ -29,5 +29,6 @@ export interface CreateComplianceAndEnforcementDocumentDto extends UpdateComplia
   chronologyEntryUuid?: string | null;
   inspectionUuid?: string | null;
   noticeUuid?: string | null;
+  orderUuid?: string | null;
   file: File;
 }

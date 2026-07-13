@@ -14,6 +14,7 @@ export interface UpdateDocumentDto {
   chronologyEntryUuid?: string;
   inspectionUuid?: string;
   noticeUuid?: string;
+  orderUuid?: string;
 }
 
 export interface CreateDocumentDto extends UpdateDocumentDto {

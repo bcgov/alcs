@@ -16,6 +16,11 @@ import { ComplianceAndEnforcementNoticeProfile } from './chronology/notice/notic
 import { ComplianceAndEnforcementNoticeController } from './chronology/notice/notice.controller';
 import { ComplianceAndEnforcementNotice } from './chronology/notice/notice.entity';
 import { ComplianceAndEnforcementNoticeService } from './chronology/notice/notice.service';
+import { ComplianceAndEnforcementOrderDueDate } from './chronology/order/due-date/due-date.entity';
+import { ComplianceAndEnforcementOrderProfile } from './chronology/order/order.automapper.profile';
+import { ComplianceAndEnforcementOrderController } from './chronology/order/order.controller';
+import { ComplianceAndEnforcementOrder } from './chronology/order/order.entity';
+import { ComplianceAndEnforcementOrderService } from './chronology/order/order.service';
 import { ComplianceAndEnforcementValidatorService } from './compliance-and-enforcement-validator.service';
 import { ComplianceAndEnforcementProfile } from './compliance-and-enforcement.automapper.profile';
 import { ComplianceAndEnforcementController } from './compliance-and-enforcement.controller';
@@ -54,6 +59,8 @@ import { ComplianceAndEnforcementSubmitterService } from './submitter/submitter.
       ComplianceAndEnforcementChronologyInspection,
       ComplianceAndEnforcementNotice,
       ComplianceAndEnforcementNoticeDueDate,
+      ComplianceAndEnforcementOrder,
+      ComplianceAndEnforcementOrderDueDate,
       DocumentCode,
     ]),
     CdogsModule,
@@ -68,6 +75,7 @@ import { ComplianceAndEnforcementSubmitterService } from './submitter/submitter.
     ComplianceAndEnforcementChronologyController,
     ComplianceAndEnforcementChronologyInspectionController,
     ComplianceAndEnforcementNoticeController,
+    ComplianceAndEnforcementOrderController,
   ],
   providers: [
     ComplianceAndEnforcementService,
@@ -78,7 +86,9 @@ import { ComplianceAndEnforcementSubmitterService } from './submitter/submitter.
     ComplianceAndEnforcementChronologyService,
     ComplianceAndEnforcementChronologyInspectionService,
     ComplianceAndEnforcementNoticeService,
+    ComplianceAndEnforcementOrderService,
     ComplianceAndEnforcementValidatorService,
+
     ComplianceAndEnforcementProfile,
     ComplianceAndEnforcementSubmitterProfile,
     ComplianceAndEnforcementPropertyProfile,
@@ -87,6 +97,7 @@ import { ComplianceAndEnforcementSubmitterService } from './submitter/submitter.
     ComplianceAndEnforcementChronologyProfile,
     ComplianceAndEnforcementChronologyInspectionProfile,
     ComplianceAndEnforcementNoticeProfile,
+    ComplianceAndEnforcementOrderProfile,
   ],
   exports: [
     ComplianceAndEnforcementService,
@@ -95,7 +106,11 @@ import { ComplianceAndEnforcementSubmitterService } from './submitter/submitter.
     ComplianceAndEnforcementDocumentService,
     ComplianceAndEnforcementResponsiblePartyService,
     ComplianceAndEnforcementChronologyService,
+    ComplianceAndEnforcementChronologyInspectionService,
+    ComplianceAndEnforcementNoticeService,
+    ComplianceAndEnforcementOrderService,
     ComplianceAndEnforcementValidatorService,
+
     ComplianceAndEnforcementProfile,
     ComplianceAndEnforcementSubmitterProfile,
     ComplianceAndEnforcementPropertyProfile,
@@ -104,6 +119,7 @@ import { ComplianceAndEnforcementSubmitterService } from './submitter/submitter.
     ComplianceAndEnforcementChronologyProfile,
     ComplianceAndEnforcementChronologyInspectionProfile,
     ComplianceAndEnforcementNoticeProfile,
+    ComplianceAndEnforcementOrderProfile,
   ],
 })
 export class ComplianceAndEnforcementModule {}

@@ -23,3 +23,11 @@ export enum NoticeType {
   NOTICE_OF_CONSIDERATION_OF_PENALTY = 'Notice of Consideration of Penalty',
   NOTICE_OF_DEBT_COLLECTION = 'Notice of Debt Collection',
 }
+
+export enum OrderType {
+  STOP_WORK_ORDER = 'Stop Work Order',
+  PENALTY_ORDER = 'Penalty Order',
+  REMEDIATION_ORDER = 'Remediation Order',
+  INFORMATION_ORDER = 'Information Order',
+  COURT_ORDER = 'Court Order',
+}

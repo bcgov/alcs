@@ -123,6 +123,9 @@ export class ComplianceAndEnforcementDocumentService {
     if (dto.noticeUuid) {
       formData.set('noticeUuid', dto.noticeUuid);
     }
+    if (dto.orderUuid) {
+      formData.set('orderUuid', dto.orderUuid);
+    }
     if (dto.parcelUuid) {
       formData.set('parcelUuid', dto.parcelUuid);
     }

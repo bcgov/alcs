@@ -1,9 +1,9 @@
-<h3>Chronology > {{ entryDateText() }} > ALC C&E Action > Notice</h3>
+<h3>Chronology > {{ entryDateText() }} > ALC C&E Action > Order</h3>
 
 <form [formGroup]="form">
   <div class="form-field-wrapper">
     <mat-form-field appearance="outline">
-      <mat-label>Notice Date</mat-label>
+      <mat-label>Order Date</mat-label>
       <input
         matInput
         (click)="datePicker.open()"
@@ -26,10 +26,15 @@
 
   <div class="form-field-wrapper">
     <mat-form-field appearance="outline">
-      <mat-label>Notice Type</mat-label>
-      <mat-select panelClass="author-list-panel" [required]="true" formControlName="type">
-        @for (noticeType of noticeTypes; track noticeType) {
-          <mat-option [value]="noticeType"> {{ noticeType }} </mat-option>
+      <mat-label>Order Type</mat-label>
+      <mat-select
+        panelClass="author-list-panel"
+        [required]="true"
+        formControlName="type"
+        (selectionChange)="onTypeChange($event.value)"
+      >
+        @for (orderType of orderTypes; track orderType) {
+          <mat-option [value]="orderType"> {{ orderType }} </mat-option>
         }
       </mat-select>
     </mat-form-field>
@@ -43,7 +48,12 @@
     }
   </div>
 
-  <div class="form-field-wrapper full-width">
+  <div
+    [ngClass]="{
+      'form-field-wrapper': true,
+      'full-width': form.value.type !== OrderType.PENALTY_ORDER,
+    }"
+  >
     <mat-form-field appearance="outline">
       <mat-label>Alleged Activity</mat-label>
       <mat-select panelClass="author-list-panel" [multiple]="true" [required]="true" formControlName="allegedActivity">
@@ -60,6 +70,30 @@
       </div>
     }
   </div>
+
+  @if (form.value.type === OrderType.PENALTY_ORDER) {
+    <div class="form-field-wrapper">
+      <mat-form-field appearance="outline">
+        <mat-label>Amount</mat-label>
+        <input
+          type="text"
+          mask="99999999.99"
+          [dropSpecialCharacters]="false"
+          inputmode="decimal"
+          matInput
+          [required]="form.value.type === OrderType.PENALTY_ORDER"
+          formControlName="amount"
+        />
+      </mat-form-field>
+      @if (showErrors && form.controls.amount.errors) {
+        <div>
+          @if (form.controls.amount.errors['required']) {
+            <app-error-message message="This field is required"></app-error-message>
+          }
+        </div>
+      }
+    </div>
+  }
 
   <div class="form-field-wrapper full-width">
     <mat-form-field appearance="outline">
@@ -104,7 +138,7 @@
     <div class="row">
       <div></div>
       <div>
-        <strong>Notified By*</strong>
+        <strong>Delivered By*</strong>
         @if (showErrors && form.controls.notifiedBy.errors && form.controls.notifiedBy.errors['noNotificationType']) {
           <div>
             <app-error-message message="Select at least one method"></app-error-message>
@@ -152,7 +186,7 @@
       >
         + Add Document
       </button>
-      @if (showErrors && !notice()?.documents?.length) {
+      @if (showErrors && !order()?.documents?.length) {
         <div>
           <app-error-message message="This field is required"></app-error-message>
         </div>
@@ -160,17 +194,17 @@
     </div>
   </div>
 
-  <app-compliance-and-enforcement-notice-documents
+  <app-compliance-and-enforcement-order-documents
     class="full-width"
-    [documents]="notice()?.documents ?? []"
-    (edit)="openEditDocumentDialog($event)"
+    [documents]="order()?.documents ?? []"
+    (edit)="openEditDocumentDialog(entryUuid, uuid, $event)"
     (delete)="confirmDocumentDelete($event)"
   />
 </form>
 
 <div class="actions">
   <button mat-stroked-button color="warn" type="button" class="delete-button" (click)="onDeleteButtonClick()">
-    Delete Notice
+    Delete Order
   </button>
   <button mat-stroked-button color="primary" type="button" class="save-button" (click)="saveAndExit(true)">
     Save &amp; Exit

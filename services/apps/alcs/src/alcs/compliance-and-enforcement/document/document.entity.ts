@@ -5,6 +5,7 @@ import { Document } from '../../../document/document.entity';
 import { ComplianceAndEnforcementChronologyEntry } from '../chronology/chronology.entity';
 import { ComplianceAndEnforcementChronologyInspection } from '../chronology/inspection/inspection.entity';
 import { ComplianceAndEnforcementNotice } from '../chronology/notice/notice.entity';
+import { ComplianceAndEnforcementOrder } from '../chronology/order/order.entity';
 import { ComplianceAndEnforcement } from '../compliance-and-enforcement.entity';
 
 export enum Section {
@@ -43,6 +44,9 @@ export class ComplianceAndEnforcementDocument extends BaseEntity {
 
   @ManyToOne(() => ComplianceAndEnforcementNotice, { nullable: true, onDelete: 'CASCADE' })
   notice: ComplianceAndEnforcementNotice | null;
+
+  @ManyToOne(() => ComplianceAndEnforcementOrder, { nullable: true, onDelete: 'CASCADE' })
+  order: ComplianceAndEnforcementOrder | null;
 
   @OneToOne(() => Document, { cascade: true })
   @JoinColumn()

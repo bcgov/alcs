@@ -11,6 +11,7 @@ import {
 import { ComplianceAndEnforcementChronologyService } from '../../../../../services/compliance-and-enforcement/chronology/chronology.service';
 import { ComplianceAndEnforcementChronologyInspectionService } from '../../../../../services/compliance-and-enforcement/chronology/inspection/inspection.service';
 import { ComplianceAndEnforcementNoticeService } from '../../../../../services/compliance-and-enforcement/chronology/notice/notice.service';
+import { ComplianceAndEnforcementOrderService } from '../../../../../services/compliance-and-enforcement/chronology/order/order.service';
 import { ComplianceAndEnforcementDocumentDto } from '../../../../../services/compliance-and-enforcement/documents/document.dto';
 import {
   ComplianceAndEnforcementDocumentService,
@@ -64,6 +65,21 @@ export class ComplianceAndEnforcementChronologyEntryComponent implements OnInit,
       .sort((a, b) => (a.date && b.date ? a.createdAt - b.createdAt : -1)),
   );
 
+  sortedOrders = computed(() =>
+    Array.from(this.orderService.ordersByUuid().values())
+      .filter((order) => order.entryUuid === this.entry?.uuid)
+      .sort((a, b) => (a.date && b.date ? a.createdAt - b.createdAt : -1)),
+  );
+
+  rankByDocumentTypeCode: Map<DOCUMENT_TYPE, number> = new Map(
+    [
+      DOCUMENT_TYPE.C_AND_E_INSPECTION,
+      DOCUMENT_TYPE.C_AND_E_NOTICE,
+      DOCUMENT_TYPE.C_AND_E_ORDER,
+      DOCUMENT_TYPE.CORRESPONDENCE,
+    ].map((type, index) => [type, index]),
+  );
+
   section: Section = Section.CHRONOLOGY_ENTRY;
 
   documentOptions: DocumentUploadDialogOptions = {
@@ -96,6 +112,7 @@ export class ComplianceAndEnforcementChronologyEntryComponent implements OnInit,
     private readonly documentService: ComplianceAndEnforcementDocumentService,
     private readonly inspectionService: ComplianceAndEnforcementChronologyInspectionService,
     private readonly noticeService: ComplianceAndEnforcementNoticeService,
+    private readonly orderService: ComplianceAndEnforcementOrderService,
     private readonly userService: UserService,
     private readonly toastService: ToastService,
     private readonly confirmationDialogService: ConfirmationDialogService,
@@ -134,6 +151,7 @@ export class ComplianceAndEnforcementChronologyEntryComponent implements OnInit,
 
     this.inspectionService.loadInspections({ filterByEntryUuid: this.entry.uuid }).subscribe();
     this.noticeService.loadNotices({ filterByEntryUuid: this.entry.uuid }).subscribe();
+    this.orderService.loadOrders({ filterByEntryUuid: this.entry.uuid }).subscribe();
   }
 
   fillForm(entry: ComplianceAndEnforcementChronologyEntryDto): void {
@@ -274,12 +292,6 @@ export class ComplianceAndEnforcementChronologyEntryComponent implements OnInit,
       return;
     }
 
-    if (!this.currentUserUuid) {
-      console.error('Current user not loaded. Wait and try again.');
-      this.toastService.showErrorToast('Current user not loaded. Wait and try again.');
-      return;
-    }
-
     await this.save();
 
     try {
@@ -289,8 +301,8 @@ export class ComplianceAndEnforcementChronologyEntryComponent implements OnInit,
         relativeTo: this.route,
       });
     } catch (error) {
-      console.error("Couldn't create draft inspection", error);
-      this.toastService.showErrorToast("Couldn't create draft inspection");
+      console.error("Couldn't create draft notice", error);
+      this.toastService.showErrorToast("Couldn't create draft notice");
     }
   }
 
@@ -334,6 +346,70 @@ export class ComplianceAndEnforcementChronologyEntryComponent implements OnInit,
 
         this.chronologyService.loadEntries({ filterByUuid: this.entry.uuid }).subscribe();
         this.noticeService.loadNotices({ filterByEntryUuid: this.entry.uuid }).subscribe();
+      });
+  }
+
+  async onAddOrderClick(): Promise<void> {
+    if (!this.entry || !this.entry?.uuid) {
+      console.error('Must have a chronology entry with valid UUID');
+      this.toastService.showErrorToast("Can't find chronology entry");
+      return;
+    }
+
+    await this.save();
+
+    try {
+      const orderUuid = await this.orderService.createDraft(this.entry.uuid);
+      this.toastService.showSuccessToast('Draft order created');
+      this.router.navigate(['entry', this.entry.uuid, 'order', orderUuid, 'edit'], {
+        relativeTo: this.route,
+      });
+    } catch (error) {
+      console.error("Couldn't create draft order", error);
+      this.toastService.showErrorToast("Couldn't create draft order");
+    }
+  }
+
+  async onEditOrderClick(orderUuid: string) {
+    if (!this.entry || !this.entry?.uuid) {
+      console.error('Must have a chronology entry with valid UUID');
+      this.toastService.showErrorToast("Can't find chronology entry");
+      return;
+    }
+
+    await this.save();
+
+    await this.router.navigate(['entry', this.entry.uuid, 'order', orderUuid, 'edit'], {
+      relativeTo: this.route,
+    });
+  }
+
+  async confirmOrderDelete(orderUuid: string) {
+    this.confirmationDialogService
+      .openDialog({
+        body: `Are you sure you want to delete the order and associated report?`,
+      })
+      .subscribe(async (accepted) => {
+        if (!accepted) {
+          return;
+        }
+
+        try {
+          await firstValueFrom(this.orderService.delete(orderUuid));
+          this.toastService.showSuccessToast('Order deleted successfully.');
+        } catch (error) {
+          console.error('Error deleting order:', error);
+          this.toastService.showErrorToast('Failed to delete order.');
+        }
+
+        if (!this.entry) {
+          console.error("Couldn't refresh entry. No entry found.");
+          this.toastService.showErrorToast("Couldn't refresh entry");
+          return;
+        }
+
+        this.chronologyService.loadEntries({ filterByUuid: this.entry.uuid }).subscribe();
+        this.orderService.loadOrders({ filterByEntryUuid: this.entry.uuid }).subscribe();
       });
   }
 
@@ -416,14 +492,19 @@ export class ComplianceAndEnforcementChronologyEntryComponent implements OnInit,
     this.chronologyService.loadEntries({ filterByUuid: this.entry.uuid }).subscribe();
   }
 
-  openAddCorrespondenceDialog(entryUuid: string): void {
+  openAddCorrespondenceDialog(entryUuid: string | undefined): void {
     this.openDocumentDialog({
       chronologyEntryUuid: entryUuid,
     });
   }
 
-  openEditDocumentDialog(document: ComplianceAndEnforcementDocumentDto) {
-    this.openDocumentDialog({}, document);
+  openEditDocumentDialog(entryUuid: string | undefined, document: ComplianceAndEnforcementDocumentDto) {
+    this.openDocumentDialog(
+      {
+        chronologyEntryUuid: entryUuid,
+      },
+      document,
+    );
   }
 
   openDocumentDialog(optionOverrides?: DocumentUploadDialogOptions, document?: DocumentDto) {
@@ -489,7 +570,17 @@ export class ComplianceAndEnforcementChronologyEntryComponent implements OnInit,
         }
 
         this.chronologyService.loadEntries({ filterByFileNumber: this.fileNumber }).subscribe();
+        this.inspectionService.loadInspections({ filterByEntryUuid: this.entry?.uuid }).subscribe();
       });
+  }
+
+  sortDocuments(documents: ComplianceAndEnforcementDocumentDto[]): ComplianceAndEnforcementDocumentDto[] {
+    return documents.sort(
+      (documentA, documentB) =>
+        (this.rankByDocumentTypeCode.get(documentA.type.code) ?? Number.MAX_SAFE_INTEGER) -
+          (this.rankByDocumentTypeCode.get(documentB.type.code) ?? Number.MAX_SAFE_INTEGER) ||
+        documentA.uploadedAt - documentB.uploadedAt,
+    );
   }
 
   ngOnDestroy(): void {

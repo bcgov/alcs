@@ -60,9 +60,10 @@ export class ComplianceAndEnforcementDocumentController {
       source: req.body.source.value as DOCUMENT_SOURCE,
       system: DOCUMENT_SYSTEM.ALCS,
       section: req.body.section?.value as Section,
-      chronologyEntryUuid: req.body.chronologyEntryUuid?.value as string,
-      inspectionUuid: req.body.inspectionUuid?.value as string,
-      noticeUuid: req.body.noticeUuid?.value as string,
+      ...(req.body.chronologyEntryUuid?.value && { chronologyEntryUuid: req.body.chronologyEntryUuid.value as string }),
+      ...(req.body.inspectionUuid?.value && { inspectionUuid: req.body.inspectionUuid.value as string }),
+      ...(req.body.noticeUuid?.value && { noticeUuid: req.body.noticeUuid.value as string }),
+      ...(req.body.orderUuid?.value && { orderUuid: req.body.orderUuid.value as string }),
     };
 
     // Use C&E-specific terminology

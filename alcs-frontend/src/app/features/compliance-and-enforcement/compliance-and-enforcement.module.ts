@@ -12,6 +12,8 @@ import { ComplianceAndEnforcementInspectionReportsComponent } from './details/ch
 import { ComplianceAndEnforcementChronologyEntryInspectionComponent } from './details/chronology/entry/inspection/inspection.component';
 import { ComplianceAndEnforcementNoticeDocumentsComponent } from './details/chronology/entry/notice/documents/documents.component';
 import { ComplianceAndEnforcementNoticeComponent } from './details/chronology/entry/notice/notice.component';
+import { ComplianceAndEnforcementOrderDocumentsComponent } from './details/chronology/entry/order/documents/documents.component';
+import { ComplianceAndEnforcementOrderComponent } from './details/chronology/entry/order/order.component';
 import { ComplaintReferralComponent } from './details/complaint-referral/complaint-referral.component';
 import { ComplaintReferralOverviewComponent } from './details/complaint-referral/overview/overview.component';
 import { AddSubmitterDialogComponent } from './details/complaint-referral/submitters/add-submitter-dialog/add-submitter-dialog.component';
@@ -104,12 +106,14 @@ export const detailsRoutes: (Route & { icon?: string; menuTitle?: string })[] = 
       {
         path: 'entry/:entryUuid/inspection/:inspectionUuid/edit',
         component: ComplianceAndEnforcementChronologyEntryInspectionComponent,
-        data: { editing: null },
       },
       {
         path: 'entry/:entryUuid/notice/:noticeUuid/edit',
         component: ComplianceAndEnforcementNoticeComponent,
-        data: { editing: null },
+      },
+      {
+        path: 'entry/:entryUuid/order/:orderUuid/edit',
+        component: ComplianceAndEnforcementOrderComponent,
       },
     ],
   },
@@ -152,6 +156,8 @@ const routes: Routes = [
     ComplianceAndEnforcementInspectionReportsComponent,
     ComplianceAndEnforcementNoticeComponent,
     ComplianceAndEnforcementNoticeDocumentsComponent,
+    ComplianceAndEnforcementOrderComponent,
+    ComplianceAndEnforcementOrderDocumentsComponent,
   ],
   imports: [
     SharedModule.forRoot(),

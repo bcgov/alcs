@@ -246,14 +246,19 @@ export class ComplianceAndEnforcementChronologyEntryInspectionComponent implemen
           return;
         }
 
-        try {
-          this.service.delete(this.uuid).subscribe();
-          this.toastService.showSuccessToast('Entry deleted successfully.');
-          this.router.navigate(['../../../../..'], { relativeTo: this.route });
-        } catch (error) {
-          console.error('Error deleting entry:', error);
-          this.toastService.showErrorToast('Failed to delete entry.');
-        }
+        this.service
+          .delete(this.uuid)
+          .pipe(
+            catchError((error) => {
+              console.error('Error deleting entry:', error);
+              this.toastService.showErrorToast('Failed to delete entry.');
+              return EMPTY;
+            }),
+          )
+          .subscribe(() => {
+            this.toastService.showSuccessToast('Entry deleted successfully.');
+            this.router.navigate(['../../../../..'], { relativeTo: this.route });
+          });
       });
   }
 
@@ -338,8 +343,18 @@ export class ComplianceAndEnforcementChronologyEntryInspectionComponent implemen
     });
   }
 
-  openEditDocumentDialog(document: ComplianceAndEnforcementDocumentDto) {
-    this.openDocumentDialog({}, document);
+  openEditDocumentDialog(
+    entryUuid: string | undefined,
+    inspectionUuid: string | undefined,
+    document: ComplianceAndEnforcementDocumentDto,
+  ) {
+    this.openDocumentDialog(
+      {
+        chronologyEntryUuid: entryUuid,
+        inspectionUuid: inspectionUuid,
+      },
+      document,
+    );
   }
 
   openDocumentDialog(optionOverrides?: DocumentUploadDialogOptions, document?: DocumentDto) {

@@ -31,7 +31,9 @@
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef class="actions-column">Actions</th>
       <td mat-cell *matCellDef="let document">
-        @if (document.type.code !== DOCUMENT_TYPE.C_AND_E_NOTICE) {
+        @if (
+          document.type.code !== DOCUMENT_TYPE.C_AND_E_ORDER && document.type.code !== DOCUMENT_TYPE.C_AND_E_NOTICE
+        ) {
           <button class="action-button" mat-icon-button (click)="edit.emit(document)">
             <mat-icon>edit</mat-icon>
           </button>
