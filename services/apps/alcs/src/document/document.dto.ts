@@ -75,45 +75,18 @@ export class DocumentDto {
 }
 
 export class CreateDocumentDto {
-  @AutoMap()
   typeCode?: string;
-
-  @AutoMap()
   mimeType: string;
-
-  @AutoMap()
   fileKey: string;
-
-  @AutoMap()
   fileName: string;
-
-  @AutoMap()
   fileSize?: number;
-
-  @AutoMap()
   uploadedBy?: User | null;
-
-  @AutoMap()
   source: DOCUMENT_SOURCE;
-
-  @AutoMap()
   system: DOCUMENT_SYSTEM;
-
-  @AutoMap()
   tags?: string[];
-
-  @AutoMap()
   section?: Section;
-
-  @AutoMap()
   chronologyEntryUuid?: string;
-
-  @AutoMap()
   inspectionUuid?: string;
-
-  @AutoMap()
   noticeUuid?: string;
-
-  @AutoMap()
   orderUuid?: string;
 }
