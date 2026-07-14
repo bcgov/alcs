@@ -77,7 +77,9 @@
         <mat-label>Amount</mat-label>
         <input
           type="text"
-          mask="99999999.99"
+          mask="separator.2"
+          separatorLimit="10000000"
+          thousandSeparator=","
           [dropSpecialCharacters]="false"
           inputmode="decimal"
           matInput
@@ -85,6 +87,7 @@
           formControlName="amount"
         />
       </mat-form-field>
+
       @if (showErrors && form.controls.amount.errors) {
         <div>
           @if (form.controls.amount.errors['required']) {

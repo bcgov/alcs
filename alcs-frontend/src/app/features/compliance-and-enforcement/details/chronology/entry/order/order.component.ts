@@ -357,8 +357,9 @@ export class ComplianceAndEnforcementOrderComponent implements OnInit, OnDestroy
     if (this.form.invalid || !this.order()?.documents.length) {
       this.form.controls.date.markAsTouched();
       this.form.controls.type.markAsTouched();
-      this.form.controls.issuedToUuid.markAsTouched();
       this.form.controls.allegedActivity.markAsTouched();
+      this.form.controls.amount.markAsTouched();
+      this.form.controls.issuedToUuid.markAsTouched();
 
       this.showErrors = true;
     } else {
@@ -396,7 +397,7 @@ export class ComplianceAndEnforcementOrderComponent implements OnInit, OnDestroy
     }
 
     if (formData.amount !== undefined) {
-      dto.amount = formData.amount ? formData.amount : null;
+      dto.amount = formData.amount ? formData.amount.replace(',', '') : null;
     }
 
     dto.notifications = Object.entries(this.form.controls.notifiedBy.getRawValue()).reduce(
