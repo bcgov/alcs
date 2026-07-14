@@ -192,9 +192,7 @@
               }
             </div>
           }
-        }
-
-        @if (sortedInspections().length < 1 && sortedNotices().length < 1) {
+        } @else {
           <span class="no-data"> No Data</span>
         }
       </div>
