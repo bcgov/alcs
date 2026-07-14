@@ -59,7 +59,12 @@ export class ComplianceAndEnforcementNoticeService {
         dueDates: true,
         entry: true,
       },
-      order: { createdAt: 'ASC' },
+      order: {
+        createdAt: 'ASC',
+        dueDates: {
+          date: 'ASC',
+        },
+      },
     });
 
     return this.mapper.mapArray(entities, ComplianceAndEnforcementNotice, NoticeDto);
