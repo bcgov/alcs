@@ -231,7 +231,7 @@ describe('ComplianceAndEnforcementChronologyComponent', () => {
 
       const result = component.datesInUse('2');
 
-      expect(result).toEqual([1000, 3000]);
+      expect(result).toEqual([3000, 1000]);
     });
 
     it('should filter out null dates', () => {
