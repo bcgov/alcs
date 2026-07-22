@@ -28,8 +28,8 @@
     "alcs:migration:run": "npm run alcs:typeorm migration:run"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.1090.0",
-    "@aws-sdk/s3-request-presigner": "^3.1090.0",
+    "@aws-sdk/client-s3": "^3.1092.0",
+    "@aws-sdk/s3-request-presigner": "^3.1092.0",
     "@fastify/cors": "^11.3.0",
     "@fastify/helmet": "^13.1.0",
     "@fastify/multipart": "^9.4.0",
@@ -99,7 +99,7 @@
     "eslint-plugin-prettier": "^5.5.6",
     "jest": "^29.7.0",
     "memfs": "^4.64.0",
-    "prettier": "^3.9.5",
+    "prettier": "^3.9.6",
     "supertest": "^6.3.4",
     "ts-jest": "^29.4.11",
     "ts-loader": "^9.6.2",
