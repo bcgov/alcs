@@ -44,13 +44,13 @@
     "zone.js": "~0.15.1"
   },
   "devDependencies": {
-    "@angular-builders/jest": "^21.0.3",
+    "@angular-builders/jest": "^22.0.0",
     "@angular-eslint/builder": "21.3.1",
     "@angular-eslint/eslint-plugin": "21.3.1",
     "@angular-eslint/eslint-plugin-template": "21.3.1",
     "@angular-eslint/schematics": "21.3.1",
     "@angular-eslint/template-parser": "21.3.1",
-    "@angular/build": "^21.2.8",
+    "@angular/build": "^22.0.3",
     "@angular/cli": "^21.2.8",
     "@angular/compiler-cli": "^21.2.9",
     "@golevelup/ts-jest": "^3.0.0",
