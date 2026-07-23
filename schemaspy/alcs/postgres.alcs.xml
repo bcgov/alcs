@@ -1615,7 +1615,10 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="audit_created_by" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="audit_updated_by" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="5" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <child column="entry_uuid" foreignKey="FK_e72cfe78331de4c37736f6c2eaf" implied="false" onDeleteCascade="true" schema="alcs" table="compliance_and_enforcement_chronology_inspection"/>
             <child column="chronology_entry_uuid" foreignKey="FK_75a6d25131969bb5f499365b2b9" implied="false" onDeleteCascade="true" schema="alcs" table="compliance_and_enforcement_document"/>
+            <child column="entry_uuid" foreignKey="FK_9229126fdeede68ac68c539c24a" implied="false" onDeleteCascade="true" schema="alcs" table="compliance_and_enforcement_notice"/>
+            <child column="entry_uuid" foreignKey="FK_14a57d9289929a39c4602792874" implied="false" onDeleteCascade="true" schema="alcs" table="compliance_and_enforcement_order"/>
          </column>
          <column autoUpdated="false" defaultValue="false" digits="0" id="6" name="is_draft" nullable="false" remarks="" size="1" type="bool" typeCode="-7"/>
          <column autoUpdated="false" defaultValue="null" digits="6" id="7" name="date" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
@@ -1629,6 +1632,28 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="11" name="nris_inspection_id" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
          <primaryKey column="uuid" sequenceNumberInPK="1"/>
          <index name="PK_08431834c0cf05174bf74ea46d6" unique="true">
+            <column ascending="true" name="uuid"/>
+         </index>
+      </table>
+      <table name="compliance_and_enforcement_chronology_inspection" remarks="Compliance and enforcement chronology entry" schema="alcs" type="TABLE">
+         <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="0" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <child column="inspection_uuid" foreignKey="FK_d37ac07845dd354d95b27c4232c" implied="false" onDeleteCascade="true" schema="alcs" table="compliance_and_enforcement_document"/>
+         </column>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="1" name="created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="true" digits="0" id="2" name="is_draft" nullable="false" remarks="" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="date" nullable="true" remarks="" size="13" type="date" typeCode="91"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="type" nullable="true" remarks="" size="2147483647" type="&quot;alcs&quot;.&quot;compliance_and_enforcement_chronology_inspection_type_enum&quot;" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="'{}'::alcs.compliance_and_enforcement_alleged_activity_enum[]" digits="0" id="5" name="alleged_activity" nullable="false" remarks="" size="2147483647" type="&quot;alcs&quot;.&quot;_compliance_and_enforcement_alleged_activity_enum&quot;" typeCode="2003"/>
+         <column autoUpdated="false" defaultValue="'[]'::jsonb" digits="0" id="6" name="attendees" nullable="false" remarks="" size="2147483647" type="jsonb" typeCode="1111"/>
+         <column autoUpdated="false" defaultValue="''::text" digits="0" id="7" name="comments" nullable="false" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="officer_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="uuid" foreignKey="FK_70ca3e3a66229356bc2688bf72d" implied="false" onDeleteCascade="false" schema="alcs" table="user"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="9" name="entry_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="uuid" foreignKey="FK_e72cfe78331de4c37736f6c2eaf" implied="false" onDeleteCascade="true" schema="alcs" table="compliance_and_enforcement_chronology_entry"/>
+         </column>
+         <primaryKey column="uuid" sequenceNumberInPK="1"/>
+         <index name="PK_a6fef47f253d5253779603e5d96" unique="true">
             <column ascending="true" name="uuid"/>
          </index>
       </table>
@@ -1650,12 +1675,98 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="chronology_entry_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <parent column="uuid" foreignKey="FK_75a6d25131969bb5f499365b2b9" implied="false" onDeleteCascade="true" schema="alcs" table="compliance_and_enforcement_chronology_entry"/>
          </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="inspection_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="uuid" foreignKey="FK_d37ac07845dd354d95b27c4232c" implied="false" onDeleteCascade="true" schema="alcs" table="compliance_and_enforcement_chronology_inspection"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="notice_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="uuid" foreignKey="FK_71a573e06b00b3b6690ac0ee382" implied="false" onDeleteCascade="true" schema="alcs" table="compliance_and_enforcement_notice"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="order_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="uuid" foreignKey="FK_8392e9424e61fb84063a5252ffe" implied="false" onDeleteCascade="true" schema="alcs" table="compliance_and_enforcement_order"/>
+         </column>
          <primaryKey column="uuid" sequenceNumberInPK="1"/>
          <index name="PK_74f7873502cb0bce8ceeb8cd23a" unique="true">
             <column ascending="true" name="uuid"/>
          </index>
          <index name="REL_8f67dae9787b42bef912292716" unique="true">
             <column ascending="true" name="document_uuid"/>
+         </index>
+      </table>
+      <table name="compliance_and_enforcement_notice" remarks="Compliance and enforcement chronology entry" schema="alcs" type="TABLE">
+         <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="0" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <child column="notice_uuid" foreignKey="FK_71a573e06b00b3b6690ac0ee382" implied="false" onDeleteCascade="true" schema="alcs" table="compliance_and_enforcement_document"/>
+            <child column="notice_uuid" foreignKey="FK_342004adf376e3321b40571e7fa" implied="false" onDeleteCascade="true" schema="alcs" table="compliance_and_enforcement_notice_due_date"/>
+         </column>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="1" name="created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="true" digits="0" id="2" name="is_draft" nullable="false" remarks="" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="date" nullable="true" remarks="" size="13" type="date" typeCode="91"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="type" nullable="true" remarks="" size="2147483647" type="&quot;alcs&quot;.&quot;compliance_and_enforcement_notice_type_enum&quot;" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="'{}'::alcs.compliance_and_enforcement_alleged_activity_enum[]" digits="0" id="5" name="alleged_activity" nullable="false" remarks="" size="2147483647" type="&quot;alcs&quot;.&quot;_compliance_and_enforcement_alleged_activity_enum&quot;" typeCode="2003"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="entry_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="uuid" foreignKey="FK_9229126fdeede68ac68c539c24a" implied="false" onDeleteCascade="true" schema="alcs" table="compliance_and_enforcement_chronology_entry"/>
+         </column>
+         <column autoUpdated="false" defaultValue="'[]'::jsonb" digits="0" id="7" name="notifications" nullable="false" remarks="" size="2147483647" type="jsonb" typeCode="1111"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="issued_to_individual_responsible_party_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="uuid" foreignKey="FK_cb835ffe4da972cfa8a0e9f30e9" implied="false" onDeleteCascade="false" schema="alcs" table="compliance_and_enforcement_responsible_party"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="9" name="issued_to_director_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="uuid" foreignKey="FK_a3f20d4ae096798ad451484ffa9" implied="false" onDeleteCascade="false" schema="alcs" table="compliance_and_enforcement_responsible_party_director"/>
+         </column>
+         <primaryKey column="uuid" sequenceNumberInPK="1"/>
+         <index name="PK_d554901eb8b662c2eb1ded46bf7" unique="true">
+            <column ascending="true" name="uuid"/>
+         </index>
+      </table>
+      <table name="compliance_and_enforcement_notice_due_date" remarks="Compliance and enforcement chronology notice due date" schema="alcs" type="TABLE">
+         <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="0" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="date" nullable="false" remarks="" size="13" type="date" typeCode="91"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="2" name="completed_date" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="''::text" digits="0" id="3" name="comment" nullable="false" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="notice_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="uuid" foreignKey="FK_342004adf376e3321b40571e7fa" implied="false" onDeleteCascade="true" schema="alcs" table="compliance_and_enforcement_notice"/>
+         </column>
+         <primaryKey column="uuid" sequenceNumberInPK="1"/>
+         <index name="PK_6e2284845d0fae6e1422592fc03" unique="true">
+            <column ascending="true" name="uuid"/>
+         </index>
+      </table>
+      <table name="compliance_and_enforcement_order" remarks="Compliance and enforcement chronology entry" schema="alcs" type="TABLE">
+         <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="0" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <child column="order_uuid" foreignKey="FK_8392e9424e61fb84063a5252ffe" implied="false" onDeleteCascade="true" schema="alcs" table="compliance_and_enforcement_document"/>
+            <child column="order_uuid" foreignKey="FK_e87fb83241448da3ec449cf9c6b" implied="false" onDeleteCascade="true" schema="alcs" table="compliance_and_enforcement_order_due_date"/>
+         </column>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="1" name="created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="true" digits="0" id="2" name="is_draft" nullable="false" remarks="" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="date" nullable="true" remarks="" size="13" type="date" typeCode="91"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="type" nullable="true" remarks="" size="2147483647" type="&quot;alcs&quot;.&quot;compliance_and_enforcement_order_type_enum&quot;" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="'{}'::alcs.compliance_and_enforcement_alleged_activity_enum[]" digits="0" id="5" name="alleged_activity" nullable="false" remarks="" size="2147483647" type="&quot;alcs&quot;.&quot;_compliance_and_enforcement_alleged_activity_enum&quot;" typeCode="2003"/>
+         <column autoUpdated="false" defaultValue="'[]'::jsonb" digits="0" id="6" name="notifications" nullable="false" remarks="" size="2147483647" type="jsonb" typeCode="1111"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="entry_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="uuid" foreignKey="FK_14a57d9289929a39c4602792874" implied="false" onDeleteCascade="true" schema="alcs" table="compliance_and_enforcement_chronology_entry"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="issued_to_individual_responsible_party_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="uuid" foreignKey="FK_7d3612dc43252881adddcfb7257" implied="false" onDeleteCascade="false" schema="alcs" table="compliance_and_enforcement_responsible_party"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="9" name="issued_to_director_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="uuid" foreignKey="FK_9a390d00e32cb7c3ad6ed27dc83" implied="false" onDeleteCascade="false" schema="alcs" table="compliance_and_enforcement_responsible_party_director"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="2" id="10" name="amount" nullable="true" remarks="" size="10" type="numeric" typeCode="2"/>
+         <primaryKey column="uuid" sequenceNumberInPK="1"/>
+         <index name="PK_ee778ce2546db4c249b00f68558" unique="true">
+            <column ascending="true" name="uuid"/>
+         </index>
+      </table>
+      <table name="compliance_and_enforcement_order_due_date" remarks="Compliance and enforcement chronology order due date" schema="alcs" type="TABLE">
+         <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="0" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="date" nullable="false" remarks="" size="13" type="date" typeCode="91"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="completed_date" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="''::text" digits="0" id="3" name="comment" nullable="false" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="order_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="uuid" foreignKey="FK_e87fb83241448da3ec449cf9c6b" implied="false" onDeleteCascade="true" schema="alcs" table="compliance_and_enforcement_order"/>
+         </column>
+         <primaryKey column="uuid" sequenceNumberInPK="1"/>
+         <index name="PK_cd1ca726daed257414aa27f7580" unique="true">
+            <column ascending="true" name="uuid"/>
          </index>
       </table>
       <table name="compliance_and_enforcement_property" remarks="Compliance and enforcement property" schema="alcs" type="TABLE">
@@ -1690,6 +1801,8 @@
       </table>
       <table name="compliance_and_enforcement_responsible_party" remarks="Compliance and enforcement responsible party" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <child column="issued_to_individual_responsible_party_uuid" foreignKey="FK_cb835ffe4da972cfa8a0e9f30e9" implied="false" onDeleteCascade="false" schema="alcs" table="compliance_and_enforcement_notice"/>
+            <child column="issued_to_individual_responsible_party_uuid" foreignKey="FK_7d3612dc43252881adddcfb7257" implied="false" onDeleteCascade="false" schema="alcs" table="compliance_and_enforcement_order"/>
             <child column="responsible_party_uuid" foreignKey="FK_375fa69d3f2af493039c5b3d08e" implied="false" onDeleteCascade="false" schema="alcs" table="compliance_and_enforcement_responsible_party_director"/>
          </column>
          <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="party_type" nullable="false" remarks="" size="2147483647" type="&quot;alcs&quot;.&quot;compliance_and_enforcement_responsible_party_party_type_enum&quot;" typeCode="12"/>
@@ -1724,7 +1837,10 @@
          </index>
       </table>
       <table name="compliance_and_enforcement_responsible_party_director" remarks="Compliance and enforcement responsible party director" schema="alcs" type="TABLE">
-         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <child column="issued_to_director_uuid" foreignKey="FK_a3f20d4ae096798ad451484ffa9" implied="false" onDeleteCascade="false" schema="alcs" table="compliance_and_enforcement_notice"/>
+            <child column="issued_to_director_uuid" foreignKey="FK_9a390d00e32cb7c3ad6ed27dc83" implied="false" onDeleteCascade="false" schema="alcs" table="compliance_and_enforcement_order"/>
+         </column>
          <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="director_name" nullable="false" remarks="" size="2147483647" type="text" typeCode="12">
             <parent column="name" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" schema="alcs" table="configuration"/>
          </column>
@@ -2214,7 +2330,7 @@
             <column ascending="true" name="uuid"/>
          </index>
       </table>
-      <table name="migrations" numRows="494" remarks="Database migration history recorded by typeorm" schema="alcs" type="TABLE">
+      <table name="migrations" numRows="503" remarks="Database migration history recorded by typeorm" schema="alcs" type="TABLE">
          <column autoUpdated="true" defaultValue="nextval('alcs.migrations_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial" typeCode="4"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="timestamp" nullable="false" remarks="" size="19" type="int8" typeCode="-5"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="name" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12">
@@ -3870,6 +3986,7 @@
             <child column="assignee_uuid" foreignKey="FK_1c1dc55d4f9379e09a3fae94a6f" implied="false" onDeleteCascade="false" schema="alcs" table="compliance_and_enforcement"/>
             <child column="chronology_closed_by_uuid" foreignKey="FK_3a21caa5cf341465504a6c50fd9" implied="false" onDeleteCascade="false" schema="alcs" table="compliance_and_enforcement"/>
             <child column="author_uuid" foreignKey="FK_164d6ce38ac2bc929aff05737ce" implied="false" onDeleteCascade="false" schema="alcs" table="compliance_and_enforcement_chronology_entry"/>
+            <child column="officer_uuid" foreignKey="FK_70ca3e3a66229356bc2688bf72d" implied="false" onDeleteCascade="false" schema="alcs" table="compliance_and_enforcement_chronology_inspection"/>
             <child column="uploaded_by_uuid" foreignKey="FK_9b9254f412e8a5a07063209a08c" implied="false" onDeleteCascade="false" schema="alcs" table="document"/>
             <child column="closed_by_uuid" foreignKey="FK_3fcfda215d023cf892bf0b3048a" implied="false" onDeleteCascade="false" schema="alcs" table="inquiry"/>
             <child column="actor_uuid" foreignKey="FK_f9d295dbeac38c6b05f0994b415" implied="false" onDeleteCascade="false" schema="alcs" table="message"/>

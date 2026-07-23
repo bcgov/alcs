@@ -131,6 +131,16 @@
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
                                             <tr>
+                                                <td title="compliance_and_enforcement_notice.issued_to_individual_responsible_party_uuid references compliance_and_enforcement_responsible_party.uuid via FK_cb835ffe4da972cfa8a0e9f30e9"><a href='compliance_and_enforcement_notice.html'>compliance_and_enforcement_notice</a><span class='relatedKey'>.issued_to_individual_responsible_party_uuid</span></td>
+                                                <td class="constraint detail">FK_cb835ffe4da972cfa8a0e9f30e9</td>
+                                                <td class="constraint detail"><span title='Null on delete:&#10;Foreign key to parent set to NULL when parent deleted'>N</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td title="compliance_and_enforcement_order.issued_to_individual_responsible_party_uuid references compliance_and_enforcement_responsible_party.uuid via FK_7d3612dc43252881adddcfb7257"><a href='compliance_and_enforcement_order.html'>compliance_and_enforcement_order</a><span class='relatedKey'>.issued_to_individual_responsible_party_uuid</span></td>
+                                                <td class="constraint detail">FK_7d3612dc43252881adddcfb7257</td>
+                                                <td class="constraint detail"><span title='Null on delete:&#10;Foreign key to parent set to NULL when parent deleted'>N</span></td>
+                                            </tr>
+                                            <tr>
                                                 <td title="compliance_and_enforcement_responsible_party_director.responsible_party_uuid references compliance_and_enforcement_responsible_party.uuid via FK_375fa69d3f2af493039c5b3d08e"><a href='compliance_and_enforcement_respo_8e11e99.html'>compliance_and_enforcement_responsible_party_director</a><span class='relatedKey'>.responsible_party_uuid</span></td>
                                                 <td class="constraint detail">FK_375fa69d3f2af493039c5b3d08e</td>
                                                 <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
@@ -485,74 +495,88 @@
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="compliance_and_enforcement_document.html" target="_top" title="compliance_and_enforcement_document" alt="" coords="421,527,900,761">
-<area shape="rect" id="node2" href="compliance_and_enforcement.html" target="_top" title="compliance_and_enforcement" alt="" coords="5,519,377,724">
-<area shape="rect" id="node3" href="compliance_and_enforcement_resp_bda02a92.html" target="_top" title="compliance_and_enforcement_responsible_party" alt="" coords="944,61,2147,600">
-<area shape="rect" id="node4" href="compliance_and_enforcement_respo_8e11e99.html" target="_top" title="compliance_and_enforcement_responsible_party_director" alt="" coords="2191,5,2832,181">
+<area shape="rect" id="node1" href="compliance_and_enforcement_document.html" target="_top" title="compliance_and_enforcement_document" alt="" coords="2877,113,3356,435">
+<area shape="rect" id="node2" href="compliance_and_enforcement.html" target="_top" title="compliance_and_enforcement" alt="" coords="5,354,377,559">
+<area shape="rect" id="node3" href="compliance_and_enforcement_notice.html" target="_top" title="compliance_and_enforcement_notice" alt="" coords="2353,171,2833,377">
+<area shape="rect" id="node4" href="compliance_and_enforcement_order.html" target="_top" title="compliance_and_enforcement_order" alt="" coords="2353,394,2833,599">
+<area shape="rect" id="node5" href="compliance_and_enforcement_respo_8e11e99.html" target="_top" title="compliance_and_enforcement_responsible_party_director" alt="" coords="1668,279,2309,455">
+<area shape="rect" id="node6" href="compliance_and_enforcement_resp_bda02a92.html" target="_top" title="compliance_and_enforcement_responsible_party" alt="" coords="421,201,1624,739">
 </map>
                                         <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/compliance_and_enforcement_resp_bda02a92.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="compliance_and_enforcement.html" target="_top" title="compliance_and_enforcement" alt="" coords="176,651,548,739">
-<area shape="rect" id="node2" href="user.html" target="_top" title="user" alt="" coords="5,684,132,772">
-<area shape="rect" id="node3" href="compliance_and_enforcement_chro_f0b46776.html" target="_top" title="compliance_and_enforcement_chronology_entry" alt="" coords="592,719,1143,807">
-<area shape="rect" id="node4" href="compliance_and_enforcement_document.html" target="_top" title="compliance_and_enforcement_document" alt="" coords="1187,699,1665,787">
-<area shape="rect" id="node5" href="document.html" target="_top" title="document" alt="" coords="271,808,453,896">
-<area shape="rect" id="node6" href="document_code.html" target="_top" title="document_code" alt="" coords="749,613,985,701">
-<area shape="rect" id="node7" href="compliance_and_enforcement_property.html" target="_top" title="compliance_and_enforcement_property" alt="" coords="2077,741,2544,829">
-<area shape="rect" id="node8" href="compliance_and_enforcement_resp_bda02a92.html" target="_top" title="compliance_and_enforcement_responsible_party" alt="" coords="1709,61,2912,600">
-<area shape="rect" id="node9" href="compliance_and_enforcement_respo_8e11e99.html" target="_top" title="compliance_and_enforcement_responsible_party_director" alt="" coords="2956,5,3597,181">
-<area shape="rect" id="node10" href="compliance_and_enforcement_submitter.html" target="_top" title="compliance_and_enforcement_submitter" alt="" coords="629,472,1106,560">
+<area shape="rect" id="node1" href="compliance_and_enforcement.html" target="_top" title="compliance_and_enforcement" alt="" coords="176,636,548,724">
+<area shape="rect" id="node2" href="user.html" target="_top" title="user" alt="" coords="5,633,132,721">
+<area shape="rect" id="node3" href="compliance_and_enforcement_chro_f0b46776.html" target="_top" title="compliance_and_enforcement_chronology_entry" alt="" coords="1884,508,2435,596">
+<area shape="rect" id="node4" href="compliance_and_enforcement_chro_cf5070f0.html" target="_top" title="compliance_and_enforcement_chronology_inspection" alt="" coords="2524,544,3124,632">
+<area shape="rect" id="node5" href="compliance_and_enforcement_document.html" target="_top" title="compliance_and_enforcement_document" alt="" coords="3199,547,3677,635">
+<area shape="rect" id="node6" href="document.html" target="_top" title="document" alt="" coords="271,847,453,935">
+<area shape="rect" id="node7" href="compliance_and_enforcement_notice.html" target="_top" title="compliance_and_enforcement_notice" alt="" coords="2603,261,3045,349">
+<area shape="rect" id="node8" href="compliance_and_enforcement_order.html" target="_top" title="compliance_and_enforcement_order" alt="" coords="2607,367,3041,455">
+<area shape="rect" id="node9" href="document_code.html" target="_top" title="document_code" alt="" coords="2706,685,2942,773">
+<area shape="rect" id="node10" href="compliance_and_enforcement_respo_8e11e99.html" target="_top" title="compliance_and_enforcement_responsible_party_director" alt="" coords="1839,261,2480,349">
+<area shape="rect" id="node11" href="compliance_and_enforcement_resp_bda02a92.html" target="_top" title="compliance_and_enforcement_responsible_party" alt="" coords="592,5,1795,544">
+<area shape="rect" id="node12" href="compliance_and_enforcement_noti_d5cb8815.html" target="_top" title="compliance_and_enforcement_notice_due_date" alt="" coords="3168,259,3708,347">
+<area shape="rect" id="node13" href="compliance_and_enforcement_orde_c8497ad5.html" target="_top" title="compliance_and_enforcement_order_due_date" alt="" coords="3172,364,3704,452">
+<area shape="rect" id="node14" href="compliance_and_enforcement_property.html" target="_top" title="compliance_and_enforcement_property" alt="" coords="3752,667,4219,755">
+<area shape="rect" id="node15" href="compliance_and_enforcement_submitter.html" target="_top" title="compliance_and_enforcement_submitter" alt="" coords="955,669,1432,757">
 </map>
                                         <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/compliance_and_enforcement_resp_bda02a92.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="oneimpliedDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagramImplied" name="oneDegreeRelationshipsDiagramImplied">
-<area shape="rect" id="node1" href="compliance_and_enforcement_document.html" target="_top" title="compliance_and_enforcement_document" alt="" coords="421,579,900,813">
-<area shape="rect" id="node2" href="compliance_and_enforcement.html" target="_top" title="compliance_and_enforcement" alt="" coords="5,571,377,776">
-<area shape="rect" id="node3" href="compliance_and_enforcement_resp_bda02a92.html" target="_top" title="compliance_and_enforcement_responsible_party" alt="" coords="944,113,2147,652">
-<area shape="rect" id="node4" href="configuration.html" target="_top" title="configuration" alt="" coords="553,233,768,351">
-<area shape="rect" id="node5" href="compliance_and_enforcement_respo_8e11e99.html" target="_top" title="compliance_and_enforcement_responsible_party_director" alt="" coords="2191,33,2832,209">
+<area shape="rect" id="node1" href="compliance_and_enforcement_document.html" target="_top" title="compliance_and_enforcement_document" alt="" coords="2877,74,3356,397">
+<area shape="rect" id="node2" href="compliance_and_enforcement.html" target="_top" title="compliance_and_enforcement" alt="" coords="5,188,377,393">
+<area shape="rect" id="node3" href="compliance_and_enforcement_notice.html" target="_top" title="compliance_and_enforcement_notice" alt="" coords="2353,197,2833,402">
+<area shape="rect" id="node4" href="compliance_and_enforcement_order.html" target="_top" title="compliance_and_enforcement_order" alt="" coords="2353,420,2833,625">
+<area shape="rect" id="node5" href="compliance_and_enforcement_respo_8e11e99.html" target="_top" title="compliance_and_enforcement_responsible_party_director" alt="" coords="1668,438,2309,614">
+<area shape="rect" id="node6" href="compliance_and_enforcement_resp_bda02a92.html" target="_top" title="compliance_and_enforcement_responsible_party" alt="" coords="421,210,1624,749">
+<area shape="rect" id="node7" href="configuration.html" target="_top" title="configuration" alt="" coords="84,477,299,594">
 </map>
                                         <a name='diagram'><img id="oneimpliedDegreeImg" src="../diagrams/tables/compliance_and_enforcement_resp_bda02a92.implied1degrees.png" usemap="#oneDegreeRelationshipsDiagramImplied" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="twoimpliedDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagramImplied" name="twoDegreesRelationshipsDiagramImplied">
-<area shape="rect" id="node1" href="application_owner.html" target="_top" title="application_owner" alt="" coords="409,179,670,267">
-<area shape="rect" id="node2" href="configuration.html" target="_top" title="configuration" alt="" coords="5,864,220,952">
-<area shape="rect" id="node3" href="application_submission_review.html" target="_top" title="application_submission_review" alt="" coords="859,5,1244,93">
-<area shape="rect" id="node4" href="user.html" target="_top" title="user" alt="" coords="476,404,603,492">
-<area shape="rect" id="node5" href="application_submission_search_view.html" target="_top" title="application_submission_search_view" alt="" coords="321,1003,757,1067">
-<area shape="rect" id="node6" href="compliance_and_enforcement.html" target="_top" title="compliance_and_enforcement" alt="" coords="865,216,1237,304">
-<area shape="rect" id="node7" href="compliance_and_enforcement_chro_f0b46776.html" target="_top" title="compliance_and_enforcement_chronology_entry" alt="" coords="1288,304,1839,392">
-<area shape="rect" id="node8" href="compliance_and_enforcement_document.html" target="_top" title="compliance_and_enforcement_document" alt="" coords="1883,359,2361,447">
-<area shape="rect" id="node9" href="document.html" target="_top" title="document" alt="" coords="961,357,1142,445">
-<area shape="rect" id="node10" href="document_code.html" target="_top" title="document_code" alt="" coords="1445,409,1681,497">
-<area shape="rect" id="node11" href="compliance_and_enforcement_property.html" target="_top" title="compliance_and_enforcement_property" alt="" coords="2773,261,3240,349">
-<area shape="rect" id="node12" href="local_government.html" target="_top" title="local_government" alt="" coords="411,581,667,669">
-<area shape="rect" id="node13" href="compliance_and_enforcement_resp_bda02a92.html" target="_top" title="compliance_and_enforcement_responsible_party" alt="" coords="2405,367,3608,905">
-<area shape="rect" id="node14" href="compliance_and_enforcement_respo_8e11e99.html" target="_top" title="compliance_and_enforcement_responsible_party_director" alt="" coords="3652,632,4293,720">
-<area shape="rect" id="node15" href="compliance_and_enforcement_submitter.html" target="_top" title="compliance_and_enforcement_submitter" alt="" coords="1325,637,1802,725">
-<area shape="rect" id="node16" href="covenant_transferee.html" target="_top" title="covenant_transferee" alt="" coords="397,1084,681,1172">
-<area shape="rect" id="node17" href="holiday_entity.html" target="_top" title="holiday_entity" alt="" coords="429,1189,650,1277">
-<area shape="rect" id="node18" href="inquiry.html" target="_top" title="inquiry" alt="" coords="975,604,1127,692">
-<area shape="rect" id="node19" href="inquiry_search_view.html" target="_top" title="inquiry_search_view" alt="" coords="401,1295,678,1359">
-<area shape="rect" id="node20" href="migrations.html" target="_top" title="migrations" alt="" coords="445,1376,634,1464">
-<area shape="rect" id="node21" href="notice_of_intent_decision.html" target="_top" title="notice_of_intent_decision" alt="" coords="887,111,1216,199">
-<area shape="rect" id="node22" href="notice_of_intent_owner.html" target="_top" title="notice_of_intent_owner" alt="" coords="385,1481,694,1569">
-<area shape="rect" id="node23" href="notice_of_intent_submission_search_view.html" target="_top" title="notice_of_intent_submission_search_view" alt="" coords="298,1587,781,1651">
-<area shape="rect" id="node24" href="notification_submission.html" target="_top" title="notification_submission" alt="" coords="894,745,1209,833">
-<area shape="rect" id="node25" href="notification_submission_search_view.html" target="_top" title="notification_submission_search_view" alt="" coords="320,1668,759,1732">
-<area shape="rect" id="node26" href="notification_transferee.html" target="_top" title="notification_transferee" alt="" coords="1410,959,1717,1047">
-<area shape="rect" id="node27" href="planning_review.html" target="_top" title="planning_review" alt="" coords="930,463,1173,551">
-<area shape="rect" id="node28" href="planning_review_search_view.html" target="_top" title="planning_review_search_view" alt="" coords="355,1749,723,1813">
-<area shape="rect" id="node29" href="public_application_submission_s_21a213ce.html" target="_top" title="public_application_submission_search_view" alt="" coords="288,1831,791,1895">
-<area shape="rect" id="node30" href="public_notice_of_intent_submiss_882223b5.html" target="_top" title="public_notice_of_intent_submission_search_view" alt="" coords="264,1912,815,1976">
-<area shape="rect" id="node31" href="public_notification_submission__33ffb967.html" target="_top" title="public_notification_submission_search_view" alt="" coords="286,1993,793,2057">
-<area shape="rect" id="node32" href="tag.html" target="_top" title="tag" alt="" coords="971,2073,1132,2161">
-<area shape="rect" id="node33" href="tag_category.html" target="_top" title="tag_category" alt="" coords="434,2111,645,2199">
-<area shape="rect" id="node34" href="typeorm_metadata.html" target="_top" title="typeorm_metadata" alt="" coords="405,2216,673,2304">
+<area shape="rect" id="node1" href="application_owner.html" target="_top" title="application_owner" alt="" coords="409,184,670,272">
+<area shape="rect" id="node2" href="configuration.html" target="_top" title="configuration" alt="" coords="5,1070,220,1158">
+<area shape="rect" id="node3" href="application_submission_review.html" target="_top" title="application_submission_review" alt="" coords="859,268,1244,356">
+<area shape="rect" id="node4" href="user.html" target="_top" title="user" alt="" coords="476,762,603,850">
+<area shape="rect" id="node5" href="application_submission_search_view.html" target="_top" title="application_submission_search_view" alt="" coords="321,1216,757,1280">
+<area shape="rect" id="node6" href="compliance_and_enforcement.html" target="_top" title="compliance_and_enforcement" alt="" coords="865,764,1237,852">
+<area shape="rect" id="node7" href="compliance_and_enforcement_chro_f0b46776.html" target="_top" title="compliance_and_enforcement_chronology_entry" alt="" coords="2580,638,3131,726">
+<area shape="rect" id="node8" href="compliance_and_enforcement_chro_cf5070f0.html" target="_top" title="compliance_and_enforcement_chronology_inspection" alt="" coords="3220,695,3820,783">
+<area shape="rect" id="node9" href="compliance_and_enforcement_document.html" target="_top" title="compliance_and_enforcement_document" alt="" coords="3895,556,4373,644">
+<area shape="rect" id="node10" href="document.html" target="_top" title="document" alt="" coords="961,482,1142,570">
+<area shape="rect" id="node11" href="compliance_and_enforcement_notice.html" target="_top" title="compliance_and_enforcement_notice" alt="" coords="3299,220,3741,308">
+<area shape="rect" id="node12" href="compliance_and_enforcement_order.html" target="_top" title="compliance_and_enforcement_order" alt="" coords="3303,331,3737,419">
+<area shape="rect" id="node13" href="document_code.html" target="_top" title="document_code" alt="" coords="3402,554,3638,642">
+<area shape="rect" id="node14" href="compliance_and_enforcement_respo_8e11e99.html" target="_top" title="compliance_and_enforcement_responsible_party_director" alt="" coords="2535,115,3176,203">
+<area shape="rect" id="node15" href="compliance_and_enforcement_resp_bda02a92.html" target="_top" title="compliance_and_enforcement_responsible_party" alt="" coords="1288,100,2491,639">
+<area shape="rect" id="node16" href="compliance_and_enforcement_noti_d5cb8815.html" target="_top" title="compliance_and_enforcement_notice_due_date" alt="" coords="3864,218,4404,306">
+<area shape="rect" id="node17" href="compliance_and_enforcement_orde_c8497ad5.html" target="_top" title="compliance_and_enforcement_order_due_date" alt="" coords="3868,328,4400,416">
+<area shape="rect" id="node18" href="compliance_and_enforcement_property.html" target="_top" title="compliance_and_enforcement_property" alt="" coords="4448,799,4915,887">
+<area shape="rect" id="node19" href="local_government.html" target="_top" title="local_government" alt="" coords="411,903,667,991">
+<area shape="rect" id="node20" href="compliance_and_enforcement_submitter.html" target="_top" title="compliance_and_enforcement_submitter" alt="" coords="1651,872,2128,960">
+<area shape="rect" id="node21" href="covenant_transferee.html" target="_top" title="covenant_transferee" alt="" coords="397,1298,681,1386">
+<area shape="rect" id="node22" href="holiday_entity.html" target="_top" title="holiday_entity" alt="" coords="429,1403,650,1491">
+<area shape="rect" id="node23" href="inquiry.html" target="_top" title="inquiry" alt="" coords="975,1011,1127,1099">
+<area shape="rect" id="node24" href="inquiry_search_view.html" target="_top" title="inquiry_search_view" alt="" coords="401,1508,678,1572">
+<area shape="rect" id="node25" href="migrations.html" target="_top" title="migrations" alt="" coords="445,1590,634,1678">
+<area shape="rect" id="node26" href="notice_of_intent_decision.html" target="_top" title="notice_of_intent_decision" alt="" coords="887,587,1216,675">
+<area shape="rect" id="node27" href="notice_of_intent_owner.html" target="_top" title="notice_of_intent_owner" alt="" coords="385,1695,694,1783">
+<area shape="rect" id="node28" href="notice_of_intent_submission_search_view.html" target="_top" title="notice_of_intent_submission_search_view" alt="" coords="298,1800,781,1864">
+<area shape="rect" id="node29" href="notification_submission.html" target="_top" title="notification_submission" alt="" coords="894,1152,1209,1240">
+<area shape="rect" id="node30" href="notification_submission_search_view.html" target="_top" title="notification_submission_search_view" alt="" coords="320,1882,759,1946">
+<area shape="rect" id="node31" href="notification_transferee.html" target="_top" title="notification_transferee" alt="" coords="1736,1236,2043,1324">
+<area shape="rect" id="node32" href="planning_review.html" target="_top" title="planning_review" alt="" coords="930,870,1173,958">
+<area shape="rect" id="node33" href="planning_review_search_view.html" target="_top" title="planning_review_search_view" alt="" coords="355,1963,723,2027">
+<area shape="rect" id="node34" href="public_application_submission_s_21a213ce.html" target="_top" title="public_application_submission_search_view" alt="" coords="288,2044,791,2108">
+<area shape="rect" id="node35" href="public_notice_of_intent_submiss_882223b5.html" target="_top" title="public_notice_of_intent_submission_search_view" alt="" coords="264,2126,815,2190">
+<area shape="rect" id="node36" href="public_notification_submission__33ffb967.html" target="_top" title="public_notification_submission_search_view" alt="" coords="286,2207,793,2271">
+<area shape="rect" id="node37" href="tag.html" target="_top" title="tag" alt="" coords="971,2322,1132,2410">
+<area shape="rect" id="node38" href="tag_category.html" target="_top" title="tag_category" alt="" coords="434,2288,645,2376">
+<area shape="rect" id="node39" href="typeorm_metadata.html" target="_top" title="typeorm_metadata" alt="" coords="405,2430,673,2518">
 </map>
                                         <a name='diagram'><img id="twoimpliedDegreeImg" src="../diagrams/tables/compliance_and_enforcement_resp_bda02a92.implied2degrees.png" usemap="#twoDegreesRelationshipsDiagramImplied" class="diagram" border="0" align="left"></a>
                                     </div>
