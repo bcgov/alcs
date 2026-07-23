@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import moment, { Moment } from 'moment';
-import { EMPTY, Subject, catchError, debounceTime, firstValueFrom, takeUntil } from 'rxjs';
+import { EMPTY, Subject, catchError, debounceTime, firstValueFrom, switchMap, takeUntil } from 'rxjs';
 import {
   CreateResponsiblePartyDto,
   FOIPPACategory,
@@ -17,9 +17,9 @@ import { strictEmailValidator } from '../../../shared/validators/email-validator
 import { C_E_AUTOSAVE_DEBOUNCE_MS } from '../constants';
 
 @Component({
-    selector: 'app-compliance-and-enforcement-responsible-parties',
-    templateUrl: './responsible-parties.component.html',
-    styleUrls: ['./responsible-parties.component.scss'],
+  selector: 'app-compliance-and-enforcement-responsible-parties',
+  templateUrl: './responsible-parties.component.html',
+  styleUrls: ['./responsible-parties.component.scss'],
     standalone: false
 })
 export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
@@ -42,7 +42,7 @@ export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
 
   // Prevent duplicate create calls for the same form during rapid value changes
   private creatingForms = new WeakSet<FormGroup>();
-  
+
   // Flag to prevent auto-save during deletion operations
   private isDeleting = false;
 
@@ -81,9 +81,8 @@ export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
 
     this.responsibleParties.forEach((party) => {
       const partyForm = this.createPartyFormGroup(party);
-      this.form.push(partyForm);
+      this.form.push(partyForm, { emitEvent: false });
     });
-
   }
 
   createPartyFormGroup(party?: ResponsiblePartyDto): FormGroup {
@@ -91,7 +90,7 @@ export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
 
     if (party?.directors) {
       party.directors.forEach((director) => {
-        directorsArray.push(this.createDirectorFormGroup(director));
+        directorsArray.push(this.createDirectorFormGroup(director), { emitEvent: false });
       });
     }
 
@@ -161,10 +160,10 @@ export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
     }
 
     // Update validity
-    partyForm.get('individualName')?.updateValueAndValidity();
-    partyForm.get('individualMailingAddress')?.updateValueAndValidity();
-    partyForm.get('organizationName')?.updateValueAndValidity();
-    partyForm.get('ownerSince')?.updateValueAndValidity();
+    partyForm.get('individualName')?.updateValueAndValidity({ emitEvent: false });
+    partyForm.get('individualMailingAddress')?.updateValueAndValidity({ emitEvent: false });
+    partyForm.get('organizationName')?.updateValueAndValidity({ emitEvent: false });
+    partyForm.get('ownerSince')?.updateValueAndValidity({ emitEvent: false });
   }
 
   subscribeToFormChanges(partyForm: FormGroup, existingParty?: ResponsiblePartyDto) {
@@ -172,24 +171,26 @@ export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
       .pipe(
         debounceTime(C_E_AUTOSAVE_DEBOUNCE_MS),
         takeUntil(this.$destroy),
+        switchMap((formValue) => {
+          // Skip auto-save if we're in the middle of a deletion operation
+          if (this.isDeleting) {
+            return EMPTY;
+          }
+
+          if (!this.fileUuid) {
+            console.warn('No fileUuid available for responsible party save');
+            return EMPTY;
+          }
+
+          this.handleFormValueChange(formValue, partyForm, existingParty);
+          return EMPTY;
+        }),
         catchError((error) => {
           console.error('Error in form changes', error);
           return EMPTY;
         }),
       )
-      .subscribe(async (formValue) => {
-        // Skip auto-save if we're in the middle of a deletion operation
-        if (this.isDeleting) {
-          return;
-        }
-        
-        if (!this.fileUuid) {
-          console.warn('No fileUuid available for responsible party save');
-          return;
-        }
-
-        await this.handleFormValueChange(formValue, partyForm, existingParty);
-      });
+      .subscribe();
 
     this.subscribeToFieldChanges(partyForm);
   }
@@ -202,8 +203,6 @@ export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
         await this.updateExistingParty(existingParty.uuid, updateDto);
       } else if (this.shouldUpdateExistingParty(formValue)) {
         await this.updateExistingParty(formValue.uuid, updateDto);
-      } else {
-        await this.createNewParty(formValue, updateDto, partyForm);
       }
     } catch (error) {
       console.error('Error saving responsible party', error);
@@ -248,7 +247,7 @@ export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
 
     this.creatingForms.add(partyForm);
     const createDto = this.buildCreateDto(formValue, updateDto);
-    
+
     try {
       const newParty = await firstValueFrom(this.responsiblePartiesService.create(createDto));
       this.handleNewPartyCreated(newParty, partyForm);
@@ -292,12 +291,12 @@ export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
   private subscribeToFieldChanges(partyForm: FormGroup) {
     // Subscribe to party type and FOIPPA category changes to update validators
     partyForm.get('partyType')?.valueChanges.pipe(takeUntil(this.$destroy)).subscribe(() => {
-      this.updateValidators(partyForm);
-    });
+        this.updateValidators(partyForm);
+      });
 
     partyForm.get('foippaCategory')?.valueChanges.pipe(takeUntil(this.$destroy)).subscribe((newCategory) => {
-      this.clearFieldsOnCategoryChange(partyForm, newCategory);
-    });
+        this.clearFieldsOnCategoryChange(partyForm, newCategory);
+      });
   }
 
   clearFieldsOnCategoryChange(partyForm: FormGroup, newCategory: FOIPPACategory) {
@@ -311,8 +310,8 @@ export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
 
       // Clear directors array for organizations
       const directorsArray = partyForm.get('directors') as FormArray;
-      directorsArray.clear();
-      
+      directorsArray.clear({ emitEvent: false });
+
       // Mark the directors field as dirty to ensure it gets saved
       directorsArray.markAsDirty();
     } else if (newCategory === FOIPPACategory.ORGANIZATION) {
@@ -324,23 +323,20 @@ export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
       partyForm.get('individualNote')?.setValue('', { emitEvent: false });
       partyForm.get('ownerSince')?.setValue(null, { emitEvent: false });
     }
-    
+
     // After clearing fields, update validators with a small delay this seems to prevent race conditions with the form value changes
     setTimeout(() => {
       this.updateValidators(partyForm);
     });
   }
 
-  addParty() {
+  async addPartyOfType(partyType: ResponsiblePartyType) {
     const newPartyForm = this.createPartyFormGroup();
-    this.form.push(newPartyForm);
-  }
+    newPartyForm.get('partyType')?.setValue(partyType, { emitEvent: false });
+    this.form.push(newPartyForm, { emitEvent: false });
+    const updateDto = this.buildUpdateDto(newPartyForm.value);
+    await this.createNewParty(newPartyForm.value, updateDto, newPartyForm);
 
-  addPartyOfType(partyType: ResponsiblePartyType) {
-    const newPartyForm = this.createPartyFormGroup();
-    newPartyForm.get('partyType')?.setValue(partyType);
-    this.form.push(newPartyForm);
-    
     // Clear the validation error since we now have at least one party
     this.showRequiredError = false;
   }
@@ -361,13 +357,13 @@ export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
           // Set deletion flag to prevent auto-save during deletion
           this.isDeleting = true;
           await this.responsiblePartiesService.delete(partyUuid);
-          
+
           this.form.removeAt(index);
           this.responsibleParties = this.responsibleParties.filter(p => p.uuid !== partyUuid);
-          
+
           // Reset deletion flag to allow normal auto-save functionality
           this.isDeleting = false;
-          
+
           this.toastService.showSuccessToast('Responsible party deleted');
         } catch (error) {
           console.error('Error deleting responsible party', error);
@@ -375,18 +371,6 @@ export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
           // Reset deletion flag on error as well
           this.isDeleting = false;
         }
-      }
-    } else {
-      // Show confirmation even for unsaved parties
-      const confirmed = await firstValueFrom(
-        this.confirmationDialogService.openDialog({
-          body: 'Are you sure you want to delete this Responsible Party?',
-        }),
-      );
-
-      if (confirmed) {
-        this.form.removeAt(index);
-        this.toastService.showSuccessToast('Responsible party deleted');
       }
     }
   }
@@ -464,7 +448,7 @@ export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
     try {
       // Set deletion flag to prevent auto-save during bulk deletion
       this.isDeleting = true;
-      
+
       // Delete all existing parties from the API
       for (const party of this.responsibleParties) {
         if (party.uuid) {
@@ -518,24 +502,24 @@ export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
 
     // Check if all forms are valid
     const allFormsValid = this.form.controls.every(form => form.valid);
-    
+
     if (!allFormsValid) {
       return false; // Validation failed
     }
 
     // Force immediate save of all form changes, bypassing debounce
     const savePromises: Promise<void>[] = [];
-    
+
     for (let i = 0; i < this.form.length; i++) {
       const partyForm = this.form.at(i);
       const formValue = partyForm.value;
       const existingParty = this.responsibleParties[i];
-      
+
       if (partyForm.valid && partyForm.dirty) {
         savePromises.push(this.handleFormValueChange(formValue, partyForm, existingParty));
       }
     }
-    
+
     // Wait for all saves to complete
     await Promise.all(savePromises);
     return true; // Success
