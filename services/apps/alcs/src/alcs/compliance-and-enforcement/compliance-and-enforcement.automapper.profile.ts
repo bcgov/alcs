@@ -1,18 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { createMap, forMember, mapFrom, Mapper } from 'automapper-core';
 import { AutomapperProfile, InjectMapper } from 'automapper-nestjs';
-import { AllegedActivity, ComplianceAndEnforcement, InitialSubmissionType } from './compliance-and-enforcement.entity';
+import { UserDto } from '../../user/user.dto';
+import { User } from '../../user/user.entity';
 import { ComplianceAndEnforcementDto, UpdateComplianceAndEnforcementDto } from './compliance-and-enforcement.dto';
-import { In } from 'typeorm';
-import { ComplianceAndEnforcementSubmitter } from './submitter/submitter.entity';
+import { ComplianceAndEnforcement } from './compliance-and-enforcement.entity';
+import { AllegedActivity, InitialSubmissionType } from './compliance-and-enforcement.enum';
+import { ComplianceAndEnforcementPropertyDto } from './property/property.dto';
+import { ComplianceAndEnforcementProperty } from './property/property.entity';
 import {
   ComplianceAndEnforcementSubmitterDto,
   UpdateComplianceAndEnforcementSubmitterDto,
 } from './submitter/submitter.dto';
-import { ComplianceAndEnforcementProperty } from './property/property.entity';
-import { ComplianceAndEnforcementPropertyDto } from './property/property.dto';
-import { User } from '../../user/user.entity';
-import { UserDto } from '../../user/user.dto';
+import { ComplianceAndEnforcementSubmitter } from './submitter/submitter.entity';
 
 @Injectable()
 export class ComplianceAndEnforcementProfile extends AutomapperProfile {

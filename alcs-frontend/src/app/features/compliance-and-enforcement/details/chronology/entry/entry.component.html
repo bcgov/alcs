@@ -35,7 +35,7 @@
           type="button"
           class="edit-button"
           [disabled]="!entry?.uuid || editDisabled"
-          (click)="edit.emit(entry?.uuid!)"
+          (click)="setDraft(entry?.uuid!)"
         >
           <mat-icon>edit</mat-icon>
         </button>
@@ -45,7 +45,7 @@
         <mat-form-field appearance="outline">
           <mat-label>Author</mat-label>
           <mat-select panelClass="author-list-panel" [formControl]="authorDropdown">
-            @for (author of authors; track author) {
+            @for (author of authors; track author.uuid) {
               <mat-option [value]="author.uuid">
                 {{ author.prettyName }}
               </mat-option>
@@ -74,13 +74,139 @@
         <div class="description-view">{{ entry?.description }}</div>
       }
 
-      @if (entry?.isDraft) {
-        <div class="c-and-e-action-list"><strong>C&E Action:</strong> <span class="no-data"> No Data</span></div>
-      }
+      <div class="c-and-e-action-list">
+        <strong>C&E Action:</strong>
+        @if (sortedInspections().length > 0 || sortedOrders().length > 0 || sortedNotices().length > 0) {
+          @for (inspection of sortedInspections(); track inspection) {
+            <div class="c-and-e-action-wrapper">
+              <div class="c-and-e-action inspection">
+                @if (inspection.isDraft) {
+                  DRAFT
+                }
+                {{ inspection.type }} Inspection
+                @if (entry?.isDraft) {
+                  <button
+                    mat-icon-button
+                    class="c-and-e-action-button c-and-e-action-edit-button"
+                    type="button"
+                    (click)="onEditInspectionClick(inspection.uuid)"
+                    touch-target="none"
+                  >
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button
+                    mat-icon-button
+                    class="c-and-e-action-button c-and-e-action-delete-button"
+                    type="button"
+                    (click)="confirmInspectionDelete(inspection.uuid)"
+                    touch-target="none"
+                  >
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                }
+              </div>
+              @if (showErrors && inspection.isDraft) {
+                <div>
+                  <app-error-message message="Inspection must be finalized"></app-error-message>
+                </div>
+              }
+            </div>
+          }
+
+          @for (notice of sortedNotices(); track notice.uuid) {
+            <div class="c-and-e-action-wrapper">
+              <div class="c-and-e-action notice">
+                @if (notice.isDraft) {
+                  DRAFT
+                }
+                @if (notice.type) {
+                  {{ notice.type }}
+                } @else {
+                  Notice
+                }
+                @if (entry?.isDraft) {
+                  <button
+                    mat-icon-button
+                    class="c-and-e-action-button c-and-e-action-edit-button"
+                    type="button"
+                    (click)="onEditNoticeClick(notice.uuid)"
+                    touch-target="none"
+                  >
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button
+                    mat-icon-button
+                    class="c-and-e-action-button c-and-e-action-delete-button"
+                    type="button"
+                    (click)="confirmNoticeDelete(notice.uuid)"
+                    touch-target="none"
+                  >
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                }
+              </div>
+              @if (showErrors && notice.isDraft) {
+                <div>
+                  <app-error-message message="Notice must be finalized"></app-error-message>
+                </div>
+              }
+            </div>
+          }
+
+          @for (order of sortedOrders(); track order) {
+            <div class="c-and-e-action-wrapper">
+              <div class="c-and-e-action order">
+                @if (order.isDraft) {
+                  DRAFT
+                }
+                @if (order.type) {
+                  {{ order.type }}
+                } @else {
+                  Order
+                }
+                @if (entry?.isDraft) {
+                  <button
+                    mat-icon-button
+                    class="c-and-e-action-button c-and-e-action-edit-button"
+                    type="button"
+                    (click)="onEditOrderClick(order.uuid)"
+                    touch-target="none"
+                  >
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button
+                    mat-icon-button
+                    class="c-and-e-action-button c-and-e-action-delete-button"
+                    type="button"
+                    (click)="confirmOrderDelete(order.uuid)"
+                    touch-target="none"
+                  >
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                }
+              </div>
+              @if (showErrors && order.isDraft) {
+                <div>
+                  <app-error-message message="Order must be finalized"></app-error-message>
+                </div>
+              }
+            </div>
+          }
+        } @else {
+          <span class="no-data"> No Data</span>
+        }
+      </div>
 
       @if (entry?.isDraft) {
         <div class="add-component-actions">
-          <button mat-stroked-button color="primary" type="button" [disabled]="!entry?.uuid" class="add-action-button">
+          <button
+            mat-stroked-button
+            color="primary"
+            type="button"
+            [disabled]="!entry?.uuid"
+            class="add-action-button"
+            [matMenuTriggerFor]="decisionComponentMenu"
+          >
             + ALC C&E Action
             <mat-icon>arrow_drop_down</mat-icon>
           </button>
@@ -88,16 +214,36 @@
             mat-stroked-button
             type="button"
             [disabled]="!entry?.uuid"
-            (click)="addCorrespondence.emit(entry?.uuid!)"
+            (click)="openAddCorrespondenceDialog(entry?.uuid!)"
             class="add-correspondence-button"
           >
             + Correspondence
           </button>
         </div>
+
+        <mat-menu xPosition="before" #decisionComponentMenu="matMenu">
+          <button type="button" mat-menu-item class="c-and-e-action-menu-item" (click)="onAddInspectionClick()">
+            Inspection
+          </button>
+
+          <button type="button" mat-menu-item class="c-and-e-action-menu-item" (click)="onAddNoticeClick()">
+            Notice
+          </button>
+
+          <button type="button" mat-menu-item class="c-and-e-action-menu-item" (click)="onAddOrderClick()">
+            Order
+          </button>
+        </mat-menu>
       }
 
-      <!-- Documents -->
-      <ng-content></ng-content>
+      @if (entry?.isDraft || entry?.documents?.length) {
+        <app-compliance-and-enforcement-chronology-entry-documents
+          [isDraft]="!!entry?.isDraft"
+          [documents]="sortDocuments(entry?.documents ?? [])"
+          (edit)="openEditDocumentDialog(entry?.uuid, $event)"
+          (delete)="confirmDocumentDelete($event)"
+        />
+      }
 
       @if (entry?.isDraft) {
         <div class="actions">
@@ -106,7 +252,7 @@
             color="warn"
             type="button"
             [disabled]="!entry?.uuid"
-            (click)="delete.emit(entry?.uuid!)"
+            (click)="confirmEntryDelete(this.entry?.uuid)"
           >
             Delete
           </button>

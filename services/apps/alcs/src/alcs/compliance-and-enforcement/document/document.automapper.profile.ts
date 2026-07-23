@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { createMap, forMember, mapFrom, Mapper } from 'automapper-core';
 import { AutomapperProfile, InjectMapper } from 'automapper-nestjs';
-import { ComplianceAndEnforcementDocument } from './document.entity';
 import { ComplianceAndEnforcementDocumentDto, UpdateComplianceAndEnforcementDocumentDto } from './document.dto';
+import { ComplianceAndEnforcementDocument } from './document.entity';
 
 @Injectable()
 export class ComplianceAndEnforcementDocumentProfile extends AutomapperProfile {

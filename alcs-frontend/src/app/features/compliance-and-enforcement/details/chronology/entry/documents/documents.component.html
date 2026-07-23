@@ -19,7 +19,7 @@
           target="_blank"
           [matTooltip]="document.fileName"
           [matTooltipDisabled]="document.fileName.length <= fileNameTruncLen"
-          >
+        >
           {{ document.fileName }}
         </a>
       </td>
@@ -31,12 +31,16 @@
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef class="actions-column">Actions</th>
       <td mat-cell *matCellDef="let document">
-        <button class="action-button" mat-icon-button (click)="edit.emit(document)">
-          <mat-icon>edit</mat-icon>
-        </button>
-        <button class="action-button" mat-icon-button (click)="delete.emit(document)">
-          <mat-icon color="warn">delete</mat-icon>
-        </button>
+        @if (
+          document.type.code !== DOCUMENT_TYPE.C_AND_E_ORDER && document.type.code !== DOCUMENT_TYPE.C_AND_E_NOTICE
+        ) {
+          <button class="action-button" mat-icon-button (click)="edit.emit(document)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button class="action-button" mat-icon-button (click)="delete.emit(document)">
+            <mat-icon color="warn">delete</mat-icon>
+          </button>
+        }
       </td>
     </ng-container>
     <tr mat-header-row *matHeaderRowDef="documentColumns"></tr>
@@ -49,17 +53,16 @@
   <div class="documents-wrapper">
     <strong>Documents:</strong>
     <div class="document-list">
-      @for (document of documentsTableData.data; track document) {
+      @for (document of documentsTableData.data; track document.uuid) {
         <a
           routerLink="/document/{{ document.documentUuid }}"
           target="_blank"
           [matTooltip]="document.fileName"
           [matTooltipDisabled]="document.fileName.length <= fileNameTruncLen"
-          >
+        >
           {{ document.fileName }}
         </a>
       }
     </div>
   </div>
 }
-

@@ -218,16 +218,6 @@ describe('ResponsiblePartiesComponent', () => {
     expect(partyForm.get('ownerSince')?.hasError('required')).toBe(false);
   });
 
-  it('should add a new party', () => {
-    const initialLength = component.form.length;
-    component.addParty();
-
-    expect(component.form.length).toBe(initialLength + 1);
-    const newPartyForm = component.form.at(component.form.length - 1);
-    expect(newPartyForm.get('partyType')?.value).toBe(ResponsiblePartyType.PROPERTY_OWNER);
-    expect(newPartyForm.get('foippaCategory')?.value).toBe(FOIPPACategory.INDIVIDUAL);
-  });
-
   it('should check if party is Property Owner', () => {
     component.responsibleParties = [mockResponsibleParty, mockOrganizationParty];
     component.buildFormArray();

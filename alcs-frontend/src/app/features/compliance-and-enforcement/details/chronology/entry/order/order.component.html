@@ -1,0 +1,218 @@
+<h3>Chronology > {{ entryDateText() }} > ALC C&E Action > Order</h3>
+
+<form [formGroup]="form">
+  <div class="form-field-wrapper">
+    <mat-form-field appearance="outline">
+      <mat-label>Order Date</mat-label>
+      <input
+        matInput
+        (click)="datePicker.open()"
+        [matDatepicker]="datePicker"
+        name="date-submitted"
+        [required]="true"
+        formControlName="date"
+      />
+      <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+      <mat-datepicker #datePicker type="date"></mat-datepicker>
+    </mat-form-field>
+    @if (showErrors && form.controls.date.errors) {
+      <div>
+        @if (form.controls.date.errors['required']) {
+          <app-error-message message="This field is required"></app-error-message>
+        }
+      </div>
+    }
+  </div>
+
+  <div class="form-field-wrapper">
+    <mat-form-field appearance="outline">
+      <mat-label>Order Type</mat-label>
+      <mat-select
+        panelClass="author-list-panel"
+        [required]="true"
+        formControlName="type"
+        (selectionChange)="onTypeChange($event.value)"
+      >
+        @for (orderType of orderTypes; track orderType) {
+          <mat-option [value]="orderType"> {{ orderType }} </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    @if (showErrors && form.controls.type.errors) {
+      <div>
+        @if (form.controls.type.errors['required']) {
+          <app-error-message message="This field is required"></app-error-message>
+        }
+      </div>
+    }
+  </div>
+
+  <div
+    [ngClass]="{
+      'form-field-wrapper': true,
+      'full-width': form.value.type !== OrderType.PENALTY_ORDER,
+    }"
+  >
+    <mat-form-field appearance="outline">
+      <mat-label>Alleged Activity</mat-label>
+      <mat-select panelClass="author-list-panel" [multiple]="true" [required]="true" formControlName="allegedActivity">
+        @for (activity of allegedActivities; track activity) {
+          <mat-option [value]="activity"> {{ activity }} </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    @if (showErrors && form.controls.allegedActivity.errors) {
+      <div>
+        @if (form.controls.allegedActivity.errors['required']) {
+          <app-error-message message="This field is required"></app-error-message>
+        }
+      </div>
+    }
+  </div>
+
+  @if (form.value.type === OrderType.PENALTY_ORDER) {
+    <div class="form-field-wrapper">
+      <mat-form-field appearance="outline">
+        <mat-label>Amount</mat-label>
+        <input
+          type="text"
+          mask="separator.2"
+          separatorLimit="10000000"
+          thousandSeparator=","
+          [dropSpecialCharacters]="false"
+          inputmode="decimal"
+          matInput
+          [required]="form.value.type === OrderType.PENALTY_ORDER"
+          formControlName="amount"
+        />
+      </mat-form-field>
+
+      @if (showErrors && form.controls.amount.errors) {
+        <div>
+          @if (form.controls.amount.errors['required']) {
+            <app-error-message message="This field is required"></app-error-message>
+          }
+        </div>
+      }
+    </div>
+  }
+
+  <div class="form-field-wrapper full-width">
+    <mat-form-field appearance="outline">
+      <mat-label>Issued To</mat-label>
+      <mat-select panelClass="officer-list-panel" formControlName="issuedToUuid">
+        @for (issuee of issuees(); track issuee.uuid) {
+          <mat-option [value]="issuee.uuid">
+            @if (issuee.type === IssueeType.INDIVIDUAL_RESPONSIBLE_PARTY) {
+              {{ issuee.name }}
+            } @else {
+              {{ issuee.name }}, {{ issuee.organization }}
+            }
+          </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    @if (showErrors && form.controls.issuedToUuid.errors) {
+      <div>
+        @if (form.controls.issuedToUuid.errors['required']) {
+          <app-error-message message="This field is required"></app-error-message>
+        }
+      </div>
+    }
+  </div>
+
+  <div class="due-dates full-width">
+    <strong>Due dates:</strong>
+    @for (dueDate of dueDates(); track dueDate.date) {
+      @if (dueDate.date) {
+        <div class="due-date">{{ formattedDate(dueDate.date) }}</div>
+      }
+    }
+    <button type="button" mat-icon-button class="edit-due-dates-button" (click)="openDueDateDialog(false)">
+      <mat-icon>edit</mat-icon>
+    </button>
+    <button type="button" mat-flat-button color="accent" class="add-due-date-button" (click)="openDueDateDialog(true)">
+      + Due Dates
+    </button>
+  </div>
+
+  <div class="notifications full-width" formGroupName="notifiedBy">
+    <div class="row">
+      <div></div>
+      <div>
+        <strong>Delivered By*</strong>
+        @if (showErrors && form.controls.notifiedBy.errors && form.controls.notifiedBy.errors['noNotificationType']) {
+          <div>
+            <app-error-message message="Select at least one method"></app-error-message>
+          </div>
+        }
+      </div>
+      <div>
+        <strong>On*</strong>
+        @if (
+          showErrors && form.controls.notifiedBy.errors && form.controls.notifiedBy.errors['missingNotificationDate']
+        ) {
+          <div>
+            <app-error-message message="Add one date per selected method"></app-error-message>
+          </div>
+        }
+      </div>
+    </div>
+
+    @for (method of notificationMethods; track method) {
+      <div class="row" [formGroupName]="method">
+        <mat-checkbox formControlName="wasNotified"></mat-checkbox>
+        <div class="method">{{ method }}</div>
+        @if (notificationMethodChecked(method)) {
+          <app-inline-datepicker
+            (save)="onNotificationDateSave(method, $event)"
+            [value]="notificationDateTimestamp(method) ?? undefined"
+          ></app-inline-datepicker>
+        } @else {
+          Add date
+        }
+      </div>
+    }
+  </div>
+
+  <div class="documents-header full-width">
+    <h4 class="full-width">Documents</h4>
+    <div class="report-add-button-wrapper full-width">
+      <button
+        mat-flat-button
+        color="accent"
+        type="button"
+        [disabled]="!uuid"
+        (click)="openAddDocumentDialog(entryUuid, uuid)"
+        class="add-correspondence-button"
+      >
+        + Add Document
+      </button>
+      @if (showErrors && !order()?.documents?.length) {
+        <div>
+          <app-error-message message="This field is required"></app-error-message>
+        </div>
+      }
+    </div>
+  </div>
+
+  <app-compliance-and-enforcement-order-documents
+    class="full-width"
+    [documents]="order()?.documents ?? []"
+    (edit)="openEditDocumentDialog(entryUuid, uuid, $event)"
+    (delete)="confirmDocumentDelete($event)"
+  />
+</form>
+
+<div class="actions">
+  <button mat-stroked-button color="warn" type="button" class="delete-button" (click)="onDeleteButtonClick()">
+    Delete Order
+  </button>
+  <button mat-stroked-button color="primary" type="button" class="save-button" (click)="saveAndExit(true)">
+    Save &amp; Exit
+  </button>
+  <button mat-flat-button color="primary" type="button" class="finish-button" (click)="onFinishButtonClick()">
+    Finish
+  </button>
+</div>

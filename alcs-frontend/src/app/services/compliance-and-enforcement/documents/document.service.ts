@@ -1,14 +1,14 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { CSP_NONCE, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../../environments/environment';
+import { DOCUMENT_TYPE, DocumentTypeDto } from '../../../shared/document/document.dto';
+import { downloadFileFromUrl, openFileInline } from '../../../shared/utils/file';
 import {
   ComplianceAndEnforcementDocumentDto,
   CreateComplianceAndEnforcementDocumentDto,
   UpdateComplianceAndEnforcementDocumentDto,
 } from './document.dto';
-import { DOCUMENT_TYPE, DocumentTypeDto } from '../../../shared/document/document.dto';
-import { downloadFileFromUrl, openFileInline } from '../../../shared/utils/file';
 
 export enum Section {
   SUBMISSION = 'Submission',
@@ -29,6 +29,8 @@ export class ComplianceAndEnforcementDocumentService {
     fileNumber?: string,
     section?: Section,
     chronologyEntryUuid?: string,
+    inspectionUuid?: string,
+    noticeUuid?: string,
   ): Promise<ComplianceAndEnforcementDocumentDto[]> {
     let params = new HttpParams();
 
@@ -40,6 +42,12 @@ export class ComplianceAndEnforcementDocumentService {
     }
     if (chronologyEntryUuid) {
       params = params.append('chronologyEntryUuid', chronologyEntryUuid);
+    }
+    if (inspectionUuid) {
+      params = params.append('chronologyEntryUuid', inspectionUuid);
+    }
+    if (noticeUuid) {
+      params = params.append('chronologyEntryUuid', noticeUuid);
     }
 
     return firstValueFrom(this.http.get<ComplianceAndEnforcementDocumentDto[]>(this.url, { params }));
@@ -108,6 +116,15 @@ export class ComplianceAndEnforcementDocumentService {
     }
     if (dto.chronologyEntryUuid) {
       formData.set('chronologyEntryUuid', dto.chronologyEntryUuid);
+    }
+    if (dto.inspectionUuid) {
+      formData.set('inspectionUuid', dto.inspectionUuid);
+    }
+    if (dto.noticeUuid) {
+      formData.set('noticeUuid', dto.noticeUuid);
+    }
+    if (dto.orderUuid) {
+      formData.set('orderUuid', dto.orderUuid);
     }
     if (dto.parcelUuid) {
       formData.set('parcelUuid', dto.parcelUuid);

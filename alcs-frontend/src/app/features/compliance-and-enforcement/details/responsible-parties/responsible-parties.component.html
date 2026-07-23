@@ -30,10 +30,8 @@
       </div>
     }
     <!-- Regular Responsible Parties -->
-    @for (party of responsibleParties; track party) {
-      <div
-        class="party-card"
-        [class.previous-party]="party.isPrevious">
+    @for (party of responsibleParties; track party.uuid) {
+      <div class="party-card" [class.previous-party]="party.isPrevious">
         <div class="party-header">
           <h4>{{ getPartyDisplayName(party) }}</h4>
           <div class="party-type-badge" [class.previous]="party.isPrevious">
@@ -53,17 +51,19 @@
           @if (party.foippaCategory === FOIPPACategory.INDIVIDUAL) {
             <div class="contact-row">
               <!-- Address (if individual) -->
-              @if (getPartyAddress(party)) {
                 <div class="field">
                   <div class="field-heading">Mailing Address</div>
+                @if (getPartyAddress(party)) {
                   <div>{{ getPartyAddress(party) }}</div>
-                </div>
+                } @else {
+                  <app-inline-text
+                    [value]="getPartyAddress(party)"
+                    addText="Add Mailing Address"
+                    placeholder="Add Mailing Address"
+                    (save)="saveInlineEdit(party, 'mailingAddress', $event)"
+                  ></app-inline-text>
               }
-              <!-- Empty div for spacing if no address -->
-              @if (!getPartyAddress(party)) {
-                <div class="field">
                 </div>
-              }
               <!-- Email -->
               <div class="field">
                 <div class="field-heading">Email</div>
@@ -106,7 +106,7 @@
           }
           @if (party.foippaCategory === FOIPPACategory.ORGANIZATION && party.directors?.length) {
             <div class="directors-section">
-              @for (director of party.directors; track director; let i = $index) {
+              @for (director of party.directors; track director.uuid; let i = $index) {
                 <div class="director-container">
                   <!-- Director Name Row -->
                   <div class="director-name-row">

@@ -1,7 +1,5 @@
-
-
 <div class="submitters-container">
-  @for (submitter of submitters; track submitter) {
+  @for (submitter of submitters; track submitter.uuid) {
     <div class="inset">
       @if (!submitter.isAnonymous) {
         <div class="header">

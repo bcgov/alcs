@@ -1,11 +1,17 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { firstValueFrom, Observable } from 'rxjs';
+import { Injectable, signal } from '@angular/core';
+import { map, Observable, tap } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import {
   ComplianceAndEnforcementChronologyEntryDto,
   UpdateComplianceAndEnforcementChronologyEntryDto,
 } from './chronology.dto';
+
+export interface EntryOptions {
+  filterByUuid?: string;
+  filterByFileUuid?: string;
+  filterByFileNumber?: string;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -13,15 +19,34 @@ import {
 export class ComplianceAndEnforcementChronologyService {
   private readonly url = `${environment.apiUrl}/compliance-and-enforcement/chronology`;
 
+  entriesByUuid = signal<Map<string, ComplianceAndEnforcementChronologyEntryDto>>(new Map());
+
   constructor(private readonly http: HttpClient) {}
 
-  entriesByFileId(
-    fileId: string,
-    options: { idType: string } = { idType: 'uuid' },
-  ): Observable<ComplianceAndEnforcementChronologyEntryDto[]> {
-    const params = new HttpParams().set('fileId', fileId).set('idType', options.idType);
+  loadEntries(options: EntryOptions = {}): Observable<ComplianceAndEnforcementChronologyEntryDto[]> {
+    let params = new HttpParams();
 
-    return this.http.get<ComplianceAndEnforcementChronologyEntryDto[]>(`${this.url}/entry`, { params });
+    for (const [option, value] of Object.entries(options)) {
+      if (options[option as keyof EntryOptions]) {
+        params = params.set(option, value);
+      }
+    }
+
+    return this.http.get<ComplianceAndEnforcementChronologyEntryDto[]>(`${this.url}/entry`, { params }).pipe(
+      tap((freshEntries) => {
+        this.entriesByUuid.update((staleEntriesByUuid) => {
+          const freshEntriesByUuid = new Map<string, ComplianceAndEnforcementChronologyEntryDto>(staleEntriesByUuid);
+          for (const entry of freshEntries) {
+            freshEntriesByUuid.set(entry.uuid, entry);
+          }
+          return freshEntriesByUuid;
+        });
+      }),
+    );
+  }
+
+  clear() {
+    this.entriesByUuid.set(new Map<string, ComplianceAndEnforcementChronologyEntryDto>());
   }
 
   createEntry(
@@ -37,9 +62,16 @@ export class ComplianceAndEnforcementChronologyService {
     return this.http.patch<ComplianceAndEnforcementChronologyEntryDto>(`${this.url}/entry/${uuid}`, updateDto);
   }
 
-  async deleteEntry(uuid: string): Promise<ComplianceAndEnforcementChronologyEntryDto> {
-    return await firstValueFrom(
-      this.http.delete<ComplianceAndEnforcementChronologyEntryDto>(`${this.url}/entry/${uuid}`),
+  deleteEntry(uuid: string): Observable<string> {
+    return this.http.delete<{ uuid: string }>(`${this.url}/entry/${uuid}`).pipe(
+      map((result) => result.uuid),
+      tap((uuid) => {
+        this.entriesByUuid.update((staleEntriesByUuid) => {
+          const freshEntriesByUuid = new Map<string, ComplianceAndEnforcementChronologyEntryDto>(staleEntriesByUuid);
+          freshEntriesByUuid.delete(uuid);
+          return freshEntriesByUuid;
+        });
+      }),
     );
   }
 }

@@ -1,3 +1,4 @@
+import { MultipartFile } from '@fastify/multipart';
 import {
   BadRequestException,
   Body,
@@ -13,17 +14,16 @@ import {
 } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
+import { DeleteResult } from 'typeorm';
+import { v4 } from 'uuid';
+import { AUTH_ROLE } from '../../../common/authorization/roles';
 import { RolesGuard } from '../../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../../common/authorization/roles.decorator';
-import { AUTH_ROLE } from '../../../common/authorization/roles';
-import { ComplianceAndEnforcementDocumentService } from './document.service';
-import { ComplianceAndEnforcementDocumentDto, UpdateComplianceAndEnforcementDocumentDto } from './document.dto';
-import { DeleteResult } from 'typeorm';
 import { CreateDocumentDto, DOCUMENT_SOURCE, DOCUMENT_SYSTEM, DocumentTypeDto } from '../../../document/document.dto';
 import { User } from '../../../user/user.entity';
-import { v4 } from 'uuid';
+import { ComplianceAndEnforcementDocumentDto, UpdateComplianceAndEnforcementDocumentDto } from './document.dto';
 import { Section } from './document.entity';
-import { MultipartFile } from '@fastify/multipart';
+import { ComplianceAndEnforcementDocumentService } from './document.service';
 
 @Controller('compliance-and-enforcement/document')
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
@@ -37,8 +37,10 @@ export class ComplianceAndEnforcementDocumentController {
     @Query('fileNumber') fileNumber?: string,
     @Query('section') section?: Section,
     @Query('chronologyEntryUuid') chronologyEntryUuid?: string,
+    @Query('inspectionUuid') inspectionUuid?: string,
+    @Query('noticeUuid') noticeUuid?: string,
   ): Promise<ComplianceAndEnforcementDocumentDto[]> {
-    return await this.service.list(fileNumber, section, chronologyEntryUuid);
+    return await this.service.list(fileNumber, section, chronologyEntryUuid, inspectionUuid, noticeUuid);
   }
 
   @Post('/:fileNumber')
@@ -58,7 +60,10 @@ export class ComplianceAndEnforcementDocumentController {
       source: req.body.source.value as DOCUMENT_SOURCE,
       system: DOCUMENT_SYSTEM.ALCS,
       section: req.body.section?.value as Section,
-      chronologyEntry: req.body.chronologyEntryUuid?.value as string,
+      ...(req.body.chronologyEntryUuid?.value && { chronologyEntryUuid: req.body.chronologyEntryUuid.value as string }),
+      ...(req.body.inspectionUuid?.value && { inspectionUuid: req.body.inspectionUuid.value as string }),
+      ...(req.body.noticeUuid?.value && { noticeUuid: req.body.noticeUuid.value as string }),
+      ...(req.body.orderUuid?.value && { orderUuid: req.body.orderUuid.value as string }),
     };
 
     // Use C&E-specific terminology

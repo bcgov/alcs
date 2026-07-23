@@ -2,8 +2,11 @@ import { AutoMap } from 'automapper-classes';
 import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { DocumentCode } from '../../../document/document-code.entity';
 import { Document } from '../../../document/document.entity';
-import { ComplianceAndEnforcement } from '../compliance-and-enforcement.entity';
 import { ComplianceAndEnforcementChronologyEntry } from '../chronology/chronology.entity';
+import { ComplianceAndEnforcementChronologyInspection } from '../chronology/inspection/inspection.entity';
+import { ComplianceAndEnforcementNotice } from '../chronology/notice/notice.entity';
+import { ComplianceAndEnforcementOrder } from '../chronology/order/order.entity';
+import { ComplianceAndEnforcement } from '../compliance-and-enforcement.entity';
 
 export enum Section {
   SUBMISSION = 'Submission',
@@ -35,6 +38,15 @@ export class ComplianceAndEnforcementDocument extends BaseEntity {
 
   @ManyToOne(() => ComplianceAndEnforcementChronologyEntry, { nullable: true, onDelete: 'CASCADE' })
   chronologyEntry: ComplianceAndEnforcementChronologyEntry | null;
+
+  @ManyToOne(() => ComplianceAndEnforcementChronologyInspection, { nullable: true, onDelete: 'CASCADE' })
+  inspection: ComplianceAndEnforcementChronologyInspection | null;
+
+  @ManyToOne(() => ComplianceAndEnforcementNotice, { nullable: true, onDelete: 'CASCADE' })
+  notice: ComplianceAndEnforcementNotice | null;
+
+  @ManyToOne(() => ComplianceAndEnforcementOrder, { nullable: true, onDelete: 'CASCADE' })
+  order: ComplianceAndEnforcementOrder | null;
 
   @OneToOne(() => Document, { cascade: true })
   @JoinColumn()

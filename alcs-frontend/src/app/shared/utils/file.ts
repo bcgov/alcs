@@ -33,15 +33,29 @@ export const openFileInline = (url: string, fileName: string) => {
 export const splitExtension = (documentName: string) => {
   const lastPeriod = documentName.lastIndexOf('.');
 
-  if (lastPeriod <= 0  || lastPeriod === documentName.length - 1) {
+  if (lastPeriod <= 0 || lastPeriod === documentName.length - 1) {
     return {
       fileName: documentName,
       extension: '',
     };
   }
-  
+
   return {
     fileName: documentName.substring(0, lastPeriod),
     extension: documentName.substring(lastPeriod),
   };
+};
+
+export const downloadDocxFile = (fileName: string, data: any) => {
+  const blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+  var downloadURL = URL.createObjectURL(blob);
+  const downloadLink = document.createElement('a');
+  downloadLink.href = downloadURL;
+  downloadLink.download = fileName;
+  if (window.webkitURL == null) {
+    downloadLink.onclick = (event: MouseEvent) => document.body.removeChild(<Node>event.target);
+    downloadLink.style.display = 'none';
+    document.body.appendChild(downloadLink);
+  }
+  downloadLink.click();
 };

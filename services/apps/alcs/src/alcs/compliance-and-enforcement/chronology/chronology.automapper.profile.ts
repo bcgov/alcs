@@ -1,16 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { createMap, forMember, mapFrom, Mapper } from 'automapper-core';
 import { AutomapperProfile, InjectMapper } from 'automapper-nestjs';
+import { UserDto } from '../../../user/user.dto';
+import { User } from '../../../user/user.entity';
+import { ComplianceAndEnforcement } from '../compliance-and-enforcement.entity';
+import { ComplianceAndEnforcementDocumentDto } from '../document/document.dto';
+import { ComplianceAndEnforcementDocument } from '../document/document.entity';
 import {
   ComplianceAndEnforcementChronologyEntryDto,
   UpdateComplianceAndEnforcementChronologyEntryDto,
 } from './chronology.dto';
 import { ComplianceAndEnforcementChronologyEntry } from './chronology.entity';
-import { ComplianceAndEnforcement } from '../compliance-and-enforcement.entity';
-import { ComplianceAndEnforcementDocument } from '../document/document.entity';
-import { ComplianceAndEnforcementDocumentDto } from '../document/document.dto';
-import { User } from '../../../user/user.entity';
-import { UserDto } from '../../../user/user.dto';
+import { InspectionDto } from './inspection/inspection.dto';
+import { ComplianceAndEnforcementChronologyInspection } from './inspection/inspection.entity';
 
 @Injectable()
 export class ComplianceAndEnforcementChronologyProfile extends AutomapperProfile {
@@ -44,6 +46,14 @@ export class ComplianceAndEnforcementChronologyProfile extends AutomapperProfile
               : undefined,
           ),
         ),
+        forMember(
+          (dto) => dto.inspections,
+          mapFrom((entity) =>
+            entity.inspections !== undefined && entity.inspections !== null
+              ? mapper.mapArray(entity.inspections, ComplianceAndEnforcementChronologyInspection, InspectionDto)
+              : undefined,
+          ),
+        ),
       );
       createMap(
         mapper,
@@ -59,7 +69,7 @@ export class ComplianceAndEnforcementChronologyProfile extends AutomapperProfile
         ),
         forMember(
           (entity) => entity.file,
-          mapFrom((dto) => new ComplianceAndEnforcement({ uuid: dto.fileUuid })),
+          mapFrom((dto) => (dto.fileUuid ? new ComplianceAndEnforcement({ uuid: dto.fileUuid }) : undefined)),
         ),
       );
     };

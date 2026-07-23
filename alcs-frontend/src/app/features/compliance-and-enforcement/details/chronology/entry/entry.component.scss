@@ -75,8 +75,68 @@ form {
 }
 
 .c-and-e-action-list {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+
   .no-data {
     color: colors.$grey;
+  }
+}
+
+.c-and-e-action-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+}
+
+.c-and-e-action {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+
+  font-size: 14px;
+  padding: 0 8px;
+  border: 2px solid colors.$grey;
+  border-radius: 3px;
+
+  &.inspection {
+    border-color: #5eca00;
+  }
+
+  &.notice {
+    border-color: #fba924;
+  }
+
+  &.order {
+    border-color: #9747ff;
+  }
+}
+
+.c-and-e-action-menu-item {
+  font-size: 16px !important;
+  font-weight: normal !important;
+}
+
+.c-and-e-action-button {
+  display: block;
+
+  width: 16px;
+  height: 16px;
+  padding: 0;
+
+  &.c-and-e-action-delete-button {
+    color: colors.$error-color;
+  }
+
+  .mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+
+  ::ng-deep .mat-mdc-button-touch-target {
+    display: none !important;
   }
 }
 

@@ -1,0 +1,73 @@
+@use '../../../../../../../styles/colors.scss' as colors;
+
+form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  padding: 24px;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px 1px rgba(0, 0, 0, 0.25);
+  margin: 32px 0;
+}
+
+.full-width {
+  grid-column: 1 / -1;
+}
+
+.attendees-table {
+  display: grid;
+  grid-template-columns: auto 1fr 1fr auto;
+  gap: 10px 24px;
+  align-items: center;
+}
+
+.attendees-heading {
+  color: colors.$grey;
+  font-size: 14px;
+}
+
+.attendee {
+  display: contents;
+}
+
+.attendee-delete-button {
+  color: colors.$error-color;
+}
+
+.add-attendee-button {
+  margin-top: 24px !important;
+}
+
+.actions {
+  display: flex;
+  gap: 18px;
+}
+
+.save-button {
+  margin-left: auto !important;
+}
+
+.form-field-wrapper mat-form-field {
+  display: contents;
+}
+
+.report-add-button-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.generate-report-template-wrapper {
+  display: flex;
+  align-items: top;
+  gap: 12px;
+}
+
+.generate-report-template-help-text {
+  font-size: 12px;
+}
+
+.generate-report-template-button {
+  --mat-button-filled-container-color: #ba5a27;
+  flex-shrink: 0;
+}

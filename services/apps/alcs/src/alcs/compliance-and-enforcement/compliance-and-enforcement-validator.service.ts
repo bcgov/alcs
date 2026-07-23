@@ -1,11 +1,10 @@
 import { ServiceValidationException } from '@app/common/exceptions/base.exception';
 import { Injectable, Logger } from '@nestjs/common';
 import { ComplianceAndEnforcement } from './compliance-and-enforcement.entity';
-import { ComplianceAndEnforcementSubmitterDto } from './submitter/submitter.dto';
+import { InitialSubmissionType } from './compliance-and-enforcement.enum';
 import { ComplianceAndEnforcementPropertyDto } from './property/property.dto';
 import { ComplianceAndEnforcementResponsibleParty } from './responsible-parties/responsible-party.entity';
-import { ComplianceAndEnforcementResponsiblePartyDirector } from './responsible-parties/responsible-party-director.entity';
-import { InitialSubmissionType } from './compliance-and-enforcement.entity';
+import { ComplianceAndEnforcementSubmitterDto } from './submitter/submitter.dto';
 
 export class ValidatedComplianceAndEnforcement extends ComplianceAndEnforcement {
   // This class represents a validated C&E submission that can be submitted
@@ -13,9 +12,7 @@ export class ValidatedComplianceAndEnforcement extends ComplianceAndEnforcement 
 
 @Injectable()
 export class ComplianceAndEnforcementValidatorService {
-  private logger: Logger = new Logger(
-    ComplianceAndEnforcementValidatorService.name,
-  );
+  private logger: Logger = new Logger(ComplianceAndEnforcementValidatorService.name);
 
   async validateSubmission(
     complianceAndEnforcement: ComplianceAndEnforcement,
@@ -40,37 +37,25 @@ export class ComplianceAndEnforcementValidatorService {
     return {
       errors,
       validatedSubmission:
-        errors.length === 0
-          ? (complianceAndEnforcement as ValidatedComplianceAndEnforcement)
-          : undefined,
+        errors.length === 0 ? (complianceAndEnforcement as ValidatedComplianceAndEnforcement) : undefined,
     };
   }
 
-  private async validateMainFile(
-    complianceAndEnforcement: ComplianceAndEnforcement,
-    errors: Error[],
-  ) {
+  private async validateMainFile(complianceAndEnforcement: ComplianceAndEnforcement, errors: Error[]) {
     // Validate initial submission type
     if (!complianceAndEnforcement.initialSubmissionType) {
-      errors.push(
-        new ServiceValidationException('Initial submission type is required'),
-      );
+      errors.push(new ServiceValidationException('Initial submission type is required'));
     }
 
     // Validate alleged contravention narrative
     if (!complianceAndEnforcement.allegedContraventionNarrative?.trim()) {
-      errors.push(
-        new ServiceValidationException('Alleged contravention narrative is required'),
-      );
+      errors.push(new ServiceValidationException('Alleged contravention narrative is required'));
     }
 
     // Validate alleged activities
     if (!complianceAndEnforcement.allegedActivity || complianceAndEnforcement.allegedActivity.length === 0) {
-      errors.push(
-        new ServiceValidationException('At least one alleged activity must be selected'),
-      );
+      errors.push(new ServiceValidationException('At least one alleged activity must be selected'));
     }
-
   }
 
   private async validateSubmitters(
@@ -79,10 +64,11 @@ export class ComplianceAndEnforcementValidatorService {
     errors: Error[],
   ) {
     // If submission type is referral, affiliation (submitters) is required
-    if (complianceAndEnforcement.initialSubmissionType === InitialSubmissionType.REFERRAL && (!submitters || submitters.length === 0)) {
-      errors.push(
-        new ServiceValidationException('Affiliation is required for referral submissions'),
-      );
+    if (
+      complianceAndEnforcement.initialSubmissionType === InitialSubmissionType.REFERRAL &&
+      (!submitters || submitters.length === 0)
+    ) {
+      errors.push(new ServiceValidationException('Affiliation is required for referral submissions'));
       return;
     }
 
@@ -90,70 +76,49 @@ export class ComplianceAndEnforcementValidatorService {
     return;
   }
 
-  private async validateProperties(
-    properties: ComplianceAndEnforcementPropertyDto[],
-    errors: Error[],
-  ) {
+  private async validateProperties(properties: ComplianceAndEnforcementPropertyDto[], errors: Error[]) {
     if (!properties || properties.length === 0) {
-      errors.push(
-        new ServiceValidationException('At least one property is required'),
-      );
+      errors.push(new ServiceValidationException('At least one property is required'));
       return;
     }
 
     for (const property of properties) {
       // Validate civic address
       if (!property.civicAddress?.trim()) {
-        errors.push(
-          new ServiceValidationException('Property civic address is required'),
-        );
+        errors.push(new ServiceValidationException('Property civic address is required'));
       }
 
       // Validate legal description
       if (!property.legalDescription?.trim()) {
-        errors.push(
-          new ServiceValidationException('Property legal description is required'),
-        );
+        errors.push(new ServiceValidationException('Property legal description is required'));
       }
 
       // Validate local government
       if (!property.localGovernmentUuid) {
-        errors.push(
-          new ServiceValidationException('Property local government is required'),
-        );
+        errors.push(new ServiceValidationException('Property local government is required'));
       }
 
       // Validate area hectares
       if (!property.areaHectares || property.areaHectares <= 0) {
-        errors.push(
-          new ServiceValidationException('Property area hectares must be greater than 0'),
-        );
+        errors.push(new ServiceValidationException('Property area hectares must be greater than 0'));
       }
 
       // Validate ALR percentage
       if (property.alrPercentage < 0 || property.alrPercentage > 100) {
-        errors.push(
-          new ServiceValidationException('Property ALR percentage must be between 0 and 100'),
-        );
+        errors.push(new ServiceValidationException('Property ALR percentage must be between 0 and 100'));
       }
 
       // Validate ownership type specific requirements
       if (property.ownershipTypeCode === 'SMPL' && !property.pid?.trim()) {
-        errors.push(
-          new ServiceValidationException('Fee Simple properties must have a PID'),
-        );
+        errors.push(new ServiceValidationException('Fee Simple properties must have a PID'));
       }
 
       if (property.pid && property.pid.length !== 9) {
-        errors.push(
-          new ServiceValidationException('Property PID must be exactly 9 characters'),
-        );
+        errors.push(new ServiceValidationException('Property PID must be exactly 9 characters'));
       }
 
       if (property.pin && property.pin.length !== 9) {
-        errors.push(
-          new ServiceValidationException('Property PIN must be exactly 9 characters'),
-        );
+        errors.push(new ServiceValidationException('Property PIN must be exactly 9 characters'));
       }
     }
   }
@@ -163,16 +128,13 @@ export class ComplianceAndEnforcementValidatorService {
     properties: ComplianceAndEnforcementPropertyDto[],
     errors: Error[],
   ) {
-    
-    const isCrownProperty = properties.some(property => property.ownershipTypeCode === 'CRWN');
+    const isCrownProperty = properties.some((property) => property.ownershipTypeCode === 'CRWN');
 
     if (!isCrownProperty && (!responsibleParties || responsibleParties.length === 0)) {
-      errors.push(
-        new ServiceValidationException('At least one responsible party is required'),
-      );
+      errors.push(new ServiceValidationException('At least one responsible party is required'));
       return;
     }
-    
+
     if (!responsibleParties || responsibleParties.length === 0) {
       return;
     }
@@ -180,24 +142,18 @@ export class ComplianceAndEnforcementValidatorService {
     for (const party of responsibleParties) {
       // Validate party type
       if (!party.partyType) {
-        errors.push(
-          new ServiceValidationException('Responsible party type is required'),
-        );
+        errors.push(new ServiceValidationException('Responsible party type is required'));
       }
 
       // Validate FOIPPA category
       if (!party.foippaCategory) {
-        errors.push(
-          new ServiceValidationException('Responsible party FOIPPA category is required'),
-        );
+        errors.push(new ServiceValidationException('Responsible party FOIPPA category is required'));
       }
 
       // Validate based on FOIPPA category - but make contact details optional
       if (party.foippaCategory === 'Individual') {
         if (!party.individualName?.trim()) {
-          errors.push(
-            new ServiceValidationException('Individual name is required for individual responsible parties'),
-          );
+          errors.push(new ServiceValidationException('Individual name is required for individual responsible parties'));
         }
 
         if (!party.individualMailingAddress?.trim()) {
@@ -220,9 +176,7 @@ export class ComplianceAndEnforcementValidatorService {
         if (party.directors && party.directors.length > 0) {
           for (const director of party.directors) {
             if (!director.directorName?.trim()) {
-              errors.push(
-                new ServiceValidationException('Director name is required for organization directors'),
-              );
+              errors.push(new ServiceValidationException('Director name is required for organization directors'));
             }
 
             if (!director.directorMailingAddress?.trim()) {
@@ -236,9 +190,7 @@ export class ComplianceAndEnforcementValidatorService {
 
       // Validate property owner specific fields
       if (party.partyType === 'Property Owner' && !party.ownerSince) {
-        errors.push(
-          new ServiceValidationException('Owner since date is required for property owners'),
-        );
+        errors.push(new ServiceValidationException('Owner since date is required for property owners'));
       }
     }
   }

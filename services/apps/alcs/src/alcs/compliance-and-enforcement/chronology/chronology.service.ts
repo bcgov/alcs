@@ -1,20 +1,25 @@
 import { Injectable } from '@nestjs/common';
-import { DeleteResult, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ComplianceAndEnforcementChronologyEntry } from './chronology.entity';
-import {
-  ComplianceAndEnforcementChronologyEntryDto,
-  UpdateComplianceAndEnforcementChronologyEntryDto,
-} from './chronology.dto';
-import { InjectMapper } from 'automapper-nestjs';
 import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
+import { DeleteResult, FindOptionsWhere, Repository } from 'typeorm';
 import {
   ServiceConflictException,
   ServiceNotFoundException,
 } from '../../../../../../libs/common/src/exceptions/base.exception';
-import { ComplianceAndEnforcement } from '../compliance-and-enforcement.entity';
-import { User } from '../../../user/user.entity';
 import { UserService } from '../../../user/user.service';
+import { ComplianceAndEnforcement } from '../compliance-and-enforcement.entity';
+import {
+  ComplianceAndEnforcementChronologyEntryDto,
+  UpdateComplianceAndEnforcementChronologyEntryDto,
+} from './chronology.dto';
+import { ComplianceAndEnforcementChronologyEntry } from './chronology.entity';
+
+export interface EntryOptions {
+  filterByUuid?: string;
+  filterByFileUuid?: string;
+  filterByFileNumber?: string;
+}
 
 @Injectable()
 export class ComplianceAndEnforcementChronologyService {
@@ -28,16 +33,27 @@ export class ComplianceAndEnforcementChronologyService {
     private readonly userService: UserService,
   ) {}
 
-  async entriesByFileId(
-    fileId: string,
-    options: { idType: string } = { idType: 'uuid' },
-  ): Promise<ComplianceAndEnforcementChronologyEntryDto[]> {
+  async entries(options: EntryOptions): Promise<ComplianceAndEnforcementChronologyEntryDto[]> {
+    const where: FindOptionsWhere<ComplianceAndEnforcementChronologyEntry> = {};
+
+    if (options.filterByUuid) {
+      where.uuid = options.filterByUuid;
+    }
+
+    if (options.filterByFileUuid) {
+      where.file = {
+        uuid: options.filterByFileUuid,
+      };
+    }
+
+    if (options.filterByFileNumber) {
+      where.file = {
+        fileNumber: options.filterByFileNumber,
+      };
+    }
+
     const entities = await this.repository.find({
-      where: {
-        file: {
-          [options.idType]: fileId,
-        },
-      },
+      where,
       relations: {
         file: true,
         author: true,
@@ -56,6 +72,25 @@ export class ComplianceAndEnforcementChronologyService {
       ComplianceAndEnforcementChronologyEntry,
       ComplianceAndEnforcementChronologyEntryDto,
     );
+  }
+
+  async entry(uuid: string, options: EntryOptions = {}) {
+    const entity = await this.repository.findOne({
+      where: { uuid },
+      relations: {
+        file: true,
+        author: true,
+        documents: {
+          document: true,
+          type: true,
+        },
+      },
+      order: {
+        date: 'DESC',
+      },
+    });
+
+    return this.mapper.map(entity, ComplianceAndEnforcementChronologyEntry, ComplianceAndEnforcementChronologyEntryDto);
   }
 
   async createEntry(
@@ -117,7 +152,6 @@ export class ComplianceAndEnforcementChronologyService {
       ComplianceAndEnforcementChronologyEntry,
     );
     updateEntity.uuid = entity.uuid;
-    updateEntity.file = entity.file;
 
     const savedEntity = await this.repository.save(updateEntity);
 

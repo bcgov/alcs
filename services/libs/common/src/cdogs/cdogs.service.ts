@@ -3,11 +3,7 @@ import { HttpService } from '@nestjs/axios';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import * as fs from 'fs';
 import { firstValueFrom } from 'rxjs';
-import {
-  DocumentGenerationModel,
-  DocumentGenerationOptions,
-  DocumentGenerationTemplate,
-} from './cdogs.dto';
+import { DocumentGenerationModel, DocumentGenerationOptions, DocumentGenerationTemplate } from './cdogs.dto';
 
 @Injectable()
 export class CdogsService {
@@ -59,15 +55,20 @@ export class CdogsService {
     return fileContent.toString('base64');
   }
 
-  async generateDocument(reportName: string, templatePath: string, data: any) {
+  async generateDocument(reportName: string, templatePath: string, data: any, convertTo?: string) {
     const serviceUrl = this.config.get<string>('CDOGS.URL');
     const token = await this.getToken();
 
     const content = await this.getTemplateAsBase64(templatePath);
 
+    const options = new DocumentGenerationOptions({ reportName: reportName });
+    if (convertTo) {
+      options.convertTo = convertTo;
+    }
+
     const payload = new DocumentGenerationModel({
       data,
-      options: new DocumentGenerationOptions({ reportName: reportName }),
+      options,
       template: new DocumentGenerationTemplate({ content }),
     });
 
