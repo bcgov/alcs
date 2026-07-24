@@ -7,10 +7,15 @@
           <div class="nav-link" data-testid="details-nav-link">
             <div
               [routerLinkActiveOptions]="{ exact: route.path === '' }"
-              [routerLink]="route.path ? route.path : './'"
-              class="nav-item nav-text"
+              [routerLink]="routeAllowed(route) ? (route.path ? route.path : './') : null"
+              [ngClass]="{
+                'nav-item': true,
+                'nav-text': true,
+                disabled: !routeAllowed(route),
+              }"
               routerLinkActive="active"
-              >
+              [matTooltip]="!routeAllowed(route) ? 'Contact assigned officer' : null"
+            >
               <mat-icon>{{ route.icon }}</mat-icon>
               {{ route.menuTitle }}
             </div>
