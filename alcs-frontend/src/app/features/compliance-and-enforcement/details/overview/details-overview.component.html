@@ -10,7 +10,7 @@
         <span>
           {{ status.value }}
         </span>
-        @if (status.value) {
+        @if (userProfile()?.clientRoles?.includes(ROLES.C_AND_E) && status.value) {
           <button class="edit-button" mat-icon-button (click)="startEdit()">
             <mat-icon class="edit-icon">edit</mat-icon>
           </button>

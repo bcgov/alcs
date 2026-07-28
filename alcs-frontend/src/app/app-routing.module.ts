@@ -82,7 +82,7 @@ const routes: Routes = [
     path: 'compliance-and-enforcement',
     canActivate: [HasRolesGuard],
     data: {
-      roles: [ROLES.C_AND_E],
+      roles: ROLES_ALLOWED_APPLICATIONS,
     },
     loadChildren: () =>
       import('./features/compliance-and-enforcement/compliance-and-enforcement.module').then(

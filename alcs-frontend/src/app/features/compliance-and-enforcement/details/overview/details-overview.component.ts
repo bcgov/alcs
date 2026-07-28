@@ -1,17 +1,20 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
+import { ROLES } from '../../../../services/authentication/authentication.service';
 import {
   ComplianceAndEnforcementService,
   DEFAULT_C_AND_E_FETCH_OPTIONS,
   Status,
   statusFromFile,
 } from '../../../../services/compliance-and-enforcement/compliance-and-enforcement.service';
+import { UserService } from '../../../../services/user/user.service';
 
 @Component({
-    selector: 'app-details-overview',
-    templateUrl: './details-overview.component.html',
-    styleUrls: ['./details-overview.component.scss'],
+  selector: 'app-details-overview',
+  templateUrl: './details-overview.component.html',
+  styleUrls: ['./details-overview.component.scss'],
     standalone: false
 })
 export class DetailsOverviewComponent implements OnInit, OnDestroy {
@@ -23,7 +26,13 @@ export class DetailsOverviewComponent implements OnInit, OnDestroy {
 
   status = new FormControl<Status | null>(null);
 
-  constructor(private readonly service: ComplianceAndEnforcementService) {}
+  ROLES = ROLES;
+  readonly userProfile = toSignal(this.userService.$userProfile);
+
+  constructor(
+    private readonly service: ComplianceAndEnforcementService,
+    private readonly userService: UserService,
+  ) {}
 
   ngOnInit(): void {
     this.service.$file.pipe(takeUntil(this.$destroy)).subscribe((file) => {
