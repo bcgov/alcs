@@ -45,7 +45,7 @@ export const detailsRoutes: (Route & { icon?: string; menuTitle?: string })[] = 
     menuTitle: 'Complaint / Referral',
     canActivate: [HasRolesGuard],
     data: {
-      roles: ROLES.C_AND_E,
+      roles: [ROLES.C_AND_E],
     },
     children: [
       {
@@ -71,7 +71,7 @@ export const detailsRoutes: (Route & { icon?: string; menuTitle?: string })[] = 
     menuTitle: 'Responsible Parties',
     canActivate: [HasRolesGuard],
     data: {
-      roles: ROLES.C_AND_E,
+      roles: [ROLES.C_AND_E],
     },
     children: [
       {
@@ -92,7 +92,7 @@ export const detailsRoutes: (Route & { icon?: string; menuTitle?: string })[] = 
     menuTitle: 'Property & Maps',
     canActivate: [HasRolesGuard],
     data: {
-      roles: ROLES.C_AND_E,
+      roles: [ROLES.C_AND_E],
     },
     children: [
       {
@@ -113,7 +113,7 @@ export const detailsRoutes: (Route & { icon?: string; menuTitle?: string })[] = 
     menuTitle: 'Chronology',
     canActivate: [HasRolesGuard],
     data: {
-      roles: ROLES.C_AND_E,
+      roles: [ROLES.C_AND_E],
     },
     children: [
       {
@@ -147,7 +147,7 @@ const routes: Routes = [
     path: ':fileNumber/draft',
     canActivate: [HasRolesGuard],
     data: {
-      roles: ROLES.C_AND_E,
+      roles: [ROLES.C_AND_E],
     },
     component: DraftComponent,
   },
