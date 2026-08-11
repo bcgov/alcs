@@ -34,6 +34,7 @@ export interface ComplianceAndEnforcementDto {
   chronologyClosedAt: number | null;
   chronologyClosedBy: UserDto | null;
   assignee: UserDto | null;
+  filePath: string;
 }
 
 export interface UpdateComplianceAndEnforcementDto {

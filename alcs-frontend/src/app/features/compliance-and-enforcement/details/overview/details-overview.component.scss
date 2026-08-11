@@ -16,23 +16,25 @@ section {
 
 .button-container {
   button:not(:last-child) {
-    margin-right: 2px !important;
+    margin-right: 12px !important;
   }
 
-  .save {
+  .save:not(:disabled) {
     color: colors.$primary-color;
   }
 }
 
-.edit-button {
+.action-button {
   height: 24px;
   width: 24px;
   padding: 0;
-  display: flex;
-  align-items: center;
+
+  ::ng-deep .mat-mdc-button-touch-target {
+    display: none !important;
+  }
 }
 
-.edit-icon {
+.action-icon {
   font-size: inherit;
   line-height: 22px;
 }
@@ -44,4 +46,10 @@ section {
 .status-display {
   display: flex;
   align-items: center;
+}
+
+.file-path-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
