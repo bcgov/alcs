@@ -14,6 +14,7 @@ import { Application } from '../application/application.entity';
 import { CARD_TYPE } from '../card/card-type/card-type.entity';
 import { ApplicationTypeDto } from '../code/application-code/application-type/application-type.dto';
 import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
+import { ComplianceAndEnforcement } from '../compliance-and-enforcement/compliance-and-enforcement.entity';
 import { INQUIRY_TYPES } from '../inquiry/inquiry.dto';
 import { Inquiry } from '../inquiry/inquiry.entity';
 import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
@@ -22,6 +23,8 @@ import { PLANNING_REVIEW_TYPES } from '../planning-review/planning-review.dto';
 import { PlanningReview } from '../planning-review/planning-review.entity';
 import { ApplicationAdvancedSearchService } from './application/application-advanced-search.service';
 import { ApplicationSubmissionSearchView } from './application/application-search-view.entity';
+import { ComplianceAndEnforcementAdvancedSearchService } from './compliance-and-enforcement/compliance-and-enforcement-advanced-search.service';
+import { ComplianceAndEnforcementSearchView } from './compliance-and-enforcement/compliance-and-enforcement-search-view.entity';
 import { InquiryAdvancedSearchService } from './inquiry/inquiry-advanced-search.service';
 import { InquirySearchView } from './inquiry/inquiry-search-view.entity';
 import { NoticeOfIntentAdvancedSearchService } from './notice-of-intent/notice-of-intent-advanced-search.service';
@@ -34,6 +37,7 @@ import {
   AdvancedSearchResponseDto,
   AdvancedSearchResultDto,
   ApplicationSearchResultDto,
+  ComplianceAndEnforcementSearchResultDto,
   InquirySearchResultDto,
   NoticeOfIntentSearchResultDto,
   NotificationSearchResultDto,
@@ -58,6 +62,7 @@ export class SearchController {
     private planningReviewSearchService: PlanningReviewAdvancedSearchService,
     private searchStatusService: SearchStatusService,
     private inquirySearchService: InquiryAdvancedSearchService,
+    private cAndEFileSearchService: ComplianceAndEnforcementAdvancedSearchService,
     @InjectRepository(ApplicationType)
     private appTypeRepo: Repository<ApplicationType>,
     @InjectDataSource()
@@ -72,10 +77,11 @@ export class SearchController {
     const notification = await this.searchService.getNotification(searchTerm);
     const planningReview = await this.searchService.getPlanningReview(searchTerm);
     const inquiry = await this.searchService.getInquiry(searchTerm);
+    const cAndEFile = await this.searchService.getCAndEFile(searchTerm);
 
     const result: SearchResultDto[] = [];
 
-    this.mapSearchResults(result, application, noi, planningReview, notification, inquiry);
+    this.mapSearchResults(result, application, noi, planningReview, notification, inquiry, cAndEFile);
 
     return result;
   }
@@ -87,6 +93,7 @@ export class SearchController {
     planningReview: PlanningReview | null,
     notification: Notification | null,
     inquiry: Inquiry | null,
+    cAndEFile: ComplianceAndEnforcement | null,
   ) {
     if (application) {
       result.push(this.mapApplicationToSearchResult(application));
@@ -112,8 +119,14 @@ export class SearchController {
   @Post('/advanced')
   @UserRoles(...ROLES_ALLOWED_SEARCH)
   async advancedSearch(@Body() searchDto: SearchRequestDto) {
-    const { searchApplications, searchNoi, searchPlanningReviews, searchNotifications, searchInquiries } =
-      this.getEntitiesTypeToSearch(searchDto);
+    const {
+      searchApplications,
+      searchNoi,
+      searchPlanningReviews,
+      searchNotifications,
+      searchInquiries,
+      searchCAndEFiles,
+    } = this.getEntitiesTypeToSearch(searchDto);
 
     const queryRunner = this.dataSource.createQueryRunner('slave');
 
@@ -146,13 +159,21 @@ export class SearchController {
         inquiries = await this.inquirySearchService.search(searchDto, queryRunner);
       }
 
-      return await this.mapAdvancedSearchResults(
+      let cAndEFiles: AdvancedSearchResultDto<ComplianceAndEnforcementSearchView[]> | null = null;
+      if (searchCAndEFiles) {
+        cAndEFiles = await this.cAndEFileSearchService.search(searchDto, queryRunner);
+      }
+
+      const stuff = await this.mapAdvancedSearchResults(
         applicationSearchResult,
         noticeOfIntentSearchService,
         planningReviews,
         notifications,
         inquiries,
+        cAndEFiles,
       );
+
+      return stuff;
     } finally {
       await queryRunner.release();
     }
@@ -168,7 +189,7 @@ export class SearchController {
     try {
       const applications = await this.applicationSearchService.searchApplications(searchDto, queryRunner);
 
-      const mappedSearchResult = await this.mapAdvancedSearchResults(applications, null, null, null, null);
+      const mappedSearchResult = await this.mapAdvancedSearchResults(applications, null, null, null, null, null);
 
       return {
         total: mappedSearchResult.totalApplications,
@@ -189,7 +210,7 @@ export class SearchController {
     try {
       const noticeOfIntents = await this.noticeOfIntentSearchService.searchNoticeOfIntents(searchDto, queryRunner);
 
-      const mappedSearchResult = await this.mapAdvancedSearchResults(null, noticeOfIntents, null, null, null);
+      const mappedSearchResult = await this.mapAdvancedSearchResults(null, noticeOfIntents, null, null, null, null);
 
       return {
         total: mappedSearchResult.totalNoticeOfIntents,
@@ -210,7 +231,7 @@ export class SearchController {
     try {
       const notifications = await this.notificationSearchService.search(searchDto, queryRunner);
 
-      const mappedSearchResult = await this.mapAdvancedSearchResults(null, null, null, notifications, null);
+      const mappedSearchResult = await this.mapAdvancedSearchResults(null, null, null, notifications, null, null);
 
       return {
         total: mappedSearchResult.totalNotifications,
@@ -288,7 +309,7 @@ export class SearchController {
     try {
       const planningReviews = await this.planningReviewSearchService.search(searchDto, queryRunner);
 
-      const mappedSearchResult = await this.mapAdvancedSearchResults(null, null, planningReviews, null, null);
+      const mappedSearchResult = await this.mapAdvancedSearchResults(null, null, planningReviews, null, null, null);
 
       return {
         total: mappedSearchResult.totalPlanningReviews,
@@ -309,7 +330,7 @@ export class SearchController {
     try {
       const inquiries = await this.inquirySearchService.search(searchDto, queryRunner);
 
-      const mappedSearchResult = await this.mapAdvancedSearchResults(null, null, null, null, inquiries);
+      const mappedSearchResult = await this.mapAdvancedSearchResults(null, null, null, null, inquiries, null);
 
       return {
         total: mappedSearchResult.totalInquiries,
@@ -320,13 +341,35 @@ export class SearchController {
     }
   }
 
+  @Post('/advanced/compliance-and-enforcement-files')
+  @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
+  async advancedSearchCAndEFiles(
+    @Body() searchDto: SearchRequestDto,
+  ): Promise<AdvancedSearchResultDto<ComplianceAndEnforcementSearchResultDto[]>> {
+    const queryRunner = this.dataSource.createQueryRunner('slave');
+
+    try {
+      const cAndEFiles = await this.cAndEFileSearchService.search(searchDto, queryRunner);
+
+      const mappedSearchResult = await this.mapAdvancedSearchResults(null, null, null, null, null, cAndEFiles);
+
+      return {
+        total: mappedSearchResult.totalCAndEFiles,
+        data: mappedSearchResult.cAndEFiles,
+      };
+    } finally {
+      await queryRunner.release();
+    }
+  }
+
   private getEntitiesTypeToSearch(searchDto: SearchRequestDto) {
     let searchApplications = true;
-
     let planningReviewTypeSpecified = false;
     let noiTypeSpecified = false;
     let notificationTypeSpecified = false;
     let inquiriesTypeSpecified = false;
+    let cAndEFilesTypeSpecified = false;
+
     if (searchDto.fileTypes.length > 0) {
       searchApplications =
         searchDto.fileTypes.filter((searchType) =>
@@ -350,6 +393,8 @@ export class SearchController {
         searchDto.fileTypes.filter((searchType) =>
           Object.values(INQUIRY_TYPES).includes(INQUIRY_TYPES[searchType as keyof typeof INQUIRY_TYPES]),
         ).length > 0;
+
+      cAndEFilesTypeSpecified = searchDto.fileTypes.includes('CE');
     }
 
     const searchNoi = searchDto.fileTypes.length > 0 ? noiTypeSpecified : true;
@@ -376,12 +421,21 @@ export class SearchController {
       !searchDto.resolutionYear &&
       searchDto.portalStatusCodes.length === 0;
 
+    const searchCAndEFiles =
+      (searchDto.fileTypes.length > 0 ? cAndEFilesTypeSpecified : true) &&
+      !searchDto.dateDecidedFrom &&
+      !searchDto.dateDecidedTo &&
+      !searchDto.resolutionNumber &&
+      !searchDto.resolutionYear &&
+      searchDto.portalStatusCodes.length === 0;
+
     return {
       searchApplications,
       searchNoi,
       searchPlanningReviews,
       searchNotifications,
       searchInquiries,
+      searchCAndEFiles,
     };
   }
 
@@ -391,6 +445,7 @@ export class SearchController {
     planningReviews: AdvancedSearchResultDto<PlanningReviewSearchView[]> | null,
     notifications: AdvancedSearchResultDto<NotificationSubmissionSearchView[]> | null,
     inquiries: AdvancedSearchResultDto<InquirySearchView[]> | null,
+    cAndEFiles: AdvancedSearchResultDto<ComplianceAndEnforcementSearchView[]> | null,
   ) {
     const response = new AdvancedSearchResponseDto();
 
@@ -433,6 +488,11 @@ export class SearchController {
       mappedInquiries.push(...inquiries.data.map((inquiry) => this.mapInquiryToAdvancedSearchResult(inquiry)));
     }
 
+    const mappedCAndEFiles: ComplianceAndEnforcementSearchResultDto[] = [];
+    if (cAndEFiles && cAndEFiles.data && cAndEFiles.data.length > 0) {
+      mappedCAndEFiles.push(...cAndEFiles.data.map((cAndEFile) => this.mapCAndEFileToAdvancedSearchResult(cAndEFile)));
+    }
+
     response.applications = mappedApplications;
     response.totalApplications = applications?.total ?? 0;
     response.noticeOfIntents = mappedNoticeOfIntents;
@@ -443,6 +503,8 @@ export class SearchController {
     response.totalPlanningReviews = planningReviews?.total ?? 0;
     response.inquiries = mappedInquiries;
     response.totalInquiries = inquiries?.total ?? 0;
+    response.cAndEFiles = mappedCAndEFiles;
+    response.totalCAndEFiles = cAndEFiles?.total ?? 0;
 
     return response;
   }
@@ -584,6 +646,19 @@ export class SearchController {
       inquirerLastName: inquiry.inquirerLastName,
       inquirerOrganizationName: inquiry.inquirerOrganization,
       class: 'INQR',
+    };
+  }
+
+  private mapCAndEFileToAdvancedSearchResult(
+    cAndEFile: ComplianceAndEnforcementSearchView,
+  ): ComplianceAndEnforcementSearchResultDto {
+    return {
+      fileNumber: cAndEFile.fileNumber,
+      dateSubmitted: cAndEFile.dateSubmitted?.getTime() ?? null,
+      civicAddress: cAndEFile.civicAddress,
+      responsibleParties: cAndEFile.responsibleParties,
+      localGovernmentName: cAndEFile.localGovernmentName,
+      isOpen: cAndEFile.isOpen,
     };
   }
 }

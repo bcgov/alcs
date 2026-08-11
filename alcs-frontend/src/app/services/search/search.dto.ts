@@ -39,17 +39,28 @@ export interface InquirySearchResultDto {
   open: boolean;
 }
 
+export interface ComplianceAndEnforcementSearchResultDto {
+  fileNumber: string;
+  dateSubmitted: number | null;
+  civicAddress?: string;
+  responsibleParties?: string;
+  localGovernmentName?: string;
+  isOpen: boolean | null;
+}
+
 export interface AdvancedSearchResponseDto {
   applications: ApplicationSearchResultDto[];
   noticeOfIntents: NoticeOfIntentSearchResultDto[];
   planningReviews: PlanningReviewSearchResultDto[];
   notifications: NotificationSearchResultDto[];
   inquiries: InquirySearchResultDto[];
+  cAndEFiles: ComplianceAndEnforcementSearchResultDto[];
   totalApplications: number;
   totalNoticeOfIntents: number;
   totalPlanningReviews: number;
   totalNotifications: number;
   totalInquiries: number;
+  totalCAndEFiles: number;
 }
 
 export interface AdvancedSearchEntityResponseDto<T> {

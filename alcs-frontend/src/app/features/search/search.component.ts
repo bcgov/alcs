@@ -1,5 +1,7 @@
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { MatAutocompleteSelectedEvent, MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, SortDirection } from '@angular/material/sort';
 import { MatTabGroup } from '@angular/material/tabs';
@@ -12,16 +14,19 @@ import { ApplicationLocalGovernmentDto } from '../../services/application/applic
 import { ApplicationLocalGovernmentService } from '../../services/application/application-local-government/application-local-government.service';
 import { ApplicationStatusDto } from '../../services/application/application-submission-status/application-submission-status.dto';
 import { ApplicationService } from '../../services/application/application.service';
+import { DecisionMakerDto } from '../../services/application/decision/application-decision-v2/application-decision-v2.dto';
+import { AuthenticationService, ROLES } from '../../services/authentication/authentication.service';
 import { NoticeOfIntentStatusDto } from '../../services/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.dto';
 import { NoticeOfIntentSubmissionStatusService } from '../../services/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.service';
 import { NotificationSubmissionStatusService } from '../../services/notification/notification-submission-status/notification-submission-status.service';
 import { NotificationSubmissionStatusDto } from '../../services/notification/notification.dto';
-import { FileTypeDataSourceService } from '../../services/search/file-type/file-type-data-source.service';
 import { DecisionOutcomeDataSourceService } from '../../services/search/decision-outcome/decision-outcome-data-source.service';
+import { FileTypeDataSourceService } from '../../services/search/file-type/file-type-data-source.service';
 import { PortalStatusDataSourceService } from '../../services/search/portal-status/portal-status-data-source.service';
 import {
   AdvancedSearchResponseDto,
   ApplicationSearchResultDto,
+  ComplianceAndEnforcementSearchResultDto,
   InquirySearchResultDto,
   NoticeOfIntentSearchResultDto,
   NotificationSearchResultDto,
@@ -29,18 +34,14 @@ import {
   SearchRequestDto,
 } from '../../services/search/search.dto';
 import { SearchService } from '../../services/search/search.service';
+import { TagCategoryDto } from '../../services/tag/tag-category/tag-category.dto';
+import { TagCategoryService } from '../../services/tag/tag-category/tag-category.service';
+import { TagDto } from '../../services/tag/tag.dto';
+import { TagService } from '../../services/tag/tag.service';
 import { ToastService } from '../../services/toast/toast.service';
 import { formatDateForApi } from '../../shared/utils/api-date-formatter';
 import { FileTypeFilterDropDownComponent } from './file-type-filter-drop-down/file-type-filter-drop-down.component';
 import { TableChange } from './search.interface';
-import { AuthenticationService, ROLES } from '../../services/authentication/authentication.service';
-import { TagCategoryService } from '../../services/tag/tag-category/tag-category.service';
-import { TagCategoryDto } from '../../services/tag/tag-category/tag-category.dto';
-import { TagDto } from '../../services/tag/tag.dto';
-import { TagService } from '../../services/tag/tag.service';
-import { MatAutocompleteSelectedEvent, MatAutocompleteTrigger } from '@angular/material/autocomplete';
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { DecisionMakerDto } from '../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 
 export const defaultStatusBackgroundColour = '#ffffff';
 export const defaultStatusColour = '#313132';
@@ -91,6 +92,9 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   inquiries: InquirySearchResultDto[] = [];
   inquiriesTotal = 0;
+
+  cAndEFiles: ComplianceAndEnforcementSearchResultDto[] = [];
+  cAndEFilesTotal = 0;
 
   pageIndex = 0;
   itemsPerPage = 20;
@@ -556,11 +560,13 @@ export class SearchComponent implements OnInit, OnDestroy {
         planningReviews: [],
         notifications: [],
         inquiries: [],
+        cAndEFiles: [],
         totalApplications: 0,
         totalNoticeOfIntents: 0,
         totalNotifications: 0,
         totalPlanningReviews: 0,
         totalInquiries: 0,
+        totalCAndEFiles: 0,
       };
     }
 
@@ -578,6 +584,9 @@ export class SearchComponent implements OnInit, OnDestroy {
 
     this.inquiries = searchResult.inquiries;
     this.inquiriesTotal = searchResult.totalInquiries;
+
+    this.cAndEFiles = searchResult.cAndEFiles;
+    this.cAndEFilesTotal = searchResult.totalCAndEFiles;
   }
 
   private setActiveTab() {

@@ -1,0 +1,83 @@
+@if (!isLoading && totalCount) {
+  <table
+    mat-table
+    [dataSource]="dataSource"
+    class="mat-elevation-z2 table"
+    matSort
+    [matSortActive]="sortField"
+    [matSortDirection]="sortDirection"
+    (matSortChange)="onSortChange($event)"
+    matSortDisableClear
+  >
+    <ng-container matColumnDef="fileId">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>File ID</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.fileNumber | emptyColumn }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="dateSubmitted">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Date Submitted</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.dateSubmitted | date | emptyColumn }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="civicAddress">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Civic Address</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.civicAddress | emptyColumn }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="responsibleParties">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Responsible Parties</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.responsibleParties | emptyColumn }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="localGovernmentName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Local/First Nation Government</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.localGovernmentName | emptyColumn }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+      <td mat-cell *matCellDef="let element">
+        @if (element.isOpen === null) {
+          <app-application-type-pill [type]="DRAFT_DECISION_TYPE_LABEL" />
+        } @else if (element.isOpen) {
+          <app-application-type-pill [type]="OPEN_TYPE" />
+        } @else {
+          <app-application-type-pill [type]="CLOSED_TYPE" />
+        }
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr (click)="onSelectRecord(row)" mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    <tr class="mat-row no-data" *matNoDataRow>
+      <td class="text-center" colspan="4">
+        <div><b>No C&E files found.</b></div>
+        <div>Please adjust criteria and try again.</div>
+      </td>
+    </tr>
+  </table>
+  <mat-paginator
+    [length]="totalCount"
+    [pageIndex]="pageIndex"
+    [pageSize]="itemsPerPage"
+    [pageSizeOptions]="[20, 50, 100]"
+    (page)="onPageChange($event)"
+    aria-label="Select page"
+  ></mat-paginator>
+}
+@if (isLoading) {
+  <div class="center">
+    <mat-spinner />
+  </div>
+}
+
+@if (totalCount === 0) {
+  <div class="no-data">
+    <div><b>No C&E files found.</b></div>
+    <div>Please adjust criteria and try again.</div>
+  </div>
+}

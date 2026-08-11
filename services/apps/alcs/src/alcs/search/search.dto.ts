@@ -75,17 +75,28 @@ export class InquirySearchResultDto {
   open: boolean;
 }
 
+export class ComplianceAndEnforcementSearchResultDto {
+  fileNumber: string;
+  dateSubmitted: number | null;
+  civicAddress?: string;
+  responsibleParties?: string;
+  localGovernmentName?: string;
+  isOpen: boolean | null;
+}
+
 export class AdvancedSearchResponseDto {
   applications: ApplicationSearchResultDto[];
   noticeOfIntents: NoticeOfIntentSearchResultDto[];
   notifications: NotificationSearchResultDto[];
   planningReviews: PlanningReviewSearchResultDto[];
   inquiries: InquirySearchResultDto[];
+  cAndEFiles: ComplianceAndEnforcementSearchResultDto[];
   totalApplications: number;
   totalNoticeOfIntents: number;
   totalPlanningReviews: number;
   totalNotifications: number;
   totalInquiries: number;
+  totalCAndEFiles: number;
 }
 
 export class StatusUpdateSearchResultDto {
