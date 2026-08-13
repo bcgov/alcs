@@ -114,6 +114,10 @@ export class SearchController {
     if (inquiry) {
       result.push(this.mapInquiryToSearchResult(inquiry));
     }
+
+    if (cAndEFile) {
+      result.push(this.mapCAndEFileToSearchResult(cAndEFile));
+    }
   }
 
   @Post('/advanced')
@@ -547,6 +551,14 @@ export class SearchController {
       localGovernmentName: inquiry.localGovernment?.name,
       applicant: inquiry.inquirerLastName ?? undefined,
       fileNumber: inquiry.fileNumber,
+    };
+  }
+
+  private mapCAndEFileToSearchResult(cAndEFile: ComplianceAndEnforcement): SearchResultDto {
+    return {
+      type: CARD_TYPE.C_AND_E,
+      referenceId: cAndEFile.fileNumber,
+      fileNumber: cAndEFile.fileNumber,
     };
   }
 

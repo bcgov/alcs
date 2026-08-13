@@ -7,7 +7,7 @@ export class SearchResultDto {
   type: string;
   referenceId: string;
   applicant?: string;
-  localGovernmentName: string | undefined;
+  localGovernmentName?: string;
   fileNumber: string;
   boardCode?: string;
   label?: ApplicationTypeDto;
