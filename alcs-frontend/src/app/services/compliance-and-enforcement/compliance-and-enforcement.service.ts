@@ -84,6 +84,18 @@ export class ComplianceAndEnforcementService {
     );
   }
 
+  async setFilePath(
+    id: string,
+    filePath: string,
+    options: { idType: string } = { idType: 'uuid' },
+  ): Promise<ComplianceAndEnforcementDto> {
+    return await firstValueFrom(
+      this.http.patch<ComplianceAndEnforcementDto>(`${this.url}/${id}/file-path?idType=${options.idType}`, {
+        filePath,
+      }),
+    );
+  }
+
   async delete(uuid: string): Promise<UpdateComplianceAndEnforcementDto> {
     return await firstValueFrom(this.http.delete<ComplianceAndEnforcementDto>(`${this.url}/${uuid}`));
   }
