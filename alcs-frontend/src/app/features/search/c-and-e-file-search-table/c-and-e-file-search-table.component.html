@@ -30,7 +30,7 @@
     <ng-container matColumnDef="responsibleParties">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Responsible Parties</th>
       <td mat-cell *matCellDef="let element">
-        {{ element.responsibleParties | emptyColumn }}
+        {{ propertyOwnerName(element) | emptyColumn }}
       </td>
     </ng-container>
     <ng-container matColumnDef="localGovernmentName">

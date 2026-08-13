@@ -79,7 +79,8 @@ export class ComplianceAndEnforcementSearchResultDto {
   fileNumber: string;
   dateSubmitted: number | null;
   civicAddress?: string;
-  responsibleParties?: string;
+  isCrown?: boolean;
+  responsibleParties?: string[];
   localGovernmentName?: string;
   isOpen: boolean | null;
 }

@@ -656,6 +656,7 @@ export class SearchController {
       fileNumber: cAndEFile.fileNumber,
       dateSubmitted: cAndEFile.dateSubmitted?.getTime() ?? null,
       civicAddress: cAndEFile.civicAddress,
+      isCrown: cAndEFile.isCrown,
       responsibleParties: cAndEFile.responsibleParties,
       localGovernmentName: cAndEFile.localGovernmentName,
       isOpen: cAndEFile.isOpen,

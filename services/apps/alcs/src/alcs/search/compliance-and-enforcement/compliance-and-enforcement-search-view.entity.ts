@@ -13,7 +13,23 @@ import { LocalGovernment } from '../../local-government/local-government.entity'
       .addSelect('cae.file_number', 'file_number')
       .addSelect('cae.date_submitted', 'date_submitted')
       .addSelect('caep.civic_address', 'civic_address')
-      .addSelect("'party list'", 'responsible_parties')
+      .addSelect(
+        `case
+          when caep.ownership_type_code = 'CRWN' then true
+          else false
+        end`,
+        'is_crown',
+      )
+      .addSelect(
+        `array_agg(
+          coalesce(
+            nullif(caerp.individual_name, ''),
+            nullif(caerp.organization_name, '')
+          )
+        )
+          filter (where caerp.uuid is not null)`,
+        'responsible_parties',
+      )
       .addSelect(
         `case
           when cae.date_opened is not null and cae.date_closed is null then true
@@ -26,8 +42,16 @@ import { LocalGovernment } from '../../local-government/local-government.entity'
       .from(ComplianceAndEnforcement, 'cae')
       .leftJoin(ComplianceAndEnforcementProperty, 'caep', 'caep.file_uuid = cae.uuid')
       .leftJoin(ComplianceAndEnforcementResponsibleParty, 'caerp', 'caerp.file_uuid = cae.uuid')
-      .leftJoin(ComplianceAndEnforcementResponsiblePartyDirector, 'caerpd', 'caerpd.responsible_party_uuid = caep.uuid')
-      .leftJoin(LocalGovernment, 'lg', 'lg.uuid = caep.local_government_uuid'),
+      .leftJoin(
+        ComplianceAndEnforcementResponsiblePartyDirector,
+        'caerpd',
+        'caerpd.responsible_party_uuid = caerp.uuid',
+      )
+      .leftJoin(LocalGovernment, 'lg', 'lg.uuid = caep.local_government_uuid')
+      .groupBy('cae.uuid')
+      .addGroupBy('caep.civic_address')
+      .addGroupBy('caep.ownership_type_code')
+      .addGroupBy('lg.name'),
 })
 export class ComplianceAndEnforcementSearchView {
   @ViewColumn()
@@ -44,7 +68,10 @@ export class ComplianceAndEnforcementSearchView {
   civicAddress?: string;
 
   @ViewColumn()
-  responsibleParties?: string;
+  isCrown?: boolean;
+
+  @ViewColumn()
+  responsibleParties?: string[];
 
   @ViewColumn()
   localGovernmentName?: string;

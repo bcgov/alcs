@@ -97,4 +97,18 @@ export class ComplianceAndEnforcementService {
 
     return uuid;
   }
+
+  propertyOwnerName(isCrown: boolean, nonCrownOwnerNames: string[]): string | undefined {
+    const hasNonCrownOwners = nonCrownOwnerNames && nonCrownOwnerNames.length > 0;
+
+    if (isCrown) {
+      return 'Crown' + (hasNonCrownOwners ? ' et al.' : '');
+    }
+
+    if (hasNonCrownOwners) {
+      return nonCrownOwnerNames[0] + (nonCrownOwnerNames.length > 1 ? ' et al.' : '');
+    }
+
+    return undefined;
+  }
 }

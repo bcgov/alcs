@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { Sort, SortDirection } from '@angular/material/sort';
 import { Router } from '@angular/router';
+import { ComplianceAndEnforcementService } from '../../../services/compliance-and-enforcement/compliance-and-enforcement.service';
 import { ComplianceAndEnforcementSearchResultDto } from '../../../services/search/search.dto';
 import {
   CLOSED_PR_LABEL,
@@ -52,7 +53,10 @@ export class ComplianceAndEnforcementSearchTableComponent {
   sortField = 'dateSubmitted';
   isLoading = false;
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private readonly cAndEService: ComplianceAndEnforcementService,
+  ) {}
 
   onTableChange() {
     this.isLoading = true;
@@ -85,5 +89,9 @@ export class ComplianceAndEnforcementSearchTableComponent {
     );
 
     window.open(url, '_blank');
+  }
+
+  propertyOwnerName(record: ComplianceAndEnforcementSearchResultDto): string | undefined {
+    return this.cAndEService.propertyOwnerName(record.isCrown, record.responsibleParties || []);
   }
 }

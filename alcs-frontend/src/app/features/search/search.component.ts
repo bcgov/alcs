@@ -597,6 +597,7 @@ export class SearchComponent implements OnInit, OnDestroy {
       this.planningReviewsTotal,
       this.notificationTotal,
       this.inquiriesTotal,
+      this.cAndEFilesTotal,
     ];
 
     this.tabGroup.selectedIndex = searchCounts.indexOf(Math.max(...searchCounts));
