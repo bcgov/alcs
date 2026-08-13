@@ -398,7 +398,7 @@ export class SearchController {
           Object.values(INQUIRY_TYPES).includes(INQUIRY_TYPES[searchType as keyof typeof INQUIRY_TYPES]),
         ).length > 0;
 
-      cAndEFilesTypeSpecified = searchDto.fileTypes.includes('CE');
+      cAndEFilesTypeSpecified = searchDto.fileTypes.includes('CAE');
     }
 
     const searchNoi = searchDto.fileTypes.length > 0 ? noiTypeSpecified : true;

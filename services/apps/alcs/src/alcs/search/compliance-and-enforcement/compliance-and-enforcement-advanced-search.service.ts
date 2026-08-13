@@ -83,6 +83,10 @@ export class ComplianceAndEnforcementAdvancedSearchService {
       this.addFileNumberResults(searchDto, promises);
     }
 
+    if (searchDto.fileTypes.includes('CAE')) {
+      this.addFileTypeResults(searchDto, promises);
+    }
+
     const finalResult = await processSearchPromises(promises);
 
     return finalResult;
@@ -93,6 +97,16 @@ export class ComplianceAndEnforcementAdvancedSearchService {
       where: {
         fileNumber: searchDto.fileNumber,
       },
+      select: {
+        fileNumber: true,
+      },
+    });
+
+    promises.push(promise);
+  }
+
+  addFileTypeResults(searchDto: SearchRequestDto, promises: Promise<{ fileNumber: string }[]>[]) {
+    const promise = this.complianceAndEnforcementRepository.find({
       select: {
         fileNumber: true,
       },
