@@ -8,6 +8,7 @@ import { ComplianceAndEnforcement } from '../../compliance-and-enforcement/compl
 import { LocalGovernment } from '../../local-government/local-government.entity';
 import { SearchRequestDto } from '../search.dto';
 import { ComplianceAndEnforcementAdvancedSearchService } from './compliance-and-enforcement-advanced-search.service';
+import { ComplianceAndEnforcementSearchView } from './compliance-and-enforcement-search-view.entity';
 
 describe('ComplianceAndEnforcementAdvancedSearchService', () => {
   let service: ComplianceAndEnforcementAdvancedSearchService;
@@ -98,9 +99,7 @@ describe('ComplianceAndEnforcementAdvancedSearchService', () => {
     const result = await service.search(mockSearchDto, mockQueryRunner);
 
     expect(result).toEqual({ data: [], total: 0 });
-    expect(mockComplianceAndEnforcementRepository.find).toHaveBeenCalledTimes(4);
-    expect(mockComplianceAndEnforcementRepository.createQueryBuilder).toHaveBeenCalledTimes(4);
-    expect(mockQuery.andWhere).toHaveBeenCalledTimes(4);
+    expect(mockComplianceAndEnforcementRepository.find).toHaveBeenCalledTimes(1);
   });
 
   it('should call searchForFileNumbers method correctly', async () => {

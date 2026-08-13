@@ -13,6 +13,7 @@ import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
 import { Notification } from '../notification/notification.entity';
 import { PlanningReview } from '../planning-review/planning-review.entity';
 import { ApplicationAdvancedSearchService } from './application/application-advanced-search.service';
+import { ComplianceAndEnforcementAdvancedSearchService } from './compliance-and-enforcement/compliance-and-enforcement-advanced-search.service';
 import { InquiryAdvancedSearchService } from './inquiry/inquiry-advanced-search.service';
 import { NoticeOfIntentAdvancedSearchService } from './notice-of-intent/notice-of-intent-advanced-search.service';
 import { NotificationAdvancedSearchService } from './notification/notification-advanced-search.service';
@@ -30,6 +31,7 @@ describe('SearchController', () => {
   let mockNotificationAdvancedSearchService: DeepMocked<NotificationAdvancedSearchService>;
   let mockPlanningReviewAdvancedSearchService: DeepMocked<PlanningReviewAdvancedSearchService>;
   let mockInquiryAdvancedSearchService: DeepMocked<InquiryAdvancedSearchService>;
+  let mockCAndEAdvancedSearchService: DeepMocked<ComplianceAndEnforcementAdvancedSearchService>;
   let mockSearchStatusService: DeepMocked<SearchStatusService>;
   let mockDataSource: DeepMocked<DataSource>;
   let mockQueryRunner: DeepMocked<QueryRunner>;
@@ -53,6 +55,7 @@ describe('SearchController', () => {
     mockNotificationAdvancedSearchService = createMock();
     mockPlanningReviewAdvancedSearchService = createMock();
     mockInquiryAdvancedSearchService = createMock();
+    mockCAndEAdvancedSearchService = createMock();
     mockSearchStatusService = createMock();
     mockDataSource = createMock();
     mockAppTypeRepo = createMock();
@@ -89,6 +92,10 @@ describe('SearchController', () => {
           useValue: mockInquiryAdvancedSearchService,
         },
         {
+          provide: ComplianceAndEnforcementAdvancedSearchService,
+          useValue: mockCAndEAdvancedSearchService,
+        },
+        {
           provide: SearchStatusService,
           useValue: mockSearchStatusService,
         },
@@ -120,6 +127,7 @@ describe('SearchController', () => {
     mockSearchService.getNotification.mockResolvedValue(new Notification());
     mockSearchService.getPlanningReview.mockResolvedValue(new PlanningReview());
     mockSearchService.getInquiry.mockResolvedValue(new Inquiry());
+    mockSearchService.getCAndEFile.mockResolvedValue(null);
 
     mockNoticeOfIntentAdvancedSearchService.searchNoticeOfIntents.mockResolvedValue({
       data: [],
@@ -142,6 +150,11 @@ describe('SearchController', () => {
     });
 
     mockInquiryAdvancedSearchService.search.mockResolvedValue({
+      data: [],
+      total: 0,
+    });
+
+    mockCAndEAdvancedSearchService.search.mockResolvedValue({
       data: [],
       total: 0,
     });
