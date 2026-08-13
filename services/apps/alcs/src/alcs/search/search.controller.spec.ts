@@ -118,6 +118,11 @@ describe('SearchController', () => {
 
     controller = module.get<SearchController>(SearchController);
 
+    // ensure mapper.map calls don't fail due to missing automapper profiles
+    (controller as any).mapper = {
+      map: jest.fn().mockReturnValue({}),
+    } as any;
+
     mockQueryRunner = createMock<QueryRunner>();
     mockQueryRunner.release.mockResolvedValue();
     mockDataSource.createQueryRunner.mockReturnValue(mockQueryRunner);
@@ -359,5 +364,147 @@ describe('SearchController', () => {
 
     expect(mockSearchStatusService.searchNotificationStatus).toHaveBeenCalledTimes(1);
     expect(result).toBeDefined();
+  });
+
+  it('should call advanced search to retrieve Notifications', async () => {
+    const mockSearchRequestDto: SearchRequestDto = {
+      pageSize: 1,
+      page: 1,
+      sortField: '1',
+      sortDirection: 'ASC',
+      fileTypes: [],
+      portalStatusCodes: [],
+    };
+
+    const result = await controller.advancedSearchNotifications(mockSearchRequestDto);
+
+    expect(mockNotificationAdvancedSearchService.search).toHaveBeenCalledTimes(1);
+    expect(mockNotificationAdvancedSearchService.search).toHaveBeenCalledWith(mockSearchRequestDto, {});
+    expect(result.data).toBeDefined();
+    expect(result.total).toBe(0);
+  });
+
+  it('should call advanced search to retrieve Planning Reviews', async () => {
+    const mockSearchRequestDto: SearchRequestDto = {
+      pageSize: 1,
+      page: 1,
+      sortField: '1',
+      sortDirection: 'ASC',
+      fileTypes: [],
+      portalStatusCodes: [],
+    };
+
+    const result = await controller.advancedSearchPlanningReviews(mockSearchRequestDto);
+
+    expect(mockPlanningReviewAdvancedSearchService.search).toHaveBeenCalledTimes(1);
+    expect(mockPlanningReviewAdvancedSearchService.search).toHaveBeenCalledWith(mockSearchRequestDto, {});
+    expect(result.data).toBeDefined();
+    expect(result.total).toBe(0);
+  });
+
+  it('should call advanced search to retrieve Inquiries', async () => {
+    const mockSearchRequestDto: SearchRequestDto = {
+      pageSize: 1,
+      page: 1,
+      sortField: '1',
+      sortDirection: 'ASC',
+      fileTypes: [],
+      portalStatusCodes: [],
+    };
+
+    const result = await controller.advancedSearchInquiries(mockSearchRequestDto);
+
+    expect(mockInquiryAdvancedSearchService.search).toHaveBeenCalledTimes(1);
+    expect(mockInquiryAdvancedSearchService.search).toHaveBeenCalledWith(mockSearchRequestDto, {});
+    expect(result.data).toBeDefined();
+    expect(result.total).toBe(0);
+  });
+
+  it('should call advanced search to retrieve C&E files', async () => {
+    const mockSearchRequestDto: SearchRequestDto = {
+      pageSize: 1,
+      page: 1,
+      sortField: '1',
+      sortDirection: 'ASC',
+      fileTypes: [],
+      portalStatusCodes: [],
+    };
+
+    const result = await controller.advancedSearchCAndEFiles(mockSearchRequestDto);
+
+    expect(mockCAndEAdvancedSearchService.search).toHaveBeenCalledTimes(1);
+    expect(mockCAndEAdvancedSearchService.search).toHaveBeenCalledWith(mockSearchRequestDto, {});
+    expect(result.data).toBeDefined();
+    expect(result.total).toBe(0);
+  });
+
+  it('getEntitiesTypeToSearch respects fileTypes and flags', () => {
+    const dto: SearchRequestDto = {
+      pageSize: 10,
+      page: 1,
+      sortField: '1',
+      sortDirection: 'ASC',
+      fileTypes: ['NOI', 'SRW', 'MISC', 'GENC', 'CAE', 'NFUP'],
+      portalStatusCodes: [],
+    };
+
+    const result = (controller as any).getEntitiesTypeToSearch(dto);
+
+    expect(result.searchNoi).toBe(true);
+    expect(result.searchNotifications).toBe(true);
+    expect(result.searchPlanningReviews).toBe(true);
+    expect(result.searchInquiries).toBe(true);
+    expect(result.searchCAndEFiles).toBe(true);
+  });
+
+  it('mapping helpers should produce search result shapes', () => {
+    const app: any = {
+      fileNumber: 'F1',
+      localGovernment: { name: 'LG' },
+      applicant: 'Owner',
+      type: {},
+    };
+
+    const noi: any = {
+      fileNumber: 'N1',
+      localGovernment: { name: 'LG' },
+      applicant: 'Owner',
+    };
+
+    const planning: any = {
+      fileNumber: 'P1',
+      localGovernment: { name: 'LG' },
+      documentName: 'Doc',
+    };
+
+    const inquiry: any = {
+      fileNumber: 'I1',
+      localGovernment: { name: 'LG' },
+      inquirerLastName: 'Last',
+    };
+
+    const notification: any = {
+      fileNumber: 'NO1',
+      localGovernment: { name: 'LG' },
+      applicant: 'Owner',
+    };
+
+    const cande: any = {
+      fileNumber: 'C1',
+    };
+
+    const ares = (controller as any).mapApplicationToSearchResult(app);
+    const nres = (controller as any).mapNoticeOfIntentToSearchResult(noi);
+    const pres = (controller as any).mapPlanningReviewToSearchResult(planning);
+    const ires = (controller as any).mapInquiryToSearchResult(inquiry);
+    const cres = (controller as any).mapCAndEFileToSearchResult(cande);
+    const notifres = (controller as any).mapNotificationToSearchResult(notification);
+
+    expect(ares.fileNumber).toBe('F1');
+    expect(nres.fileNumber).toBe('N1');
+    expect(pres.fileNumber).toBe('P1');
+    expect(ires.fileNumber).toBe('I1');
+    expect(cres.fileNumber).toBe('C1');
+    expect(notifres.fileNumber).toBe('NO1');
   });
 });
