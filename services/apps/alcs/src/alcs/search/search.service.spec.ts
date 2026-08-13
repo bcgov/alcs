@@ -170,4 +170,36 @@ describe('SearchService', () => {
     });
     expect(result).toBeDefined();
   });
+
+  it('should call repository to get C&E file', async () => {
+    mockCAndERepository.findOne.mockResolvedValue(new ComplianceAndEnforcement());
+
+    const result = await service.getCAndEFile('fake');
+
+    expect(mockCAndERepository.findOne).toHaveBeenCalledTimes(1);
+    expect(mockCAndERepository.findOne).toHaveBeenCalledWith({
+      where: {
+        fileNumber: fakeFileNumber,
+      },
+    });
+    expect(result).toBeDefined();
+  });
+
+  it('returns null when application repository returns nothing', async () => {
+    mockApplicationRepository.findOne.mockResolvedValue(null as any);
+
+    const result = await service.getApplication('fake');
+
+    expect(mockApplicationRepository.findOne).toHaveBeenCalledTimes(1);
+    expect(result).toBeNull();
+  });
+
+  it('returns null when NOI repository returns nothing', async () => {
+    mockNoiRepository.findOne.mockResolvedValue(null as any);
+
+    const result = await service.getNoi('fake');
+
+    expect(mockNoiRepository.findOne).toHaveBeenCalledTimes(1);
+    expect(result).toBeNull();
+  });
 });
