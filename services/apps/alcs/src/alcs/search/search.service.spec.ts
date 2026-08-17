@@ -3,6 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Application } from '../application/application.entity';
+import { ComplianceAndEnforcement } from '../compliance-and-enforcement/compliance-and-enforcement.entity';
 import { Inquiry } from '../inquiry/inquiry.entity';
 import { LocalGovernment } from '../local-government/local-government.entity';
 import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
@@ -16,12 +17,11 @@ describe('SearchService', () => {
   let mockApplicationRepository: DeepMocked<Repository<Application>>;
   let mockNoiRepository: DeepMocked<Repository<NoticeOfIntent>>;
   let mockPlanningReviewRepository: DeepMocked<Repository<PlanningReview>>;
-  let mockApplicationSubmissionSearchView: DeepMocked<
-    Repository<ApplicationSubmissionSearchView>
-  >;
+  let mockApplicationSubmissionSearchView: DeepMocked<Repository<ApplicationSubmissionSearchView>>;
   let mockLocalGovernment: DeepMocked<Repository<LocalGovernment>>;
   let mockNotificationRepository: DeepMocked<Repository<Notification>>;
   let mockInquiryRepository: DeepMocked<Repository<Inquiry>>;
+  let mockCAndERepository: DeepMocked<Repository<ComplianceAndEnforcement>>;
 
   const fakeFileNumber = 'fake';
 
@@ -33,6 +33,7 @@ describe('SearchService', () => {
     mockLocalGovernment = createMock();
     mockNotificationRepository = createMock();
     mockInquiryRepository = createMock();
+    mockCAndERepository = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -60,6 +61,10 @@ describe('SearchService', () => {
         {
           provide: getRepositoryToken(Inquiry),
           useValue: mockInquiryRepository,
+        },
+        {
+          provide: getRepositoryToken(ComplianceAndEnforcement),
+          useValue: mockCAndERepository,
         },
         {
           provide: getRepositoryToken(LocalGovernment),
@@ -113,9 +118,7 @@ describe('SearchService', () => {
   });
 
   it('should call repository to get planning review', async () => {
-    mockPlanningReviewRepository.findOne.mockResolvedValue(
-      new PlanningReview(),
-    );
+    mockPlanningReviewRepository.findOne.mockResolvedValue(new PlanningReview());
 
     const result = await service.getPlanningReview('fake');
 
@@ -166,5 +169,37 @@ describe('SearchService', () => {
       },
     });
     expect(result).toBeDefined();
+  });
+
+  it('should call repository to get C&E file', async () => {
+    mockCAndERepository.findOne.mockResolvedValue(new ComplianceAndEnforcement());
+
+    const result = await service.getCAndEFile('fake');
+
+    expect(mockCAndERepository.findOne).toHaveBeenCalledTimes(1);
+    expect(mockCAndERepository.findOne).toHaveBeenCalledWith({
+      where: {
+        fileNumber: fakeFileNumber,
+      },
+    });
+    expect(result).toBeDefined();
+  });
+
+  it('returns null when application repository returns nothing', async () => {
+    mockApplicationRepository.findOne.mockResolvedValue(null as any);
+
+    const result = await service.getApplication('fake');
+
+    expect(mockApplicationRepository.findOne).toHaveBeenCalledTimes(1);
+    expect(result).toBeNull();
+  });
+
+  it('returns null when NOI repository returns nothing', async () => {
+    mockNoiRepository.findOne.mockResolvedValue(null as any);
+
+    const result = await service.getNoi('fake');
+
+    expect(mockNoiRepository.findOne).toHaveBeenCalledTimes(1);
+    expect(result).toBeNull();
   });
 });

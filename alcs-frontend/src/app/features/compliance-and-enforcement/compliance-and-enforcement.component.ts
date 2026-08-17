@@ -76,25 +76,14 @@ export class ComplianceAndEnforcementComponent implements OnInit, OnDestroy {
       await this.service.loadFile(fileNumber, options);
 
       if (this.file) {
-        const owners = await this.responsiblePartyService.fetchByFileNumber(
-          fileNumber,
-          ResponsiblePartyType.PROPERTY_OWNER,
+        const ownerNames = (
+          await this.responsiblePartyService.fetchByFileNumber(fileNumber, ResponsiblePartyType.PROPERTY_OWNER)
+        ).map((owner) => owner.organizationName || owner.individualName || '');
+
+        this.propertyOwnerName = this.service.propertyOwnerName(
+          this.file.property?.ownershipTypeCode === 'CRWN',
+          ownerNames,
         );
-
-        const isCrown = this.file?.property?.ownershipTypeCode === 'CRWN';
-
-        if (isCrown) {
-          if (owners && owners.length > 0) {
-            this.propertyOwnerName = 'Crown et al.';
-          } else {
-            this.propertyOwnerName = 'Crown';
-          }
-        } else {
-          this.propertyOwnerName =
-            owners && owners.length > 0
-              ? (owners[0].organizationName || owners[0].individualName) + (owners.length > 1 ? ' et al.' : '')
-              : '';
-        }
 
         this.titleService.setTitle(
           `${environment.siteName} | ${this.file.fileNumber} (${this.propertyOwnerName || 'Unknown'})`,
