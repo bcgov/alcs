@@ -38,7 +38,7 @@
         <div class="field">
           <div class="field-heading">Latitude</div>
           @if (file?.property?.latitude !== undefined && file?.property?.latitude !== null) {
-            {{ file?.property?.latitude | number:'1.5-5' }}
+            {{ file?.property?.latitude | number: '1.5-5' }}
           } @else {
             <div class="no-data">No Data</div>
           }
@@ -46,7 +46,7 @@
         <div class="field">
           <div class="field-heading">Longitude</div>
           @if (file?.property?.longitude !== undefined && file?.property?.longitude !== null) {
-            {{ file?.property?.longitude | number:'1.5-5' }}
+            {{ file?.property?.longitude | number: '1.5-5' }}
           } @else {
             <div class="no-data">No Data</div>
           }
@@ -87,7 +87,7 @@
             <div class="no-data">No Data</div>
           }
         </div>
-        <div class="field full-width">
+        <div class="field full-width alc-history">
           <div class="field-heading">ALC History</div>
           @if (file?.property?.alcHistory) {
             {{ file?.property?.alcHistory }}
@@ -110,7 +110,7 @@
       [options]="mapsDocumentOptions"
       [section]="Section.MAPS"
       [addButtonText]="'+ Add Maps'"
-      />
+    />
   </section>
 }
 
@@ -123,7 +123,7 @@
         [property]="file?.property"
         [parentForm]="form"
         [hideHeader]="true"
-        />
+      />
     </section>
     <div class="button-container">
       <a mat-stroked-button color="warn" [routerLink]="'..'">Cancel</a>
