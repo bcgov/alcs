@@ -54,7 +54,7 @@
     "class-validator": "^0.15.1",
     "config": "^3.3.11",
     "csv-parser": "^3.2.1",
-    "dayjs": "^1.11.21",
+    "dayjs": "^1.11.22",
     "handlebars": "^4.7.9",
     "keycloak-connect": "^24.0.2",
     "nest-keycloak-connect": "2.0.0-alpha.3",
