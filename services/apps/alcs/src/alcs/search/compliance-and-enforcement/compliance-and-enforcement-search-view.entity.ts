@@ -2,7 +2,10 @@ import { DataSource, PrimaryColumn, ViewColumn, ViewEntity } from 'typeorm';
 import { ComplianceAndEnforcement } from '../../compliance-and-enforcement/compliance-and-enforcement.entity';
 import { ComplianceAndEnforcementProperty } from '../../compliance-and-enforcement/property/property.entity';
 import { ComplianceAndEnforcementResponsiblePartyDirector } from '../../compliance-and-enforcement/responsible-parties/responsible-party-director.entity';
-import { ComplianceAndEnforcementResponsibleParty } from '../../compliance-and-enforcement/responsible-parties/responsible-party.entity';
+import {
+  ComplianceAndEnforcementResponsibleParty,
+  ResponsiblePartyType,
+} from '../../compliance-and-enforcement/responsible-parties/responsible-party.entity';
 import { LocalGovernment } from '../../local-government/local-government.entity';
 
 @ViewEntity({
@@ -27,7 +30,7 @@ import { LocalGovernment } from '../../local-government/local-government.entity'
             nullif(caerp.organization_name, '')
           )
         )
-          filter (where caerp.uuid is not null)`,
+          filter (where caerp.uuid is not null and caerp.party_type = '${ResponsiblePartyType.PROPERTY_OWNER}')`,
         'responsible_parties',
       )
       .addSelect(

@@ -180,6 +180,9 @@ describe('SearchService', () => {
     expect(mockCAndERepository.findOne).toHaveBeenCalledWith({
       where: {
         fileNumber: fakeFileNumber,
+        responsibleParties: {
+          partyType: 'Property Owner',
+        },
       },
     });
     expect(result).toBeDefined();
