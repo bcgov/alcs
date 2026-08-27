@@ -5,7 +5,7 @@ export class BumpFileNumerSequenceAhead1787769695918 implements MigrationInterfa
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
-      SELECT setval('alcs_file_number_seq', 300000, false)
+      SELECT setval('alcs.alcs_file_number_seq', 300000, false)
     `);
   }
 
