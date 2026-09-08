@@ -483,6 +483,25 @@
           </div>
         </mat-tab>
       }
+      @if (!isCommissioner) {
+        <mat-tab>
+          <ng-template mat-tab-label> C&E Files: {{ cAndEFilesTotal }}</ng-template>
+          @if (!isLoading) {
+            <app-c-and-e-file-search-table
+              [cAndEFiles]="cAndEFiles"
+              [totalCount]="cAndEFilesTotal"
+              [pageIndex]="pageIndex"
+              (tableChange)="onTableChange($event)"
+            >
+            </app-c-and-e-file-search-table>
+          }
+          <div class="center">
+            @if (isLoading) {
+              <mat-spinner class="spinner"></mat-spinner>
+            }
+          </div>
+        </mat-tab>
+      }
     </mat-tab-group>
   </div>
 }

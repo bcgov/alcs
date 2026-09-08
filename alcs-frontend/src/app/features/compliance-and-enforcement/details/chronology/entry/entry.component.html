@@ -237,12 +237,15 @@
       }
 
       @if (entry?.isDraft || entry?.documents?.length) {
-        <app-compliance-and-enforcement-chronology-entry-documents
-          [isDraft]="!!entry?.isDraft"
-          [documents]="sortDocuments(entry?.documents ?? [])"
-          (edit)="openEditDocumentDialog(entry?.uuid, $event)"
-          (delete)="confirmDocumentDelete($event)"
-        />
+        <strong>Documents:</strong>
+        <div class="documents-container">
+          <app-compliance-and-enforcement-chronology-entry-documents
+            [isDraft]="!!entry?.isDraft"
+            [documents]="sortDocuments(entry?.documents ?? [])"
+            (edit)="openEditDocumentDialog(entry?.uuid, $event)"
+            (delete)="confirmDocumentDelete($event)"
+          />
+        </div>
       }
 
       @if (entry?.isDraft) {
