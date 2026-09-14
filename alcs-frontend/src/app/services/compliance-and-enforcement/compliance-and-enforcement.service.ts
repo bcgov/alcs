@@ -111,7 +111,7 @@ export class ComplianceAndEnforcementService {
   }
 
   propertyOwnerName(isCrown: boolean, nonCrownOwnerNames: string[]): string | undefined {
-    const sortedNonCrownOwnerNames = nonCrownOwnerNames.sort();
+    nonCrownOwnerNames.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
 
     const hasNonCrownOwners = nonCrownOwnerNames && nonCrownOwnerNames.length > 0;
 
@@ -120,7 +120,7 @@ export class ComplianceAndEnforcementService {
     }
 
     if (hasNonCrownOwners) {
-      return sortedNonCrownOwnerNames[0] + (nonCrownOwnerNames.length > 1 ? ' et al.' : '');
+      return nonCrownOwnerNames[0] + (nonCrownOwnerNames.length > 1 ? ' et al.' : '');
     }
 
     return undefined;
