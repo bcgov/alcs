@@ -111,6 +111,8 @@ export class ComplianceAndEnforcementService {
   }
 
   propertyOwnerName(isCrown: boolean, nonCrownOwnerNames: string[]): string | undefined {
+    nonCrownOwnerNames.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+
     const hasNonCrownOwners = nonCrownOwnerNames && nonCrownOwnerNames.length > 0;
 
     if (isCrown) {
