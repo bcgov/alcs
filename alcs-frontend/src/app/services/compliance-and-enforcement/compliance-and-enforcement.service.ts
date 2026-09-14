@@ -111,6 +111,8 @@ export class ComplianceAndEnforcementService {
   }
 
   propertyOwnerName(isCrown: boolean, nonCrownOwnerNames: string[]): string | undefined {
+    const sortedNonCrownOwnerNames = nonCrownOwnerNames.sort();
+
     const hasNonCrownOwners = nonCrownOwnerNames && nonCrownOwnerNames.length > 0;
 
     if (isCrown) {
@@ -118,7 +120,7 @@ export class ComplianceAndEnforcementService {
     }
 
     if (hasNonCrownOwners) {
-      return nonCrownOwnerNames[0] + (nonCrownOwnerNames.length > 1 ? ' et al.' : '');
+      return sortedNonCrownOwnerNames[0] + (nonCrownOwnerNames.length > 1 ? ' et al.' : '');
     }
 
     return undefined;
