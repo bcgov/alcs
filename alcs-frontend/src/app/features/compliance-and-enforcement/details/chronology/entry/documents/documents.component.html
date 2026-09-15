@@ -1,5 +1,4 @@
 @if (isDraft) {
-  <strong>Documents:</strong>
   <table mat-table [dataSource]="documentsTableData" matSort class="mat-elevation-z3 document-table full-width">
     <ng-container matColumnDef="source">
       <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by source">Source</th>

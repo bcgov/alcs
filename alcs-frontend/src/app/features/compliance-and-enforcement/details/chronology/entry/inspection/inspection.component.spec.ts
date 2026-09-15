@@ -68,6 +68,7 @@ describe('ComplianceAndEnforcementChronologyComponent', () => {
     chronologyClosedAt: 0,
     chronologyClosedBy: mockUser,
     assignee: mockUser,
+    filePath: '',
   };
   const mockUpdateChronologyEntryDto: UpdateComplianceAndEnforcementChronologyEntryDto = {
     isDraft: true,
