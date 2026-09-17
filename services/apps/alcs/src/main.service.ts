@@ -21,7 +21,7 @@ export class MainService {
 
       return true;
     } catch (e) {
-      this.logger.error(`canReadDb failed: ${e.message}`, e.stack);
+      this.logger.error('canReadDb failed', e);
       return false;
     }
   }
@@ -39,7 +39,7 @@ export class MainService {
 
       return true;
     } catch (e) {
-      this.logger.error(`canWriteDb failed ${e.message}`, e.stack);
+      this.logger.error('canWriteDb failed', e);
       return false;
     }
   }
