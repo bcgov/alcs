@@ -56,6 +56,7 @@ describe('ComplianceAndEnforcementController', () => {
           allegedActivity: [],
           intakeNotes: '',
           chronologyClosedAt: 0,
+          filePath: '',
         },
         {
           uuid: '2',
@@ -68,6 +69,7 @@ describe('ComplianceAndEnforcementController', () => {
           allegedActivity: [],
           intakeNotes: '',
           chronologyClosedAt: 0,
+          filePath: '',
         },
       ];
       mockComplianceAndEnforcementService.fetchAll.mockResolvedValue(result);
@@ -89,6 +91,7 @@ describe('ComplianceAndEnforcementController', () => {
         allegedActivity: [],
         intakeNotes: '',
         chronologyClosedAt: 0,
+        filePath: '',
       };
       mockComplianceAndEnforcementService.fetchById.mockResolvedValue(result);
       expect(await controller.fetchByFileNumber('1', true)).toEqual(result);
@@ -110,6 +113,7 @@ describe('ComplianceAndEnforcementController', () => {
         allegedActivity: [],
         intakeNotes: '',
         chronologyClosedAt: 0,
+        filePath: '',
       };
       mockComplianceAndEnforcementService.create.mockResolvedValue(resultDto);
       expect(await controller.create(createDto, true)).toEqual(resultDto);
@@ -141,6 +145,7 @@ describe('ComplianceAndEnforcementController', () => {
         allegedActivity: [],
         intakeNotes: '',
         chronologyClosedAt: 0,
+        filePath: '',
       };
       mockComplianceAndEnforcementService.update.mockResolvedValue(resultDto);
       expect(await controller.update('1', updateDto)).toEqual(resultDto);
