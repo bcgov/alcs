@@ -2020,17 +2020,6 @@ digraph "compactImpliedRelationshipsDiagram" {
     target="_top"
     tooltip="public_application_submission_search_view"
   ];
-  "compliance_and_enforcement_search_view" [
-   label=<
-    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
-      <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="312" HEIGHT="16"><B>compliance_and_enforcement_search_view</B></TD><TD ALIGN="RIGHT">[view]</TD></TR></TABLE></TD></TR>
-      <TR><TD PORT="local_government_name" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/foreignKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="312" HEIGHT="16">local_government_name</TD></TR></TABLE></TD></TR>
-      <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
-    </TABLE>>
-    URL="tables/compliance_and_enforcement_search_view.html"
-    target="_top"
-    tooltip="compliance_and_enforcement_search_view"
-  ];
   "noi_submission_status_search_view" [
    label=<
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
@@ -2214,7 +2203,6 @@ digraph "compactImpliedRelationshipsDiagram" {
   "compliance_and_enforcement_responsible_party":"organization_name":w -> "configuration":"name":e [arrowhead=none dir=back arrowtail=crowodot style=dashed];
   "compliance_and_enforcement_responsible_party_director":"director_name":w -> "configuration":"name":e [arrowhead=none dir=back arrowtail=crowodot style=dashed];
   "compliance_and_enforcement_responsible_party_director":"responsible_party_uuid":w -> "compliance_and_enforcement_responsible_party":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
-  "compliance_and_enforcement_search_view":"local_government_name":w -> "configuration":"name":e [arrowhead=none dir=back arrowtail=crowodot style=dashed];
   "compliance_and_enforcement_submitter":"file_uuid":w -> "compliance_and_enforcement":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
   "compliance_and_enforcement_submitter":"name":w -> "configuration":"name":e [arrowhead=none dir=back arrowtail=crowodot style=dashed];
   "covenant_transferee":"application_submission_uuid":w -> "application_submission":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];

@@ -1600,7 +1600,6 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="16" name="chronology_closed_by_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <parent column="uuid" foreignKey="FK_3a21caa5cf341465504a6c50fd9" implied="false" onDeleteCascade="false" schema="alcs" table="user"/>
          </column>
-         <column autoUpdated="false" defaultValue="''::text" digits="0" id="17" name="file_path" nullable="false" remarks="" size="2147483647" type="text" typeCode="12"/>
          <primaryKey column="uuid" sequenceNumberInPK="1"/>
          <index name="PK_f4122d7d87ff1aafd2de22c3bd4" unique="true">
             <column ascending="true" name="uuid"/>
@@ -1856,18 +1855,6 @@
             <column ascending="true" name="uuid"/>
          </index>
       </table>
-      <table name="compliance_and_enforcement_search_view" numRows="0" remarks="" schema="alcs" type="VIEW" viewSql=" SELECT cae.uuid,&#10;    lg.name AS local_government_name,&#10;    cae.file_number,&#10;    cae.date_submitted,&#10;    caep.civic_address,&#10;        CASE&#10;            WHEN (caep.ownership_type_code = 'CRWN'::text) THEN true&#10;            ELSE false&#10;        END AS is_crown,&#10;    array_agg(COALESCE(NULLIF(caerp.individual_name, ''::text), NULLIF(caerp.organization_name, ''::text))) FILTER (WHERE ((caerp.uuid IS NOT NULL) AND (caerp.party_type = 'Property Owner'::alcs.compliance_and_enforcement_responsible_party_party_type_enum))) AS responsible_parties,&#10;        CASE&#10;            WHEN ((cae.date_opened IS NOT NULL) AND (cae.date_closed IS NULL)) THEN true&#10;            WHEN ((cae.date_opened IS NOT NULL) AND (cae.date_closed IS NOT NULL)) THEN false&#10;            ELSE NULL::boolean&#10;        END AS is_open&#10;   FROM ((((alcs.compliance_and_enforcement cae&#10;     LEFT JOIN alcs.compliance_and_enforcement_property caep ON ((caep.file_uuid = cae.uuid)))&#10;     LEFT JOIN alcs.compliance_and_enforcement_responsible_party caerp ON ((caerp.file_uuid = cae.uuid)))&#10;     LEFT JOIN alcs.compliance_and_enforcement_responsible_party_director caerpd ON ((caerpd.responsible_party_uuid = caerp.uuid)))&#10;     LEFT JOIN alcs.local_government lg ON (((lg.uuid = caep.local_government_uuid) AND (lg.audit_deleted_date_at IS NULL))))&#10;  WHERE (cae.audit_deleted_date_at IS NULL)&#10;  GROUP BY cae.uuid, caep.civic_address, caep.ownership_type_code, lg.name;">
-         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="local_government_name" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12">
-            <parent column="name" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" schema="alcs" table="configuration"/>
-         </column>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="file_number" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="6" id="3" name="date_submitted" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="civic_address" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="is_crown" nullable="true" remarks="" size="1" type="bool" typeCode="-7"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="responsible_parties" nullable="true" remarks="" size="2147483647" type="_text" typeCode="2003"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="is_open" nullable="true" remarks="" size="1" type="bool" typeCode="-7"/>
-      </table>
       <table name="compliance_and_enforcement_submitter" remarks="Compliance and enforcement submitter" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="0" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111"/>
          <column autoUpdated="false" defaultValue="null" digits="6" id="1" name="date_added" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
@@ -1900,7 +1887,6 @@
             <child column="individual_name" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" schema="alcs" table="compliance_and_enforcement_responsible_party"/>
             <child column="organization_name" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" schema="alcs" table="compliance_and_enforcement_responsible_party"/>
             <child column="director_name" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" schema="alcs" table="compliance_and_enforcement_responsible_party_director"/>
-            <child column="local_government_name" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" schema="alcs" table="compliance_and_enforcement_search_view"/>
             <child column="name" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" schema="alcs" table="compliance_and_enforcement_submitter"/>
             <child column="first_name" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" schema="alcs" table="covenant_transferee"/>
             <child column="last_name" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" schema="alcs" table="covenant_transferee"/>
