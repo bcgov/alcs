@@ -84,18 +84,6 @@ export class ComplianceAndEnforcementService {
     );
   }
 
-  async setFilePath(
-    id: string,
-    filePath: string,
-    options: { idType: string } = { idType: 'uuid' },
-  ): Promise<ComplianceAndEnforcementDto> {
-    return await firstValueFrom(
-      this.http.patch<ComplianceAndEnforcementDto>(`${this.url}/${id}/file-path?idType=${options.idType}`, {
-        filePath,
-      }),
-    );
-  }
-
   async delete(uuid: string): Promise<UpdateComplianceAndEnforcementDto> {
     return await firstValueFrom(this.http.delete<ComplianceAndEnforcementDto>(`${this.url}/${uuid}`));
   }
@@ -108,21 +96,5 @@ export class ComplianceAndEnforcementService {
     const { uuid } = await firstValueFrom(this.http.get<{ uuid: string }>(`${this.url}/${fileNumber}/uuid`));
 
     return uuid;
-  }
-
-  propertyOwnerName(isCrown: boolean, nonCrownOwnerNames: string[]): string | undefined {
-    nonCrownOwnerNames.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
-
-    const hasNonCrownOwners = nonCrownOwnerNames && nonCrownOwnerNames.length > 0;
-
-    if (isCrown) {
-      return 'Crown' + (hasNonCrownOwners ? ' et al.' : '');
-    }
-
-    if (hasNonCrownOwners) {
-      return nonCrownOwnerNames[0] + (nonCrownOwnerNames.length > 1 ? ' et al.' : '');
-    }
-
-    return undefined;
   }
 }

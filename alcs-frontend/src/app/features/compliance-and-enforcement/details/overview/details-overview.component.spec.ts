@@ -1,7 +1,7 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { createMock, DeepMocked } from '@golevelup/ts-jest';
-import { ComplianceAndEnforcementService } from '../../../../services/compliance-and-enforcement/compliance-and-enforcement.service';
 import { DetailsOverviewComponent } from './details-overview.component';
+import { ComplianceAndEnforcementService } from '../../../../services/compliance-and-enforcement/compliance-and-enforcement.service';
+import { createMock, DeepMocked } from '@golevelup/ts-jest';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 describe('DetailsOverviewComponent', () => {
   let component: DetailsOverviewComponent;
@@ -30,16 +30,16 @@ describe('DetailsOverviewComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should set isEditingStatus to true on startEditStatus', () => {
+  it('should set isEditingStatus to true on startEdit', () => {
     component.isEditingStatus = false;
-    component.startEditStatus();
+    component.startEdit();
 
     expect(component.isEditingStatus).toBe(true);
   });
 
-  it('should set isEditingStatus to false on endEditStatus', () => {
+  it('should set isEditingStatus to false on endEdit', () => {
     component.isEditingStatus = true;
-    component.endEditStatus();
+    component.endEdit();
 
     expect(component.isEditingStatus).toBe(false);
   });

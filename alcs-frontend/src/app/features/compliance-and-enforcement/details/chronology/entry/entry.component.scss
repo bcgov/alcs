@@ -38,7 +38,6 @@ form {
   flex-grow: 1;
   gap: 24px;
   position: relative;
-  min-width: 0;
 }
 
 .edit-button {
@@ -163,8 +162,4 @@ form {
   display: flex;
   justify-content: flex-end;
   gap: 16px;
-}
-
-.documents-container {
-  overflow-x: scroll;
 }

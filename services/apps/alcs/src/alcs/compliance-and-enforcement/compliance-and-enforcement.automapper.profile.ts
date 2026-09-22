@@ -92,12 +92,6 @@ export class ComplianceAndEnforcementProfile extends AutomapperProfile {
             return entity.assignee ? this.mapper.map(entity.assignee, User, UserDto) : entity.assignee;
           }),
         ),
-        forMember(
-          (dto) => dto.filePath,
-          mapFrom((entity) => {
-            return entity.filePath;
-          }),
-        ),
       );
 
       createMap(
@@ -159,10 +153,6 @@ export class ComplianceAndEnforcementProfile extends AutomapperProfile {
               ? new Date(dto.chronologyClosedAt)
               : dto.chronologyClosedAt,
           ),
-        ),
-        forMember(
-          (entity) => entity.filePath,
-          mapFrom((dto) => dto.filePath),
         ),
       );
     };

@@ -2,8 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Application } from '../application/application.entity';
-import { ComplianceAndEnforcement } from '../compliance-and-enforcement/compliance-and-enforcement.entity';
-import { ResponsiblePartyType } from '../compliance-and-enforcement/responsible-parties/responsible-party.entity';
 import { Inquiry } from '../inquiry/inquiry.entity';
 import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
 import { Notification } from '../notification/notification.entity';
@@ -29,8 +27,6 @@ export class SearchService {
     private planningReviewRepository: Repository<PlanningReview>,
     @InjectRepository(Inquiry)
     private inquiryRepository: Repository<Inquiry>,
-    @InjectRepository(ComplianceAndEnforcement)
-    private cAndEFileRepository: Repository<ComplianceAndEnforcement>,
   ) {}
 
   async getApplication(fileNumber: string) {
@@ -85,17 +81,6 @@ export class SearchService {
       },
       relations: {
         localGovernment: true,
-      },
-    });
-  }
-
-  async getCAndEFile(fileNumber: string) {
-    return await this.cAndEFileRepository.findOne({
-      where: {
-        fileNumber,
-        responsibleParties: {
-          partyType: ResponsiblePartyType.PROPERTY_OWNER,
-        },
       },
     });
   }

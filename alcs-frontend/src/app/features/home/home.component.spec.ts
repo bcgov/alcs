@@ -118,7 +118,6 @@ describe('HomeComponent', () => {
         chronologyClosedAt: 0,
         chronologyClosedBy: mockUser,
         assignee: null,
-        filePath: '',
       });
 
       await component.createComplianceAndEnforcementFile();
@@ -154,7 +153,6 @@ describe('HomeComponent', () => {
         chronologyClosedAt: 0,
         chronologyClosedBy: mockUser,
         assignee: null,
-        filePath: '',
       };
 
       mockComplianceAndEnforcementService.create.mockResolvedValue(responseDto);
