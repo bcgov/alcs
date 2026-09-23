@@ -237,7 +237,6 @@
       }
 
       @if (entry?.isDraft || entry?.documents?.length) {
-        <strong>Documents:</strong>
         <div class="documents-container">
           <app-compliance-and-enforcement-chronology-entry-documents
             [isDraft]="!!entry?.isDraft"
