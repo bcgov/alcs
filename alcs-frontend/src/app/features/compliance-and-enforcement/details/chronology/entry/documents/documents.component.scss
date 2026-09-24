@@ -21,6 +21,7 @@ table {
 
 .document-list {
   display: flex;
+  flex-wrap: wrap;
   gap: 24px;
   overflow-x: auto;
   white-space: nowrap;
