@@ -10,7 +10,7 @@ services:
       - '5432:5432'
     volumes:
       - postgres:/var/lib/postgres
-    networks: 
+    networks:
       - alcs
 
   redis:
@@ -33,22 +33,24 @@ services:
       - cp /mnt/** /test
     volumes:
       - ./apps/alcs/test/pgtap:/test
-    networks: 
+    networks:
       - alcs
 
   minio:
-    image: minio/minio:latest
-    command: "server --console-address :9001 --address :80 /data"
+    image: rustfs/rustfs:latest
     environment:
-      - MINIO_ROOT_USER=minio
-      - MINIO_ROOT_PASSWORD=miniopassword
-      - MINIO_SERVER_URL=http://localhost
+      RUSTFS_VOLUMES: /data
+      RUSTFS_ADDRESS: :9000
+      RUSTFS_CONSOLE_ENABLE: true
+      RUSTFS_CONSOLE_ADDRESS: :9001
+      RUSTFS_ACCESS_KEY: minio
+      RUSTFS_SECRET_KEY: miniopassword
 
     volumes:
       - s3:/data
     ports:
-      - "80:80"
-      - "9001:9001"
+      - '80:9000'
+      - '9001:9001'
     networks:
       - alcs
 
@@ -84,7 +86,7 @@ volumes:
   clamav:
   clamsocket:
 
-networks: 
-  alcs: 
-    name: alcs 
+networks:
+  alcs:
+    name: alcs
     driver: bridge
