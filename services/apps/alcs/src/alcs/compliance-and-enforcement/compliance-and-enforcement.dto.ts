@@ -51,9 +51,6 @@ export class ComplianceAndEnforcementDto {
 
   @AutoMap()
   assignee?: UserDto;
-
-  @AutoMap()
-  filePath: string;
 }
 
 export class UpdateComplianceAndEnforcementDto {
@@ -102,8 +99,4 @@ export class UpdateComplianceAndEnforcementDto {
   @IsOptional()
   @IsString()
   assigneeUuid?: string | null;
-
-  @IsOptional()
-  @IsString()
-  filePath?: string;
 }

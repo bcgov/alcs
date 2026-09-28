@@ -1,23 +1,23 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Mapper } from 'automapper-core';
-import { InjectMapper } from 'automapper-nestjs';
 import { DeleteResult, In, Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { ComplianceAndEnforcement } from './compliance-and-enforcement.entity';
+import { ComplianceAndEnforcementDto, UpdateComplianceAndEnforcementDto } from './compliance-and-enforcement.dto';
+import { InjectMapper } from 'automapper-nestjs';
+import { Mapper } from 'automapper-core';
 import {
   ServiceConflictException,
   ServiceNotFoundException,
   ServiceValidationException,
 } from '../../../../../libs/common/src/exceptions/base.exception';
-import { UserService } from '../../user/user.service';
+import { ComplianceAndEnforcementSubmitterService } from './submitter/submitter.service';
+import { ComplianceAndEnforcementPropertyService } from './property/property.service';
+import { ComplianceAndEnforcementDocument } from './document/document.entity';
 import {
   ComplianceAndEnforcementValidatorService,
   ValidatedComplianceAndEnforcement,
 } from './compliance-and-enforcement-validator.service';
-import { ComplianceAndEnforcementDto, UpdateComplianceAndEnforcementDto } from './compliance-and-enforcement.dto';
-import { ComplianceAndEnforcement } from './compliance-and-enforcement.entity';
-import { ComplianceAndEnforcementDocument } from './document/document.entity';
-import { ComplianceAndEnforcementPropertyService } from './property/property.service';
-import { ComplianceAndEnforcementSubmitterService } from './submitter/submitter.service';
+import { UserService } from '../../user/user.service';
 
 export enum Status {
   OPEN = 'Open',
@@ -166,21 +166,6 @@ export class ComplianceAndEnforcementService {
         updateDto.dateOpened = new Date().getTime();
       }
     }
-
-    return this.update(id, updateDto, options);
-  }
-
-  async setFilePath(
-    id: string,
-    filePath: string,
-    options: { idType: string } = { idType: 'uuid' },
-  ): Promise<ComplianceAndEnforcementDto> {
-    const entity = await this.repository.findOneBy({ [options.idType]: id });
-    if (entity === null) {
-      throw new ServiceConflictException('A C&E file with this UUID does not exist. Unable to update.');
-    }
-
-    const updateDto: UpdateComplianceAndEnforcementDto = { filePath };
 
     return this.update(id, updateDto, options);
   }

@@ -7,7 +7,7 @@ export class SearchResultDto {
   type: string;
   referenceId: string;
   applicant?: string;
-  localGovernmentName?: string;
+  localGovernmentName: string | undefined;
   fileNumber: string;
   boardCode?: string;
   label?: ApplicationTypeDto;
@@ -75,29 +75,17 @@ export class InquirySearchResultDto {
   open: boolean;
 }
 
-export class ComplianceAndEnforcementSearchResultDto {
-  fileNumber: string;
-  dateSubmitted: number | null;
-  civicAddress?: string;
-  isCrown?: boolean;
-  responsibleParties?: string[];
-  localGovernmentName?: string;
-  isOpen: boolean | null;
-}
-
 export class AdvancedSearchResponseDto {
   applications: ApplicationSearchResultDto[];
   noticeOfIntents: NoticeOfIntentSearchResultDto[];
   notifications: NotificationSearchResultDto[];
   planningReviews: PlanningReviewSearchResultDto[];
   inquiries: InquirySearchResultDto[];
-  cAndEFiles: ComplianceAndEnforcementSearchResultDto[];
   totalApplications: number;
   totalNoticeOfIntents: number;
   totalPlanningReviews: number;
   totalNotifications: number;
   totalInquiries: number;
-  totalCAndEFiles: number;
 }
 
 export class StatusUpdateSearchResultDto {

@@ -1,8 +1,5 @@
 import { Component, Input, OnDestroy } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { MatDialog } from '@angular/material/dialog';
-import { firstValueFrom, Subject } from 'rxjs';
-import { ROLES } from '../../../../services/authentication/authentication.service';
+import { firstValueFrom, of, Subject } from 'rxjs';
 import { ComplianceAndEnforcementDto } from '../../../../services/compliance-and-enforcement/compliance-and-enforcement.dto';
 import {
   ComplianceAndEnforcementService,
@@ -10,14 +7,14 @@ import {
   Status,
   statusFromFile,
 } from '../../../../services/compliance-and-enforcement/compliance-and-enforcement.service';
-import { ToastService } from '../../../../services/toast/toast.service';
-import { UserService } from '../../../../services/user/user.service';
 import { ComplianceAndEnforcementAssignDialogComponent } from './assign-dialog/assign-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import { ToastService } from '../../../../services/toast/toast.service';
 
 @Component({
-  selector: 'app-compliance-and-enforcement-details-header',
-  templateUrl: './details-header.component.html',
-  styleUrls: ['./details-header.component.scss'],
+    selector: 'app-compliance-and-enforcement-details-header',
+    templateUrl: './details-header.component.html',
+    styleUrls: ['./details-header.component.scss'],
     standalone: false
 })
 export class DetailsHeaderComponent implements OnDestroy {
@@ -28,14 +25,10 @@ export class DetailsHeaderComponent implements OnDestroy {
   fileNumber?: string;
   status: Status | null = null;
 
-  ROLES = ROLES;
-  readonly userProfile = toSignal(this.userService.$userProfile);
-
   constructor(
     private readonly dialog: MatDialog,
     private readonly complianceAndEnforcementService: ComplianceAndEnforcementService,
     private readonly toastService: ToastService,
-    private readonly userService: UserService,
   ) {}
 
   private _file?: ComplianceAndEnforcementDto;

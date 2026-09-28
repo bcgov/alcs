@@ -2,8 +2,6 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { Route, RouterModule, Routes } from '@angular/router';
-import { ROLES } from '../../services/authentication/authentication.service';
-import { HasRolesGuard } from '../../services/authentication/hasRoles.guard';
 import { SharedModule } from '../../shared/shared.module';
 import { DecisionModule } from '../application/decision/decision.module';
 import { ComplianceAndEnforcementComponent } from './compliance-and-enforcement.component';
@@ -43,10 +41,6 @@ export const detailsRoutes: (Route & { icon?: string; menuTitle?: string })[] = 
     path: 'complaint-referral',
     icon: 'edit_note',
     menuTitle: 'Complaint / Referral',
-    canActivate: [HasRolesGuard],
-    data: {
-      roles: [ROLES.C_AND_E],
-    },
     children: [
       {
         path: '',
@@ -69,10 +63,6 @@ export const detailsRoutes: (Route & { icon?: string; menuTitle?: string })[] = 
     path: 'responsible-parties',
     icon: 'people',
     menuTitle: 'Responsible Parties',
-    canActivate: [HasRolesGuard],
-    data: {
-      roles: [ROLES.C_AND_E],
-    },
     children: [
       {
         path: '',
@@ -90,10 +80,6 @@ export const detailsRoutes: (Route & { icon?: string; menuTitle?: string })[] = 
     path: 'property-maps',
     icon: 'location_on',
     menuTitle: 'Property & Maps',
-    canActivate: [HasRolesGuard],
-    data: {
-      roles: [ROLES.C_AND_E],
-    },
     children: [
       {
         path: '',
@@ -111,10 +97,6 @@ export const detailsRoutes: (Route & { icon?: string; menuTitle?: string })[] = 
     path: 'chronology',
     icon: 'view_timeline',
     menuTitle: 'Chronology',
-    canActivate: [HasRolesGuard],
-    data: {
-      roles: [ROLES.C_AND_E],
-    },
     children: [
       {
         path: '',
@@ -145,10 +127,6 @@ const routes: Routes = [
   },
   {
     path: ':fileNumber/draft',
-    canActivate: [HasRolesGuard],
-    data: {
-      roles: [ROLES.C_AND_E],
-    },
     component: DraftComponent,
   },
 ];

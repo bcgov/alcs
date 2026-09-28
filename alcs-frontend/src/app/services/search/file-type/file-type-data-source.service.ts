@@ -128,9 +128,6 @@ const TREE_DATA: TreeNode[] = [
       },
     ],
   },
-  {
-    item: { label: 'C&E File', value: 'CAE' },
-  },
 ];
 
 const COMMISSIONER_TREE_DATA: TreeNode[] = [

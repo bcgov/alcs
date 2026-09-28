@@ -6,7 +6,6 @@ import { NoticeOfIntentSubmission } from '../../portal/notice-of-intent-submissi
 import { NotificationSubmission } from '../../portal/notification-submission/notification-submission.entity';
 import { Application } from '../application/application.entity';
 import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
-import { ComplianceAndEnforcement } from '../compliance-and-enforcement/compliance-and-enforcement.entity';
 import { Inquiry } from '../inquiry/inquiry.entity';
 import { LocalGovernment } from '../local-government/local-government.entity';
 import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
@@ -14,8 +13,6 @@ import { Notification } from '../notification/notification.entity';
 import { PlanningReview } from '../planning-review/planning-review.entity';
 import { ApplicationAdvancedSearchService } from './application/application-advanced-search.service';
 import { ApplicationSubmissionSearchView } from './application/application-search-view.entity';
-import { ComplianceAndEnforcementAdvancedSearchService } from './compliance-and-enforcement/compliance-and-enforcement-advanced-search.service';
-import { ComplianceAndEnforcementSearchView } from './compliance-and-enforcement/compliance-and-enforcement-search-view.entity';
 import { InquiryAdvancedSearchService } from './inquiry/inquiry-advanced-search.service';
 import { InquirySearchView } from './inquiry/inquiry-search-view.entity';
 import { NoticeOfIntentAdvancedSearchService } from './notice-of-intent/notice-of-intent-advanced-search.service';
@@ -26,10 +23,10 @@ import { PlanningReviewAdvancedSearchService } from './planning-review/planning-
 import { PlanningReviewSearchView } from './planning-review/planning-review-search-view.entity';
 import { SearchController } from './search.controller';
 import { SearchService } from './search.service';
+import { SearchStatusService } from './status/search-status.service';
 import { ApplicationSubmissionStatusSearchView } from './status/application-search-status-view.entity';
 import { NoiSubmissionStatusSearchView } from './status/noi-search-status-view.entity';
 import { NotificationSubmissionStatusSearchView } from './status/notification-search-status-view.entity';
-import { SearchStatusService } from './status/search-status.service';
 
 @Module({
   imports: [
@@ -48,14 +45,10 @@ import { SearchStatusService } from './status/search-status.service';
       NotificationSubmissionSearchView,
       Inquiry,
       InquirySearchView,
-      ComplianceAndEnforcement,
-      ComplianceAndEnforcementSearchView,
       LocalGovernment,
       ApplicationSubmissionStatusSearchView,
       NoiSubmissionStatusSearchView,
       NotificationSubmissionStatusSearchView,
-      ComplianceAndEnforcement,
-      ComplianceAndEnforcementSearchView,
     ]),
   ],
   providers: [
@@ -66,7 +59,6 @@ import { SearchStatusService } from './status/search-status.service';
     NotificationAdvancedSearchService,
     PlanningReviewAdvancedSearchService,
     InquiryAdvancedSearchService,
-    ComplianceAndEnforcementAdvancedSearchService,
     SearchStatusService,
   ],
   controllers: [SearchController],
