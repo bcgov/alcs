@@ -56,6 +56,7 @@
     "csv-parser": "^3.2.1",
     "dayjs": "^1.11.21",
     "handlebars": "^4.7.9",
+    "ioredis": "^5.11.1",
     "keycloak-connect": "^24.0.2",
     "nest-keycloak-connect": "2.0.0-alpha.3",
     "nest-winston": "^1.10.2",
