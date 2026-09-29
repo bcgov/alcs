@@ -9,10 +9,8 @@ export const MONDAY_TO_FRIDAY_AT_2AM_PDT_IN_UTC = '0 0 9 * * 1-5';
 export const EVERYDAY_MIDNIGHT_PST_IN_UTC = '0 0 8 * * *';
 export const EVERYDAY_MIDNIGHT_PDT_IN_UTC = '0 0 7 * * *';
 
-export const EVERY_15_MINUTES_STARTING_FROM_8AM_PST_IN_UTC =
-  '0/15 16-23,0-6 * * *';
-export const EVERY_15_MINUTES_STARTING_FROM_8AM_PDT_IN_UTC =
-  '0/15 15-23,0-5 * * *';
+export const EVERY_15_MINUTES_STARTING_FROM_8AM_PST_IN_UTC = '0/15 16-23,0-6 * * *';
+export const EVERY_15_MINUTES_STARTING_FROM_8AM_PDT_IN_UTC = '0/15 15-23,0-5 * * *';
 
 export const QUEUES = {
   APP_EXPIRY: 'ApplicationExpiry',
@@ -49,34 +47,16 @@ export class SchedulerService {
 
   private async scheduleApplicationExpiry() {
     await this.removeRepeatJobs(this.applicationExpiryQueue);
-    await this.applicationExpiryQueue.add(
-      'applicationExpiry',
-      {},
-      {
-        repeat: {
-          pattern: this.getCronExpressionBasedOnDst(
-            MONDAY_TO_FRIDAY_AT_2AM_PST_IN_UTC,
-            MONDAY_TO_FRIDAY_AT_2AM_PDT_IN_UTC,
-          ),
-        },
-      },
-    );
+    await this.applicationExpiryQueue.upsertJobScheduler('applicationExpiry', {
+      pattern: this.getCronExpressionBasedOnDst(MONDAY_TO_FRIDAY_AT_2AM_PST_IN_UTC, MONDAY_TO_FRIDAY_AT_2AM_PDT_IN_UTC),
+    });
   }
 
   private async scheduleCleanupNotifications() {
     await this.removeRepeatJobs(this.cleanupNotificationsQueue);
-    await this.cleanupNotificationsQueue.add(
-      'cleanupNotifications',
-      {},
-      {
-        repeat: {
-          pattern: this.getCronExpressionBasedOnDst(
-            EVERYDAY_MIDNIGHT_PST_IN_UTC,
-            EVERYDAY_MIDNIGHT_PDT_IN_UTC,
-          ),
-        },
-      },
-    );
+    await this.cleanupNotificationsQueue.upsertJobScheduler('cleanupNotifications', {
+      pattern: this.getCronExpressionBasedOnDst(EVERYDAY_MIDNIGHT_PST_IN_UTC, EVERYDAY_MIDNIGHT_PDT_IN_UTC),
+    });
   }
 
   private async scheduleSubmissionEmails() {
@@ -85,15 +65,9 @@ export class SchedulerService {
       EVERY_15_MINUTES_STARTING_FROM_8AM_PDT_IN_UTC,
     );
     await this.removeRepeatJobs(this.applicationSubmissionStatusEmailsQueue);
-    await this.applicationSubmissionStatusEmailsQueue.add(
-      'applicationSubmissionStatusEmails',
-      {},
-      {
-        repeat: {
-          pattern: cronExpression,
-        },
-      },
-    );
+    await this.applicationSubmissionStatusEmailsQueue.upsertJobScheduler('applicationSubmissionStatusEmails', {
+      pattern: cronExpression,
+    });
   }
 
   private async scheduleDecisionEmails() {
@@ -103,32 +77,25 @@ export class SchedulerService {
     );
 
     await this.removeRepeatJobs(this.applicationDecisionEmailsQueue);
-    await this.applicationDecisionEmailsQueue.add(
-      'applicationDecisionEmails',
-      {},
-      { repeat: { pattern: cronExpression } },
-    );
+    await this.applicationDecisionEmailsQueue.upsertJobScheduler('applicationDecisionEmails', {
+      pattern: cronExpression,
+    });
 
     await this.removeRepeatJobs(this.noticeOfIntentDecisionEmailsQueue);
-    await this.noticeOfIntentDecisionEmailsQueue.add(
-      'noticeOfIntentDecisionEmails',
-      {},
-      { repeat: { pattern: cronExpression } },
-    );
-  }
-
-  private async removeRepeatJobs(queue: Queue) {
-    const repeatJobs = await queue.getRepeatableJobs();
-
-    repeatJobs.forEach(async (job) => {
-      await queue.removeRepeatableByKey(job.key);
+    await this.noticeOfIntentDecisionEmailsQueue.upsertJobScheduler('noticeOfIntentDecisionEmails', {
+      pattern: cronExpression,
     });
   }
 
-  private getCronExpressionBasedOnDst(
-    pstCronExpression: string,
-    pdtCronExpression: string,
-  ) {
+  private async removeRepeatJobs(queue: Queue) {
+    const schedulers = await queue.getJobSchedulers();
+
+    for (const scheduler of schedulers) {
+      await queue.removeJobScheduler(scheduler.key);
+    }
+  }
+
+  private getCronExpressionBasedOnDst(pstCronExpression: string, pdtCronExpression: string) {
     return isDST() ? pdtCronExpression : pstCronExpression;
   }
 }
