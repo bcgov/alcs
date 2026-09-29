@@ -92,4 +92,8 @@ export class ComplianceAndEnforcement extends Base {
   @AutoMap()
   @ManyToOne(() => User, { nullable: true })
   assignee: User | null;
+
+  @AutoMap()
+  @Column({ type: 'text', default: '' })
+  filePath: string;
 }

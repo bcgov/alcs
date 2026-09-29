@@ -9,7 +9,14 @@ import { ALL_ROLES, ROLES } from './services/authentication/authentication.servi
 import { HasRolesGuard } from './services/authentication/hasRoles.guard';
 import { DocumentFileLoader } from './shared/document-file-loader/document-file-loader.component';
 
-export const ROLES_ALLOWED_APPLICATIONS = [ROLES.ADMIN, ROLES.LUP, ROLES.APP_SPECIALIST, ROLES.GIS, ROLES.SOIL_OFFICER];
+export const ROLES_ALLOWED_APPLICATIONS = [
+  ROLES.ADMIN,
+  ROLES.LUP,
+  ROLES.APP_SPECIALIST,
+  ROLES.GIS,
+  ROLES.SOIL_OFFICER,
+  ROLES.C_AND_E,
+];
 export const ROLES_ALLOWED_BOARDS = ROLES_ALLOWED_APPLICATIONS;
 
 const routes: Routes = [
@@ -82,7 +89,7 @@ const routes: Routes = [
     path: 'compliance-and-enforcement',
     canActivate: [HasRolesGuard],
     data: {
-      roles: [ROLES.C_AND_E],
+      roles: ROLES_ALLOWED_APPLICATIONS,
     },
     loadChildren: () =>
       import('./features/compliance-and-enforcement/compliance-and-enforcement.module').then(

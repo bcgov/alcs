@@ -1,8 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { ROLES } from '../../services/authentication/authentication.service';
 import { ComplianceAndEnforcementDto } from '../../services/compliance-and-enforcement/compliance-and-enforcement.dto';
 import {
   ComplianceAndEnforcementService,
@@ -12,13 +14,14 @@ import {
 import { ResponsiblePartyType } from '../../services/compliance-and-enforcement/responsible-parties/responsible-parties.dto';
 import { ResponsiblePartiesService } from '../../services/compliance-and-enforcement/responsible-parties/responsible-parties.service';
 import { ToastService } from '../../services/toast/toast.service';
+import { UserService } from '../../services/user/user.service';
 import { detailsRoutes } from './compliance-and-enforcement.module';
 
 @Component({
-    selector: 'app-compliance-and-enforcement',
-    templateUrl: './compliance-and-enforcement.component.html',
-    styleUrls: ['./compliance-and-enforcement.component.scss'],
-    standalone: false
+  selector: 'app-compliance-and-enforcement',
+  templateUrl: './compliance-and-enforcement.component.html',
+  styleUrls: ['./compliance-and-enforcement.component.scss'],
+  standalone: false,
 })
 export class ComplianceAndEnforcementComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
@@ -29,6 +32,9 @@ export class ComplianceAndEnforcementComponent implements OnInit, OnDestroy {
   file?: ComplianceAndEnforcementDto;
   propertyOwnerName?: string;
 
+  ROLES = ROLES;
+  readonly userProfile = toSignal(this.userService.$userProfile);
+
   constructor(
     private readonly route: ActivatedRoute,
     private readonly router: Router,
@@ -36,6 +42,7 @@ export class ComplianceAndEnforcementComponent implements OnInit, OnDestroy {
     private readonly responsiblePartyService: ResponsiblePartiesService,
     private readonly toastService: ToastService,
     private readonly titleService: Title,
+    private readonly userService: UserService,
   ) {}
 
   ngOnInit(): void {
@@ -69,26 +76,14 @@ export class ComplianceAndEnforcementComponent implements OnInit, OnDestroy {
       await this.service.loadFile(fileNumber, options);
 
       if (this.file) {
-        const owners = await this.responsiblePartyService.fetchByFileNumber(
-          fileNumber,
-          ResponsiblePartyType.PROPERTY_OWNER,
+        const ownerNames = (
+          await this.responsiblePartyService.fetchByFileNumber(fileNumber, ResponsiblePartyType.PROPERTY_OWNER)
+        ).map((owner) => owner.organizationName || owner.individualName || '');
+
+        this.propertyOwnerName = this.service.propertyOwnerName(
+          this.file.property?.ownershipTypeCode === 'CRWN',
+          ownerNames,
         );
-        
-        const isCrown = this.file?.property?.ownershipTypeCode === 'CRWN';
-
-        if (isCrown) {
-
-          if (owners && owners.length > 0) {
-            this.propertyOwnerName = 'Crown et al.';
-          } else {
-            this.propertyOwnerName = 'Crown';
-          }
-        } else {
-          this.propertyOwnerName =
-            owners && owners.length > 0
-              ? (owners[0].organizationName || owners[0].individualName) + (owners.length > 1 ? ' et al.' : '')
-              : '';
-        }
 
         this.titleService.setTitle(
           `${environment.siteName} | ${this.file.fileNumber} (${this.propertyOwnerName || 'Unknown'})`,
@@ -98,5 +93,11 @@ export class ComplianceAndEnforcementComponent implements OnInit, OnDestroy {
       console.error('Error loading file:', error);
       this.toastService.showErrorToast('Failed to load file');
     }
+  }
+
+  routeAllowed(route: any): boolean {
+    return !!(
+      !route?.data?.['roles'] || this.userProfile()?.clientRoles?.some((role) => route?.data?.['roles'].includes(role))
+    );
   }
 }

@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } f
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { DeleteResult } from 'typeorm';
-import { AUTH_ROLE } from '../../../common/authorization/roles';
+import { AUTH_ROLE, ROLES_ALLOWED_APPLICATIONS } from '../../../common/authorization/roles';
 import { RolesGuard } from '../../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../../common/authorization/roles.decorator';
 import {
@@ -20,7 +20,7 @@ export class ComplianceAndEnforcementResponsiblePartyController {
   constructor(private service: ComplianceAndEnforcementResponsiblePartyService) {}
 
   @Get('/file/:id')
-  @UserRoles(AUTH_ROLE.ADMIN, AUTH_ROLE.C_AND_E)
+  @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async fetchByFileId(
     @Param('id') id: string,
     @Query('idType') idType: string,

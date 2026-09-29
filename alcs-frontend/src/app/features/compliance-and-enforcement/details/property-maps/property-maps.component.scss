@@ -18,7 +18,7 @@ section.file-section {
   margin: 32px 0;
 
   h3 {
-    margin-bottom: 16px; 
+    margin-bottom: 16px;
   }
 }
 
@@ -86,4 +86,8 @@ a[mat-stroked-button] {
 .field-heading {
   font-weight: bold;
   margin-bottom: 5px;
+}
+
+.alc-history {
+  white-space: pre-line;
 }

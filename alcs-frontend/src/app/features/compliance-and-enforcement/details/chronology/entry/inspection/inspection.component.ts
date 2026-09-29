@@ -194,7 +194,6 @@ export class ComplianceAndEnforcementChronologyEntryInspectionComponent implemen
         name: new FormControl<string>(attendee.name ?? '', { nonNullable: true, validators: [Validators.required] }),
         organization: new FormControl<string>(attendee.organization ?? '', {
           nonNullable: true,
-          validators: [Validators.required],
         }),
       }) as AttendeeForm,
       { emitEvent },

@@ -87,7 +87,7 @@
     <div formArrayName="attendees" class="attendees-table">
       <div class="attendees-heading">#</div>
       <div class="attendees-heading">Name*</div>
-      <div class="attendees-heading">Organization*</div>
+      <div class="attendees-heading">Organization</div>
       <div class="attendees-heading">Actions</div>
 
       @for (attendeeForm of form.controls.attendees.controls; track i; let i = $index) {
@@ -111,15 +111,8 @@
 
           <div class="form-field-wrapper">
             <mat-form-field appearance="outline">
-              <input type="text" matInput [required]="true" formControlName="organization" />
+              <input type="text" matInput formControlName="organization" />
             </mat-form-field>
-            @if (showErrors && attendeeForm.controls.organization.errors) {
-              <div>
-                @if (attendeeForm.controls.organization.errors['required']) {
-                  <app-error-message message="This field is required"></app-error-message>
-                }
-              </div>
-            }
           </div>
 
           <button mat-icon-button type="button" class="attendee-delete-button" (click)="removeAttendee(i)">

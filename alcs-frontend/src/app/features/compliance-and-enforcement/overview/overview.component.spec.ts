@@ -1,21 +1,20 @@
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormGroup } from '@angular/forms';
-import { StartOfDayPipe } from '../../../shared/pipes/startOfDay.pipe';
-import { OverviewComponent } from '../overview/overview.component';
+import { ActivatedRoute, convertToParamMap } from '@angular/router';
+import { createMock, DeepMocked } from '@golevelup/ts-jest';
+import moment from 'moment';
 import {
-  ComplianceAndEnforcementDto,
   AllegedActivity,
+  ComplianceAndEnforcementDto,
   InitialSubmissionType,
 } from '../../../services/compliance-and-enforcement/compliance-and-enforcement.dto';
-import moment from 'moment';
-import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { ComplianceAndEnforcementService } from '../../../services/compliance-and-enforcement/compliance-and-enforcement.service';
 import { ToastService } from '../../../services/toast/toast.service';
-import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { UserDto } from '../../../services/user/user.dto';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { StartOfDayPipe } from '../../../shared/pipes/startOfDay.pipe';
+import { OverviewComponent } from '../overview/overview.component';
 
 describe('OverviewComponent', () => {
   const mockUser: UserDto = {
@@ -47,6 +46,7 @@ describe('OverviewComponent', () => {
     chronologyClosedAt: 0,
     chronologyClosedBy: mockUser,
     assignee: null,
+    filePath: '',
   };
   let mockComplianceAndEnforcementService: DeepMocked<ComplianceAndEnforcementService>;
   let mockToastService: DeepMocked<ToastService>;
@@ -56,30 +56,30 @@ describe('OverviewComponent', () => {
     mockToastService = createMock();
 
     await TestBed.configureTestingModule({
-    declarations: [OverviewComponent, StartOfDayPipe],
-    schemas: [NO_ERRORS_SCHEMA],
-    imports: [],
-    providers: [
+      declarations: [OverviewComponent, StartOfDayPipe],
+      schemas: [NO_ERRORS_SCHEMA],
+      imports: [],
+      providers: [
         {
-            provide: ComplianceAndEnforcementService,
-            useValue: mockComplianceAndEnforcementService,
+          provide: ComplianceAndEnforcementService,
+          useValue: mockComplianceAndEnforcementService,
         },
         {
-            provide: ToastService,
-            useValue: mockToastService,
+          provide: ToastService,
+          useValue: mockToastService,
         },
         {
-            provide: ActivatedRoute,
-            useValue: {
-                snapshot: {
-                    paramMap: convertToParamMap({ fileNumber: '12345' }),
-                },
+          provide: ActivatedRoute,
+          useValue: {
+            snapshot: {
+              paramMap: convertToParamMap({ fileNumber: '12345' }),
             },
+          },
         },
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
-    ]
-}).compileComponents();
+      ],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(OverviewComponent);
     component = fixture.componentInstance;
@@ -189,6 +189,7 @@ describe('OverviewComponent', () => {
       chronologyClosedAt: 0,
       chronologyClosedBy: mockUser,
       assignee: null,
+      filePath: '',
     };
 
     expect(component.form.value.dateSubmitted).toBeNull();

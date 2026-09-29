@@ -1,12 +1,12 @@
 import { Body, Controller, Delete, Get, Param, ParseBoolPipe, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
+import { DeleteResult } from 'typeorm';
+import { AUTH_ROLE, ROLES_ALLOWED_APPLICATIONS } from '../../common/authorization/roles';
 import { RolesGuard } from '../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../common/authorization/roles.decorator';
-import { AUTH_ROLE, ROLES_ALLOWED_APPLICATIONS } from '../../common/authorization/roles';
-import { ComplianceAndEnforcementService, Status } from './compliance-and-enforcement.service';
 import { ComplianceAndEnforcementDto, UpdateComplianceAndEnforcementDto } from './compliance-and-enforcement.dto';
-import { DeleteResult } from 'typeorm';
+import { ComplianceAndEnforcementService, Status } from './compliance-and-enforcement.service';
 
 @Controller('compliance-and-enforcement')
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
@@ -59,6 +59,16 @@ export class ComplianceAndEnforcementController {
     @Query('idType') idType: string = 'uuid',
   ): Promise<ComplianceAndEnforcementDto> {
     return await this.service.setStatus(id, status, { idType });
+  }
+
+  @Patch('/:id/file-path')
+  @UserRoles(AUTH_ROLE.ADMIN, AUTH_ROLE.C_AND_E)
+  async setFilePath(
+    @Param('id') id: string,
+    @Body() filePath: { filePath: string },
+    @Query('idType') idType: string = 'uuid',
+  ): Promise<ComplianceAndEnforcementDto> {
+    return await this.service.setFilePath(id, filePath.filePath, { idType });
   }
 
   @Post('/:id/submit')
