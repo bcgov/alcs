@@ -55,7 +55,7 @@
     "config": "^3.3.11",
     "csv-parser": "^3.2.1",
     "dayjs": "^1.11.23",
-    "handlebars": "^4.7.9",
+    "handlebars": "^4.7.10",
     "keycloak-connect": "^24.0.2",
     "nest-keycloak-connect": "2.0.0-alpha.3",
     "nest-winston": "^1.10.2",
