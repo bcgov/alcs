@@ -22,34 +22,34 @@ describe('SchedulerService', () => {
 
   beforeEach(async () => {
     mockAppExpiryQueue = {
-      add: jest.fn(),
+      upsertJobScheduler: jest.fn(),
       process: jest.fn(),
-      getRepeatableJobs: jest.fn().mockResolvedValue([]),
+      getJobSchedulers: jest.fn().mockResolvedValue([]),
     };
 
     mockNotificationCleanUpQueue = {
-      add: jest.fn(),
+      upsertJobScheduler: jest.fn(),
       process: jest.fn(),
       drain: jest.fn(),
-      getRepeatableJobs: jest.fn().mockResolvedValue([]),
+      getJobSchedulers: jest.fn().mockResolvedValue([]),
     };
 
     mockApplicationStatusEmailsQueue = {
-      add: jest.fn(),
+      upsertJobScheduler: jest.fn(),
       process: jest.fn(),
-      getRepeatableJobs: jest.fn().mockResolvedValue([]),
+      getJobSchedulers: jest.fn().mockResolvedValue([]),
     };
 
     mockNoticeOfIntentDecisionEmailsQueue = {
-      add: jest.fn(),
+      upsertJobScheduler: jest.fn(),
       process: jest.fn(),
-      getRepeatableJobs: jest.fn().mockResolvedValue([]),
+      getJobSchedulers: jest.fn().mockResolvedValue([]),
     };
 
     mockApplicationDecisionEmailsQueue = {
-      add: jest.fn(),
+      upsertJobScheduler: jest.fn(),
       process: jest.fn(),
-      getRepeatableJobs: jest.fn().mockResolvedValue([]),
+      getJobSchedulers: jest.fn().mockResolvedValue([]),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -95,83 +95,60 @@ describe('SchedulerService', () => {
   //Job Disabled for now
   // it('should call add for scheduleApplicationExpiry', async () => {
   //   await schedulerService.setup();
-  //   expect(mockAppExpiryQueue.getRepeatableJobs).toHaveBeenCalledTimes(1);
-  //   expect(mockAppExpiryQueue.add).toHaveBeenCalledTimes(1);
-  //   expect(mockAppExpiryQueue.add).toHaveBeenCalledWith(
+  //   expect(mockAppExpiryQueue.getJobSchedulers).toHaveBeenCalledTimes(1);
+  //   expect(mockAppExpiryQueue.upsertJobScheduler).toHaveBeenCalledTimes(1);
+  //   expect(mockAppExpiryQueue.upsertJobScheduler).toHaveBeenCalledWith(
   //     'applicationExpiry',
-  //     {},
   //     {
-  //       repeat: {
   //         pattern: isDST()
   //           ? MONDAY_TO_FRIDAY_AT_2AM_PDT_IN_UTC
   //           : MONDAY_TO_FRIDAY_AT_2AM_PST_IN_UTC,
-  //       },
   //     },
   //   );
   // });
 
   it('should call add for notification cleanup', async () => {
     await schedulerService.setup();
-    expect(mockNotificationCleanUpQueue.getRepeatableJobs).toHaveBeenCalledTimes(1);
-    expect(mockNotificationCleanUpQueue.add).toHaveBeenCalledTimes(1);
-    expect(mockNotificationCleanUpQueue.add).toHaveBeenCalledWith(
-      'cleanupNotifications',
-      {},
-      {
-        repeat: {
-          pattern: isDST() ? EVERYDAY_MIDNIGHT_PDT_IN_UTC : EVERYDAY_MIDNIGHT_PST_IN_UTC,
-        },
-      },
-    );
+    expect(mockNotificationCleanUpQueue.getJobSchedulers).toHaveBeenCalledTimes(1);
+    expect(mockNotificationCleanUpQueue.upsertJobScheduler).toHaveBeenCalledTimes(1);
+    expect(mockNotificationCleanUpQueue.upsertJobScheduler).toHaveBeenCalledWith('cleanupNotifications', {
+      pattern: isDST() ? EVERYDAY_MIDNIGHT_PDT_IN_UTC : EVERYDAY_MIDNIGHT_PST_IN_UTC,
+    });
   });
 
   it('should call add for application status email', async () => {
     await schedulerService.setup();
-    expect(mockApplicationStatusEmailsQueue.getRepeatableJobs).toHaveBeenCalledTimes(1);
-    expect(mockApplicationStatusEmailsQueue.add).toHaveBeenCalledTimes(1);
-    expect(mockApplicationStatusEmailsQueue.add).toHaveBeenCalledWith(
+    expect(mockApplicationStatusEmailsQueue.getJobSchedulers).toHaveBeenCalledTimes(1);
+    expect(mockApplicationStatusEmailsQueue.upsertJobScheduler).toHaveBeenCalledTimes(1);
+    expect(mockApplicationStatusEmailsQueue.upsertJobScheduler).toHaveBeenCalledWith(
       'applicationSubmissionStatusEmails',
-      {},
       {
-        repeat: {
-          pattern: isDST()
-            ? EVERY_15_MINUTES_STARTING_FROM_8AM_PDT_IN_UTC
-            : EVERY_15_MINUTES_STARTING_FROM_8AM_PST_IN_UTC,
-        },
+        pattern: isDST()
+          ? EVERY_15_MINUTES_STARTING_FROM_8AM_PDT_IN_UTC
+          : EVERY_15_MINUTES_STARTING_FROM_8AM_PST_IN_UTC,
       },
     );
   });
 
   it('should call add for application emails', async () => {
     await schedulerService.setup();
-    expect(mockApplicationDecisionEmailsQueue.getRepeatableJobs).toHaveBeenCalledTimes(1);
-    expect(mockApplicationDecisionEmailsQueue.add).toHaveBeenCalledTimes(1);
-    expect(mockApplicationDecisionEmailsQueue.add).toHaveBeenCalledWith(
-      'applicationDecisionEmails',
-      {},
-      {
-        repeat: {
-          pattern: isDST()
-            ? EVERY_15_MINUTES_STARTING_FROM_8AM_PDT_IN_UTC
-            : EVERY_15_MINUTES_STARTING_FROM_8AM_PST_IN_UTC,
-        },
-      },
-    );
+    expect(mockApplicationDecisionEmailsQueue.getJobSchedulers).toHaveBeenCalledTimes(1);
+    expect(mockApplicationDecisionEmailsQueue.upsertJobScheduler).toHaveBeenCalledTimes(1);
+    expect(mockApplicationDecisionEmailsQueue.upsertJobScheduler).toHaveBeenCalledWith('applicationDecisionEmails', {
+      pattern: isDST() ? EVERY_15_MINUTES_STARTING_FROM_8AM_PDT_IN_UTC : EVERY_15_MINUTES_STARTING_FROM_8AM_PST_IN_UTC,
+    });
   });
 
   it('should call add for notice of intent decision emails', async () => {
     await schedulerService.setup();
-    expect(mockNoticeOfIntentDecisionEmailsQueue.getRepeatableJobs).toHaveBeenCalledTimes(1);
-    expect(mockNoticeOfIntentDecisionEmailsQueue.add).toHaveBeenCalledTimes(1);
-    expect(mockNoticeOfIntentDecisionEmailsQueue.add).toHaveBeenCalledWith(
+    expect(mockNoticeOfIntentDecisionEmailsQueue.getJobSchedulers).toHaveBeenCalledTimes(1);
+    expect(mockNoticeOfIntentDecisionEmailsQueue.upsertJobScheduler).toHaveBeenCalledTimes(1);
+    expect(mockNoticeOfIntentDecisionEmailsQueue.upsertJobScheduler).toHaveBeenCalledWith(
       'noticeOfIntentDecisionEmails',
-      {},
       {
-        repeat: {
-          pattern: isDST()
-            ? EVERY_15_MINUTES_STARTING_FROM_8AM_PDT_IN_UTC
-            : EVERY_15_MINUTES_STARTING_FROM_8AM_PST_IN_UTC,
-        },
+        pattern: isDST()
+          ? EVERY_15_MINUTES_STARTING_FROM_8AM_PDT_IN_UTC
+          : EVERY_15_MINUTES_STARTING_FROM_8AM_PST_IN_UTC,
       },
     );
   });
