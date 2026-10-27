@@ -13,8 +13,15 @@ export interface EntryOptions {
   filterByFileNumber?: string;
 }
 
-const optionsAreEqual = (optionsA: EntryOptions, optionsB: EntryOptions): boolean =>
-  Object.entries(optionsA).every(([optionKey, optionA]) => optionA === optionsB[optionKey as keyof EntryOptions]);
+const optionsAreEqual = (optionsA: EntryOptions, optionsB: EntryOptions): boolean => {
+  const optionsAEntries = Object.entries(optionsA);
+  const optionsBEntries = Object.entries(optionsB);
+
+  return (
+    optionsAEntries.length === optionsBEntries.length &&
+    optionsAEntries.every(([optionKey, optionA]) => optionA === optionsB[optionKey as keyof EntryOptions])
+  );
+};
 
 @Injectable({
   providedIn: 'root',
