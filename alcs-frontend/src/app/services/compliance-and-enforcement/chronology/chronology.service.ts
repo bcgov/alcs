@@ -13,6 +13,9 @@ export interface EntryOptions {
   filterByFileNumber?: string;
 }
 
+const optionsAreEqual = (optionsA: EntryOptions, optionsB: EntryOptions): boolean =>
+  Object.entries(optionsA).every(([optionKey, optionA]) => optionA === optionsB[optionKey as keyof EntryOptions]);
+
 @Injectable({
   providedIn: 'root',
 })
@@ -20,6 +23,7 @@ export class ComplianceAndEnforcementChronologyService {
   private readonly url = `${environment.apiUrl}/compliance-and-enforcement/chronology`;
 
   entriesByUuid = signal<Map<string, ComplianceAndEnforcementChronologyEntryDto>>(new Map());
+  lastEntryOptions: EntryOptions = {};
 
   constructor(private readonly http: HttpClient) {}
 
@@ -35,10 +39,15 @@ export class ComplianceAndEnforcementChronologyService {
     return this.http.get<ComplianceAndEnforcementChronologyEntryDto[]>(`${this.url}/entry`, { params }).pipe(
       tap((freshEntries) => {
         this.entriesByUuid.update((staleEntriesByUuid) => {
-          const freshEntriesByUuid = new Map<string, ComplianceAndEnforcementChronologyEntryDto>(staleEntriesByUuid);
+          const freshEntriesByUuid = new Map<string, ComplianceAndEnforcementChronologyEntryDto>(
+            optionsAreEqual(options, this.lastEntryOptions) ? staleEntriesByUuid : [],
+          );
+          this.lastEntryOptions = options;
+
           for (const entry of freshEntries) {
             freshEntriesByUuid.set(entry.uuid, entry);
           }
+
           return freshEntriesByUuid;
         });
       }),
