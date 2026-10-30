@@ -18,7 +18,12 @@ def cli():
     pass
 
 
-@cli.group()
+@cli.group(help="""Imports NRIS data CSV into Postgres
+
+Preconditions:
+
+  - `nris` schema already exists
+""")
 def import_csv():
     pass
 
