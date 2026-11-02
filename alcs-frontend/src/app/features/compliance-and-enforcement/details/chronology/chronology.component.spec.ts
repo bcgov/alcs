@@ -224,11 +224,12 @@ describe('ComplianceAndEnforcementChronologyComponent', () => {
     it('should return dates of all entries except excluded', () => {
       mockChronologyService.entriesByUuid.mockReturnValue(
         new Map<string, ComplianceAndEnforcementChronologyEntryDto>([
-          ['1', { uuid: '1', date: 1000, isDraft: false } as ComplianceAndEnforcementChronologyEntryDto],
-          ['2', { uuid: '2', date: 2000, isDraft: false } as ComplianceAndEnforcementChronologyEntryDto],
-          ['3', { uuid: '3', date: 3000, isDraft: false } as ComplianceAndEnforcementChronologyEntryDto],
+          ['1', { fileUuid: '1', uuid: '1', date: 1000, isDraft: false } as ComplianceAndEnforcementChronologyEntryDto],
+          ['2', { fileUuid: '1', uuid: '2', date: 2000, isDraft: false } as ComplianceAndEnforcementChronologyEntryDto],
+          ['3', { fileUuid: '1', uuid: '3', date: 3000, isDraft: false } as ComplianceAndEnforcementChronologyEntryDto],
         ]),
       );
+      component.fileUuid.set('1');
 
       const result = component.datesInUse('2');
 
@@ -238,10 +239,11 @@ describe('ComplianceAndEnforcementChronologyComponent', () => {
     it('should filter out null dates', () => {
       mockChronologyService.entriesByUuid.mockReturnValue(
         new Map<string, ComplianceAndEnforcementChronologyEntryDto>([
-          ['1', { uuid: '1', date: 1000, isDraft: false } as ComplianceAndEnforcementChronologyEntryDto],
-          ['2', { uuid: '2', date: null, isDraft: false } as ComplianceAndEnforcementChronologyEntryDto],
+          ['1', { fileUuid: '1', uuid: '1', date: 1000, isDraft: false } as ComplianceAndEnforcementChronologyEntryDto],
+          ['2', { fileUuid: '1', uuid: '2', date: null, isDraft: false } as ComplianceAndEnforcementChronologyEntryDto],
         ]),
       );
+      component.fileUuid.set('1');
 
       const result = component.datesInUse('3');
 

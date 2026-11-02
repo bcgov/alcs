@@ -1,4 +1,4 @@
-import { Component, computed, OnDestroy, OnInit } from '@angular/core';
+import { Component, computed, OnDestroy, OnInit, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { firstValueFrom, Subject } from 'rxjs';
 import { UpdateComplianceAndEnforcementChronologyEntryDto } from '../../../../services/compliance-and-enforcement/chronology/chronology.dto';
@@ -28,9 +28,12 @@ export class ComplianceAndEnforcementChronologyComponent implements OnInit, OnDe
   fileNumber?: string;
 
   file?: ComplianceAndEnforcementDto;
+  fileUuid = signal<string | null>(null);
   authors: UserDto[] = [];
   sortedEntries = computed(() =>
-    Array.from(this.service.entriesByUuid().values()).sort((a, b) => (a.date && b.date ? b.date - a.date : -1)),
+    Array.from(this.service.entriesByUuid().values())
+      .filter((entry) => entry.fileUuid === this.fileUuid())
+      .sort((a, b) => (a.date && b.date ? b.date - a.date : -1)),
   );
 
   currentUserUuid?: string;
@@ -53,6 +56,7 @@ export class ComplianceAndEnforcementChronologyComponent implements OnInit, OnDe
       }
 
       this.file = file;
+      this.fileUuid.set(file.uuid);
     });
 
     this.userService.$userProfile.subscribe((currentUse) => {
