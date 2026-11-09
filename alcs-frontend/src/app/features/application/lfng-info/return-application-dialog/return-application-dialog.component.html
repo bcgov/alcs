@@ -20,7 +20,7 @@
         <span class="subtext">Characters left: {{ 4000 - comment.textLength }}</span>
       </div>
       <div class="step-controls">
-        <button mat-stroked-button color="primary" [mat-dialog-close]="false">cancel</button>
+        <button type="button" mat-stroked-button color="primary" [mat-dialog-close]="false">cancel</button>
         <button mat-flat-button color="primary" [disabled]="!commentForLfng" (click)="next()">next</button>
       </div>
     </div>

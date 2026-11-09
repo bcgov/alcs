@@ -14,6 +14,7 @@
     </div>
     <div class="center">
       <button
+        type="button"
         mat-flat-button
         color="accent"
         [mat-dialog-close]="isDirty"
@@ -36,7 +37,7 @@
     </div>
     <div class="right">
       @if (allowedBoards.length > 1) {
-        <button matTooltip="Move Board" [matMenuTriggerFor]="moveMenu" mat-icon-button>
+        <button type="button" matTooltip="Move Board" [matMenuTriggerFor]="moveMenu" mat-icon-button>
           <mat-icon>move_down</mat-icon>
         </button>
         <mat-menu class="move-board-menu" xPosition="before" #moveMenu="matMenu">

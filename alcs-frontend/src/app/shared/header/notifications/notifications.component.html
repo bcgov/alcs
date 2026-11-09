@@ -1,11 +1,11 @@
 @if (!hasUnread) {
-  <button mat-icon-button [matMenuTriggerFor]="notificationMenu">
+  <button type="button" mat-icon-button [matMenuTriggerFor]="notificationMenu">
     <mat-icon class="icon">notifications_outlined</mat-icon>
   </button>
 }
 
 @if (hasUnread) {
-  <button [matMenuTriggerFor]="notificationMenu" class="unread">
+  <button type="button" [matMenuTriggerFor]="notificationMenu" class="unread">
     <mat-icon class="icon">notifications</mat-icon>
     <span>{{ unreadCount }}</span>
   </button>

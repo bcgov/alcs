@@ -4,7 +4,7 @@
       {{ transferee.displayName }}
     </mat-card-title>
     @if (!isReviewStep) {
-      <button mat-icon-button [mat-menu-trigger-for]="menu">
+      <button type="button" mat-icon-button [mat-menu-trigger-for]="menu">
         <mat-icon>more_vert</mat-icon>
       </button>
       <mat-menu #menu="matMenu">

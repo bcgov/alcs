@@ -1,7 +1,7 @@
 <div mat-dialog-title>
   <div class="close">
     <h6 class="card-type-label">Application</h6>
-    <button mat-icon-button [mat-dialog-close]="isDirty">
+    <button type="button" mat-icon-button [mat-dialog-close]="isDirty">
       <mat-icon>close</mat-icon>
     </button>
   </div>
@@ -14,6 +14,7 @@
     <div class="center">
       @if (decision) {
         <button
+          type="button"
           color="accent"
           mat-flat-button
           [mat-dialog-close]="isDirty"
@@ -49,7 +50,7 @@
       </div>
     </div>
     <div class="right">
-      <button matTooltip="Move Board" [matMenuTriggerFor]="moveMenu" mat-icon-button>
+      <button type="button" matTooltip="Move Board" [matMenuTriggerFor]="moveMenu" mat-icon-button>
         <mat-icon>move_down</mat-icon>
       </button>
       <mat-menu class="move-board-menu" xPosition="before" #moveMenu="matMenu">
