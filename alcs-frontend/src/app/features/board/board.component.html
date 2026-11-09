@@ -28,7 +28,7 @@
         </button>
       }
       @if (creatableCards.length > 1) {
-        <button mat-flat-button color="primary" [matMenuTriggerFor]="createMenu">+ New Card ▾</button>
+        <button type="button" mat-flat-button color="primary" [matMenuTriggerFor]="createMenu">+ New Card ▾</button>
         <mat-menu class="move-board-menu" xPosition="before" #createMenu="matMenu">
           @for (creator of creatableCards; track creator) {
             <button mat-menu-item (click)="onOpenCreateDialog(creator.dialog)">

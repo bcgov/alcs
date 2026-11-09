@@ -40,6 +40,7 @@
                   </button>
                   @if (submission && submission.canEdit) {
                     <button
+                      type="button"
                       mat-flat-button
                       color="primary"
                       [routerLink]="'/notice-of-intent/' + submission.fileNumber + '/edit'"
@@ -76,6 +77,7 @@
         <button mat-stroked-button color="warn" (click)="onCancel(submission.uuid)">Cancel NOI</button>
         @if (submission && submission.canEdit) {
           <button
+            type="button"
             mat-flat-button
             color="primary"
             [routerLink]="'/notice-of-intent/' + submission.fileNumber + '/edit'"
