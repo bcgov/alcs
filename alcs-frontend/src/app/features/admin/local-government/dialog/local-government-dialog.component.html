@@ -49,7 +49,7 @@
               [aria-description]="'press enter to edit ' + email"
             >
               {{ email }}
-              <button matChipRemove [attr.aria-label]="'remove ' + email">
+              <button type="button" matChipRemove [attr.aria-label]="'remove ' + email">
                 <mat-icon>cancel</mat-icon>
               </button>
             </mat-chip-row>
@@ -93,7 +93,7 @@
 
   <mat-dialog-actions align="end">
     <div class="button-container">
-      <button mat-stroked-button color="primary" mat-dialog-close="false">Close</button>
+      <button type="button" mat-stroked-button color="primary" mat-dialog-close="false">Close</button>
       <button
         [loading]="isLoading"
         (click)="onSubmit()"

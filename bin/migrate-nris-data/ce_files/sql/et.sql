@@ -34,7 +34,17 @@ select distinct
             ) activities
     )::alcs._compliance_and_enforcement_alleged_activity_enum as alleged_activity,
     coalesce(concat_ws('; ', nc.internal_notes, nc.description_and_comments), '') as intake_notes,
-    au.uuid as assignee_uuid
+    refined_users.uuid as assignee_uuid
 from
     nris.complaint nc
-    left join alcs.user au on lower(au.idir_user_name) = lower(nc.assigned_to);
+    left join lateral (
+      select
+        *
+      from
+        alcs.user au
+      where
+        lower(au.idir_user_name) = lower(nc.assigned_to)
+      order by
+        au.audit_created_at desc
+      limit 1
+    ) refined_users on true;

@@ -101,7 +101,7 @@
     </div>
     <div class="button-container">
       @if (step === 1) {
-        <button mat-stroked-button color="primary" [mat-dialog-close]="false">Cancel</button>
+        <button type="button" mat-stroked-button color="primary" [mat-dialog-close]="false">Cancel</button>
         <button
           (click)="onNextStep()"
           mat-flat-button
