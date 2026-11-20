@@ -45,7 +45,7 @@
       <button [disabled]="!canDelete" (click)="onDelete()" mat-stroked-button color="warn">Delete</button>
     </div>
     <div class="button-container">
-      <button mat-stroked-button color="primary" mat-dialog-close="false">Close</button>
+      <button type="button" mat-stroked-button color="primary" mat-dialog-close="false">Close</button>
       <button
         [loading]="isLoading"
         (click)="onSubmit()"

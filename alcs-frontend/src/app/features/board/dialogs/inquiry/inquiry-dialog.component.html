@@ -1,7 +1,7 @@
 <div mat-dialog-title>
   <div class="close">
     <h6 class="card-type-label">Inquiry</h6>
-    <button [mat-dialog-close]="isDirty" mat-icon-button>
+    <button type="button" [mat-dialog-close]="isDirty" mat-icon-button>
       <mat-icon>close</mat-icon>
     </button>
   </div>
@@ -21,6 +21,7 @@
     </div>
     <div class="center">
       <button
+        type="button"
         [mat-dialog-close]="isDirty"
         [routerLink]="['inquiry', inquiry.fileNumber]"
         color="accent"
@@ -43,7 +44,7 @@
       }
     </div>
     <div class="right">
-      <button [matMenuTriggerFor]="moveMenu" mat-icon-button matTooltip="Move Board">
+      <button type="button" [matMenuTriggerFor]="moveMenu" mat-icon-button matTooltip="Move Board">
         <mat-icon>move_down</mat-icon>
       </button>
       <mat-menu #moveMenu="matMenu" class="move-board-menu" xPosition="before">

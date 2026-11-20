@@ -2,7 +2,7 @@
   <div class="subheading2 header split">
     <div>Sub-Tasks ({{ subtasks.length }})</div>
     <div>
-      <button mat-flat-button color="primary" [matMenuTriggerFor]="createMenu">+ NEW SUB-TASK ▾</button>
+      <button type="button" mat-flat-button color="primary" [matMenuTriggerFor]="createMenu">+ NEW SUB-TASK ▾</button>
       <mat-menu class="move-board-menu" xPosition="before" #createMenu="matMenu">
         <span
           matTooltip="Only one Audit subtask per card."

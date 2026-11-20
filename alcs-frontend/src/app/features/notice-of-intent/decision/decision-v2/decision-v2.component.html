@@ -13,6 +13,7 @@
     }
     @if (decisions.length > 0) {
       <button
+        type="button"
         [matMenuTriggerFor]="createMenu"
         [disabled]="isPaused || isDraftExists"
         mat-flat-button
