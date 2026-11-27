@@ -17,12 +17,12 @@
     </mat-checkbox>
     <mat-checkbox #checkbox3 color="primary" class="checkbox">
       I/we understand that the Agricultural Land Commission will take the steps necessary to confirm the accuracy of the
-      information and documents provided. This information, excluding phone numbers and emails, will be available for review 
+      information and documents provided. This information, excluding phone numbers and emails, will be available for review
       by any member of the public once received by the ALC.
     </mat-checkbox>
   </div>
   <p>
-    If you have any questions about the collection or use of this information, please 
+    If you have any questions about the collection or use of this information, please
     <a
         href="https://www.alc.gov.bc.ca/contact/"
         target="_blank"
@@ -30,8 +30,9 @@
   </p>
   <div>
     <div class="step-controls">
-      <button mat-stroked-button color="primary" [mat-dialog-close]="false">cancel</button>
+      <button mat-stroked-button color="primary" type="button" [mat-dialog-close]="false">cancel</button>
       <button
+        type="button"
         mat-flat-button
         color="primary"
         [disabled]="!checkbox1.checked || !checkbox2.checked || !checkbox3.checked"

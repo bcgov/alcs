@@ -29,7 +29,7 @@
         </button>
       }
       @if (linkedCards.length > 1) {
-        <button class="menu-item center" mat-flat-button color="accent" [matMenuTriggerFor]="goToMenu">
+        <button type="button" class="menu-item center" mat-flat-button color="accent" [matMenuTriggerFor]="goToMenu">
           Go to card ▾
         </button>
         <mat-menu class="move-board-menu" xPosition="before" #goToMenu="matMenu">

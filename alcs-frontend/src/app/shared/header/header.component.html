@@ -13,14 +13,14 @@
         @if (hasRoles) {
           <div>
             <a [routerLink]="homeUrl">
-              <button class="menu-item subheading1">Home</button>
+              <button type="button" class="menu-item subheading1">Home</button>
             </a>
           </div>
         }
         @if (hasRoles && !isCommissioner && !isSoilOfficer) {
           <div>
             <a routerLink="/schedule">
-              <button class="menu-item subheading1">Schedule</button>
+              <button type="button" class="menu-item subheading1">Schedule</button>
             </a>
           </div>
         }
@@ -28,6 +28,7 @@
       <div class="col">
         @if (hasRoles && !isCommissioner) {
           <button
+            type="button"
             class="menu-item subheading1"
             [class.open]="menuTrigger.menuOpen"
             #menuTrigger="matMenuTrigger"
@@ -45,7 +46,7 @@
                 [currentUserProfile]="userProfile"
                 [disableTooltip]="true"
               ></app-favorite-button>
-              <button mat-menu-item>
+              <button type="button" mat-menu-item>
                 {{ board.title }}
               </button>
             </div>
@@ -62,6 +63,7 @@
           }
           @if (hasRoles) {
             <button
+              type="button"
               [class.open]="menuTrigger.menuOpen"
               class="avatar-menu-button"
               #menuTrigger="matMenuTrigger"

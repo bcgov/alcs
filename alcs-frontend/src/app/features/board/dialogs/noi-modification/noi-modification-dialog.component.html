@@ -21,6 +21,7 @@
     </div>
     <div class="center">
       <button
+        type="button"
         color="accent"
         mat-flat-button
         [mat-dialog-close]="isDirty"
@@ -39,7 +40,7 @@
     <div class="header-row">
       <div class="left"></div>
       <div style="margin-right: -16px" class="right">
-        <button matTooltip="Move Board" [matMenuTriggerFor]="moveMenu" mat-icon-button>
+        <button type="button" matTooltip="Move Board" [matMenuTriggerFor]="moveMenu" mat-icon-button>
           <mat-icon>move_down</mat-icon>
         </button>
         <mat-menu class="move-board-menu" xPosition="before" #moveMenu="matMenu">

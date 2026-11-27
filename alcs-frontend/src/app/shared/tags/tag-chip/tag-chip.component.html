@@ -9,7 +9,7 @@
   >
   {{ tag.name }}
   @if (removable) {
-    <button matChipRemove [attr.aria-label]="'remove ' + tag">
+    <button type="button" matChipRemove [attr.aria-label]="'remove ' + tag">
       <mat-icon svgIcon="cancel_filled"></mat-icon>
     </button>
   }

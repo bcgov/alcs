@@ -31,8 +31,9 @@
   </p>
   <div>
     <div class="step-controls">
-      <button mat-stroked-button color="primary" [mat-dialog-close]="false">cancel</button>
+      <button mat-stroked-button color="primary" type="button" [mat-dialog-close]="false">cancel</button>
       <button
+        type="button"
         mat-flat-button
         color="primary"
         [disabled]="!checkbox1.checked || !checkbox2.checked || !checkbox3.checked || !checkbox4.checked"

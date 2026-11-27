@@ -52,6 +52,7 @@
     </div>
     @if (application && application.canEdit) {
       <button
+        type="button"
         mat-flat-button
         color="primary"
         [routerLink]="'/application/' + application.fileNumber + '/edit'"
@@ -163,6 +164,7 @@
             <button mat-stroked-button color="warn" (click)="onCancel(application.uuid)">Cancel Application</button>
             @if (application && application.canEdit) {
               <button
+                type="button"
                 mat-flat-button
                 color="primary"
                 [routerLink]="'/application/' + application.fileNumber + '/edit'"
